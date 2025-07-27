@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Register New User</title>
+</head>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header text-center">
+                    <h4>Register New User</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/auth/register}" method="post" th:object="${user}" onsubmit="return validatePasswords()">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input th:field="*{username}" type="text" class="form-control" id="username" name="username" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email (optional)</label>
+                            <input th:field="*{email}" type="email" class="form-control" id="email" name="email" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input th:field="*{password}" type="password" class="form-control" id="password" name="password" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input th:field="*{confirmPassword}" type="password" class="form-control" id="confirmPassword" name="confirmPassword" required />
+                        </div>
+
+                        <p th:errors="*{email}" class="alert alert-danger mt-4"></p>
+
+                        <div th:if="${error}" class="alert alert-danger mt-4">
+                            <div th:text="${error}">Invalid Username, Password or Email</div>
+                        </div>
+
+                        <div id="passwordError" class="alert alert-danger d-none">
+                            Passwords do not match!
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Create User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/validatePasswords.js"></script>
+</section>
+</html>

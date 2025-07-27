@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::title}, ~{::section})">
+<head>
+  <title>Dashboard</title>
+</head>
+<section>
+  <div class="card shadow">
+    <div class="card-header">
+      <h4>Welcome to your Dashboard</h4>
+    </div>
+    <div class="card-body">
+      <p>Hello, <span th:text="${#authentication.name}">User</span></p>
+      <a class="btn btn-outline-primary" href="/inventory">Go to Inventory</a>
+    </div>
+  </div>
+</section>
+</html>
