@@ -1,0 +1,27 @@
+# Note: This is a Java project using Gradle. This file is for informational purposes only.
+# Note: Gradle will handle everything automatically with "./gradlew build" and "./gradlew bootRun"
+# Note: More on README.md
+
+Spring Boot:
+    spring-boot-starter-data-jpa
+    spring-boot-starter-security
+    spring-boot-starter-validation
+    spring-boot-starter-thymeleaf
+    spring-boot-starter-web
+
+Thymeleaf Extras:
+    thymeleaf-extras-springsecurity6
+
+Database:
+    mysql-connector-java:8.0.33
+
+Testing:
+    spring-boot-starter-test
+    spring-security-test
+    junit-platform-launcher
+
+Java:
+    Java 21 (required toolchain)
+
+Build Tool:
+    Gradle 8.x (recommended)

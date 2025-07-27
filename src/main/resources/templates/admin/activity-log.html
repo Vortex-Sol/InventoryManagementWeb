@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::title}, ~{::section})">
+<head><title>Activity Log</title></head>
+<section>
+  <div class="card shadow">
+    <div class="card-header">
+      <h4>System Activity Logs</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped table-bordered">
+        <thead class="table-light">
+        <tr><th>User</th><th>Action</th><th>Timestamp</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="log : ${logs}">
+          <td th:text="${log.username}"></td>
+          <td th:text="${log.action}"></td>
+          <td th:text="${#dates.format(log.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</html>

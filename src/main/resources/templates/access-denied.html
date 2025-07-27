@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout(~{::title}, ~{::section})">
+<head><title>Access Denied</title></head>
+<section>
+  <div class="card shadow text-center">
+    <div class="card-header bg-warning">
+      <h4>403 - Access Denied</h4>
+    </div>
+    <div class="card-body">
+      <p>You do not have permission to view this page.</p>
+      <a href="/" class="btn btn-outline-secondary">Return to Home</a>
+    </div>
+  </div>
+</section>
+</html>
