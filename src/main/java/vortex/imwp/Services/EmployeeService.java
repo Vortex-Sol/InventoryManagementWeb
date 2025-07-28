@@ -20,8 +20,8 @@ public class EmployeeService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<EmployeeDTO> getEmployeeByUsername(String username) {
-        return employeeRepository.findByUsername(username)
+    public Optional<EmployeeDTO> getEmployeeByUsername(String username){
+        return employeeRepository.findByUsernameWithJobs(username)
                 .map(EmployeeDTOMapper::map);
     }
 

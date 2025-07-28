@@ -27,7 +27,7 @@ public class ReportController {
     //TODO: GET inventory
     @GetMapping("/inventory")
     public ResponseEntity<Response> getInventoryReport(){
-
+        return ResponseEntity.ok(new Response("inventory"));
     }
 
 

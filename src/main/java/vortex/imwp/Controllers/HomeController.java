@@ -1,13 +1,13 @@
 package vortex.imwp.Controllers;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import vortex.imwp.Services.ItemService;
 import vortex.imwp.Services.WarehouseService;
 
-import java.nio.file.WatchService;
-
+@Controller
 @RequestMapping(
         path = "/api"
 )
