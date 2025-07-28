@@ -10,16 +10,27 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String surname;
+    @Column(nullable = false)
     private Date dob;
+    @Column(nullable = false)
     private String phone;
+    @Column(nullable = false)
     private String email;
+    @Column(name = "Start_Date", nullable = false)
     private Date startDate;
+    @Column(name = "End_Date")
     private Date endDate;
+    @Column(name = "Warehouse_ID", nullable = false)
     private Long warehouseID;
+    @Column(name = "Boss_ID")
     private Long bossID;
 
     @ManyToMany

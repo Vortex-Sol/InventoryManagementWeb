@@ -6,4 +6,5 @@ import vortex.imwp.Models.Job;
 
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
+    public Job findById(long id);
 }
