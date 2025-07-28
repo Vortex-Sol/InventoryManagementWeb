@@ -29,13 +29,14 @@ public class SaleService {
         return Optional.empty();
     }
 
+    //TODO: Fix Needed - Program Does not Compile
     public Optional<List<SaleDTO>> getByPeriod(Timestamp start, Timestamp end) {
-        Iterable<Sale> list = saleRepository.findByTimestampBetweenOrderByTimestampAsc(start, end);
+        /*Iterable<Sale> list = saleRepository.findByTimestampBetweenOrderByTimestampAsc(start, end);
         List<SaleDTO> sales = new ArrayList<>();
         if (list.iterator().hasNext()) {
             for (Sale sale : list) sales.add(SaleDTOMapper.map(sale));
             return Optional.of(sales);
-        }
+        }*/
         return Optional.empty();
     }
 

@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
-    List<Sale> findByTimestampBetweenOrderByTimestampAsc(Timestamp start, Timestamp end);
+    //TODO: Fix - Program does not compile
+    //List<Sale> findByTimestampBetweenOrderByTimestampAsc(Timestamp start, Timestamp end);
 }
