@@ -49,7 +49,7 @@ Cart system (for checkout or temporary storage)
 </nav>
 
 <div class="container mt-5">
-    <div class="card shadow">
+    <div class="card shadow" th:object="${user}">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Item Inventory</h4>
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">+ Add Item</button>
