@@ -3,7 +3,7 @@
 CREATE TABLE Employee (
                           ID BIGINT AUTO_INCREMENT PRIMARY KEY,
                           Username VARCHAR(50) NOT NULL,
-                          HashedPassword VARCHAR(100) NOT NULL,
+                          Password VARCHAR(100) NOT NULL,
                           Name VARCHAR(50) NOT NULL,
                           Surname VARCHAR(50) NOT NULL,
                           DoB DATE NOT NULL,
