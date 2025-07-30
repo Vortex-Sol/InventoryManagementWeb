@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="fragments/layout-noSearch :: layout(~{::title}, ~{::section})">
+      th:replace="fragments/layout-noSearch :: layout(title=~{::title}, content=~{::section})">
 <head>
     <title>Register New User</title>
 </head>
@@ -47,6 +47,9 @@
 
                         <button type="submit" class="btn btn-primary w-100">Create User</button>
                     </form>
+                    <div class="card-footer">
+                        <a th:href="@{/auth/login}">Come back to Log-In page</a>
+                    </div>
                 </div>
             </div>
         </div>

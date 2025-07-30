@@ -43,14 +43,19 @@ public class InventoryController {
 
 	@GetMapping("/api/items")
 	public ResponseEntity<Response> getItems() {
-		Response resp = new vortex.imwp.Models.Response();
+		Response resp = new Response();
 
-		Optional<List<ItemDTO>> items = itemService.getAll();
-		resp.setSuccess(items.isPresent());
-		resp.setData(itemService.getAll());
-		if (resp.isSuccess()) resp.setMessage("Items found");
-		else resp.setMessage("Items not found");
+		List<ItemDTO> items = itemService.getAll();
+		resp.setSuccess(!items.isEmpty());
+		resp.setData(items);
+
+		if (resp.isSuccess()) {
+			resp.setMessage("Items found");
+		} else {
+			resp.setMessage("Items not found");
+		}
 
 		return ResponseEntity.ok(resp);
 	}
+
 }

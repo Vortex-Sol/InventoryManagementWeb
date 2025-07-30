@@ -3,9 +3,11 @@ package vortex.imwp.Services;
 import vortex.imwp.DTOs.ItemDTO;
 import vortex.imwp.Mappers.ItemDTOMapper;
 import vortex.imwp.Models.Item;
+import vortex.imwp.Models.WarehouseItem;
 import vortex.imwp.Repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vortex.imwp.Repositories.WarehouseItemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,19 +16,33 @@ import java.util.Optional;
 @Service
 public class ItemService {
     private final ItemRepository itemRepository;
-    public ItemService(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
-    }
+    private final WarehouseItemRepository warehouseItemRepository;
 
-    public Optional<List<ItemDTO>> getAll(){
+    public ItemService(ItemRepository itemRepository, WarehouseItemRepository warehouseItemRepository) {
+        this.itemRepository = itemRepository;
+        this.warehouseItemRepository = warehouseItemRepository;
+    }
+    public List<ItemDTO> getAll() {
         Iterable<Item> list = itemRepository.findAll();
         List<ItemDTO> items = new ArrayList<>();
-        if (list.iterator().hasNext()) {
-            for (Item item : list) items.add(ItemDTOMapper.map(item));
-            return Optional.of(items);
+
+        for (Item item : list) {
+            ItemDTO dto = ItemDTOMapper.map(item);
+
+            List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
+            int totalQty = warehouseItems.stream()
+                    .mapToInt(WarehouseItem::getQuantityInStock)
+                    .sum();
+
+            dto.setQuantity(totalQty);
+            warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
+
+            items.add(dto);
         }
-        return Optional.empty();
+
+        return items;
     }
+
 
     public Optional<Item> getItemById(Long id) {
         return itemRepository.findById(id);

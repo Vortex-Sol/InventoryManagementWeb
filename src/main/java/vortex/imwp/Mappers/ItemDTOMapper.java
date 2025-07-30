@@ -10,7 +10,7 @@ public class ItemDTOMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getPrice(),
-                item.getQuantity()
+                0
         );
     }
 
@@ -19,8 +19,7 @@ public class ItemDTOMapper {
                 dto.getId(),
                 dto.getName(),
                 dto.getDescription(),
-                dto.getPrice(),
-                dto.getQuantity()
+                dto.getPrice()
         );
     }
 }
