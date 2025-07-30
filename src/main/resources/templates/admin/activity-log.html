@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::section})}">
-<head><title>Activity Log</title></head>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/layout-noSearch :: layout(~{::title}, ~{::section})">
+<head>
+  <title>Activity Log</title>
+</head>
 <section>
   <div class="card shadow">
     <div class="card-header">

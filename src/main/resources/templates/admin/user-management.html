@@ -1,15 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::section})}">
-<head><title>User Management</title></head>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/layout-noSearch :: layout(~{::title}, ~{::section})">
+<head>
+  <title>User Management</title>
+</head>
 <section>
-  <div class="card shadow">
+  <div class="card shadow mt-4">
     <div class="card-header">
       <h4>User Management</h4>
     </div>
     <div class="card-body">
       <table class="table table-bordered table-hover">
         <thead class="table-light">
-        <tr><th>Username</th><th>Role</th><th>Actions</th></tr>
+        <tr>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
         <tr th:each="user : ${users}">
