@@ -67,10 +67,10 @@ CREATE TABLE Item_Sale (
                            PRIMARY KEY (Sale_ID, Item_ID)
 );
 
-CREATE TABLE Warehouse_Items (
+CREATE TABLE Warehouse_Item (
                                  Warehouse_ID BIGINT NOT NULL,
                                  Item_ID BIGINT NOT NULL,
-                                 Quantity_in_Stock INT NOT NULL,
+                                 quantity_in_stock INT NOT NULL,
                                  PRIMARY KEY (Warehouse_ID, Item_ID)
 );
 
@@ -93,7 +93,7 @@ ALTER TABLE Employee_Login_Audit ADD FOREIGN KEY (Employee_ID) REFERENCES Employ
 ALTER TABLE Sale ADD FOREIGN KEY (Salesman_ID) REFERENCES Employee(ID);
 ALTER TABLE Item_Sale ADD FOREIGN KEY (Item_ID) REFERENCES Item(ID);
 ALTER TABLE Item_Sale ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID);
-ALTER TABLE Warehouse_Items ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
-ALTER TABLE Warehouse_Items ADD FOREIGN KEY (Item_ID) REFERENCES Item(ID);
+ALTER TABLE Warehouse_Item ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
+ALTER TABLE Warehouse_Item ADD FOREIGN KEY (Item_ID) REFERENCES Item(ID);
 ALTER TABLE Report ADD FOREIGN KEY (Employee_ID_Created) REFERENCES Employee(ID);
 ALTER TABLE Report ADD FOREIGN KEY (Created_At_Warehouse_ID) REFERENCES Warehouse(ID);

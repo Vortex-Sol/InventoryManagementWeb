@@ -10,16 +10,14 @@ public class ItemDTO {
     private String name;
     private String description;
     private double price;
-    private int quantity;
 
     private Set<Warehouse> warehouses = new HashSet<>();
 
     public ItemDTO() {}
-    public ItemDTO(String name, String description, double price, int quantity) {
+    public ItemDTO(String name, String description, double price) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.quantity = quantity;
     }
 
     public Long getId() { return id; }
@@ -30,8 +28,6 @@ public class ItemDTO {
     public void setDescription(String description) { this.description = description; }
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
     public Set<Warehouse> getWarehouses() { return warehouses; }
     public void setWarehouses(Set<Warehouse> warehouses) {this.warehouses = warehouses; }
     public void addWarehouse(Warehouse warehouse) {this.warehouses.add(warehouse); }

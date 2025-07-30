@@ -24,13 +24,14 @@ public class InventoryController {
 		this.itemService = itemService;
 	}
 
+	//TODO prob needs some changes. It is better to add exactly to specific warehouse + increment their quantityInStock
 	@PostMapping("/add")
 	public String addItem(@RequestParam String name,
 						  @RequestParam String description,
 						  @RequestParam double price,
 						  @RequestParam Integer quantity,
 						  @RequestParam(required = false) List<Long> warehouseIds) {
-		ItemDTO itemDTO = new ItemDTO(name, description, price, quantity);
+		ItemDTO itemDTO = new ItemDTO(name, description, price);
 		if (warehouseIds != null) {
 			for (Long wid : warehouseIds) {
 				warehouseService.getWarehouseById(wid)

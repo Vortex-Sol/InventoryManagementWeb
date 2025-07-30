@@ -8,8 +8,7 @@ public class ItemDTOMapper {
         return new ItemDTO(
                 item.getName(),
                 item.getDescription(),
-                item.getPrice(),
-                item.getQuantity()
+                item.getPrice()
         );
     }
 
@@ -17,8 +16,7 @@ public class ItemDTOMapper {
         return new Item(
                 dto.getName(),
                 dto.getDescription(),
-                dto.getPrice(),
-                dto.getQuantity()
+                dto.getPrice()
         );
     }
 }
