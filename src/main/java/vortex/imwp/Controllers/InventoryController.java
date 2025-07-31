@@ -38,7 +38,13 @@ public class InventoryController {
 			}
 		}
 		itemService.addItem(itemDTO);
-		return "redirect:/";
+		return "redirect:/inventory/home";
+
+	}
+	@PostMapping("/delete")
+	public String deleteItem(@RequestParam("item_id") Long itemId) {
+		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
+		return "redirect:/inventory/home";
 	}
 
 	@GetMapping("/api/items")
@@ -64,7 +70,9 @@ public class InventoryController {
 		model.addAttribute("keyword", keyword);
 		return "inventory/search-results";
 	}
-
-
+	@GetMapping("/checkout")
+	public String inventoryHome() {
+		return "inventory/checkout";
+	}
 
 }
