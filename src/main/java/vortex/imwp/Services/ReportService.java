@@ -31,6 +31,8 @@ public class ReportService {
 
     public Report addReport(ReportDTO report) { return reportRepository.save(ReportDTOMapper.map(report)); }
 
+    public Report addReport(Report report) { return reportRepository.save(report); }
+
     public Report updateReport(Report report) { return reportRepository.save(report); }
 
     public void deleteReport(Long id) { reportRepository.deleteById(id); }

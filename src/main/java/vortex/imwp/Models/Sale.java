@@ -3,6 +3,7 @@ package vortex.imwp.Models;
 import jakarta.persistence.*;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public class Sale {
     private Long id;
 
     @Column(name = "Sale_Time")
-    private Timestamp sale_Time;
+    private LocalDateTime sale_Time;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID", nullable = false)
@@ -23,15 +24,15 @@ public class Sale {
     private Set<SaleItem> saleItems = new HashSet<>();
 
     public Sale(){}
-    public Sale(Timestamp sale_Time, Employee salesman) {
+    public Sale(LocalDateTime sale_Time, Employee salesman) {
         this.sale_Time = sale_Time;
         this.salesman = salesman;
     }
 
     public Long getId() { return id; }
-    public Timestamp getSale_Time() { return sale_Time; }
+    public LocalDateTime getSale_Time() { return sale_Time; }
     public Employee getSalesman() { return salesman; }
     public Set<SaleItem> getSaleItems() { return saleItems; }
     public void setEmployee(Employee employee) { salesman = employee; }
-    public void setSale_Time(Timestamp sale_Time) { this.sale_Time = sale_Time; }
+    public void setSale_Time(LocalDateTime sale_Time) { this.sale_Time = sale_Time; }
 }

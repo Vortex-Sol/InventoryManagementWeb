@@ -35,7 +35,7 @@ INSERT INTO Item (Name, Description, Sku, Price) VALUES
                                                      ('Monitor', '27\" 4K monitor', 'SKU-MON-004', 299.990);
 
 -- Warehouse Items (assumes item and warehouse IDs inserted in order)
-INSERT INTO Warehouse_Items (Warehouse_ID, Item_ID, Quantity_in_Stock) VALUES
+INSERT INTO Warehouse_Item (Warehouse_ID, Item_ID, Quantity_in_Stock) VALUES
                                                                            (1, 1, 5),
                                                                            (1, 2, 20),
                                                                            (2, 3, 10),
