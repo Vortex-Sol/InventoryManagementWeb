@@ -42,6 +42,27 @@ public class ItemService {
 
         return items;
     }
+    public List<ItemDTO> searchAndMap(String keyword) {
+        List<Item> items = itemRepository.findByNameContainingIgnoreCase(keyword);
+        List<ItemDTO> dtos = new ArrayList<>();
+
+        for (Item item : items) {
+            ItemDTO dto = ItemDTOMapper.map(item);
+            List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
+
+            int totalQty = warehouseItems.stream()
+                    .mapToInt(WarehouseItem::getQuantityInStock)
+                    .sum();
+
+            dto.setQuantity(totalQty);
+            warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
+
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
+
 
 
     public Optional<Item> getItemById(Long id) {

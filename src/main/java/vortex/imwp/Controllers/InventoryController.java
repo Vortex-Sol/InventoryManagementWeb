@@ -57,5 +57,14 @@ public class InventoryController {
 
 		return ResponseEntity.ok(resp);
 	}
+	@GetMapping("/search")
+	public String searchItems(@RequestParam("keyword") String keyword, Model model) {
+		List<ItemDTO> results = itemService.searchAndMap(keyword);
+		model.addAttribute("items", results);
+		model.addAttribute("keyword", keyword);
+		return "inventory/search-results";
+	}
+
+
 
 }
