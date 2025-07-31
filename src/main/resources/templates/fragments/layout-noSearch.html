@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:fragment="layout(title, content)">
+<head>
+  <meta charset="UTF-8">
+  <title th:replace="${title}">Page Title</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: rgba(254, 170, 35, 0.05);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .navbar {
+      background-color: #ffffff;
+      border-bottom: 1px solid #dee2e6;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    .navbar-brand img {
+      height: 60px;
+      margin-right: 10px;
+    }
+    .navbar-brand strong {
+      color: #212529;
+      font-weight: 600;
+    }
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+    .card-header {
+      background-color: transparent;
+      border-bottom: none;
+      text-align: center;
+      padding-top: 1.5rem;
+    }
+    .card-header h4 {
+      font-weight: 600;
+      margin-bottom: 0;
+      color: #212529;
+    }
+    .btn-primary {
+      background-color: #e94e77;
+      border-color: #e94e77;
+      font-weight: 500;
+    }
+    .btn-primary:hover {
+      background-color: #d43e68;
+      border-color: #d43e68;
+    }
+    .card-footer {
+      background-color: #ffffff;
+      border-top: 1px solid #dee2e6;
+      text-align: center;
+      padding: 1rem;
+    }
+    .card-footer a {
+      color: #e94e77;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .card-footer a:hover {
+      text-decoration: underline;
+    }
+    .form-control {
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img th:src="@{/icon-cart.png}" alt="Cart Icon">
+      <strong>Inventory Log-IN</strong>
+    </a>
+  </div>
+</nav>
+
+<main class="container mt-4" th:replace="${content}"></main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

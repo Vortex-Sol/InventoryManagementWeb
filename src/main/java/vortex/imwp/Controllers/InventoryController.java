@@ -38,19 +38,41 @@ public class InventoryController {
 			}
 		}
 		itemService.addItem(itemDTO);
-		return "redirect:/";
+		return "redirect:/inventory/home";
+
+	}
+	@PostMapping("/delete")
+	public String deleteItem(@RequestParam("item_id") Long itemId) {
+		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
+		return "redirect:/inventory/home";
 	}
 
 	@GetMapping("/api/items")
 	public ResponseEntity<Response> getItems() {
-		Response resp = new vortex.imwp.Models.Response();
+		Response resp = new Response();
 
-		Optional<List<ItemDTO>> items = itemService.getAll();
-		resp.setSuccess(items.isPresent());
-		resp.setData(itemService.getAll());
-		if (resp.isSuccess()) resp.setMessage("Items found");
-		else resp.setMessage("Items not found");
+		List<ItemDTO> items = itemService.getAll();
+		resp.setSuccess(!items.isEmpty());
+		resp.setData(items);
+
+		if (resp.isSuccess()) {
+			resp.setMessage("Items found");
+		} else {
+			resp.setMessage("Items not found");
+		}
 
 		return ResponseEntity.ok(resp);
 	}
+	@GetMapping("/search")
+	public String searchItems(@RequestParam("keyword") String keyword, Model model) {
+		List<ItemDTO> results = itemService.searchAndMap(keyword);
+		model.addAttribute("items", results);
+		model.addAttribute("keyword", keyword);
+		return "inventory/search-results";
+	}
+	@GetMapping("/checkout")
+	public String inventoryHome() {
+		return "inventory/checkout";
+	}
+
 }

@@ -16,20 +16,25 @@ public class Item {
     private String name;
     private String description;
     private double price;
-    private Integer quantity;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WarehouseItem> warehouseItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<SaleItem> saleItems = new ArrayList<>();
 
     public Item() {}
-    public Item(String name, String description, double price, int quantity) {
+    public Item(String name, String description, double price) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.quantity = quantity;
+    }
+
+    public Item(Long id, String name, String description, double price) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
     }
 
     public Long getId() { return id; }
@@ -40,8 +45,6 @@ public class Item {
     public void setDescription(String description) { this.description = description; }
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
     public List<WarehouseItem> getWarehouses() { return warehouseItems; }
     public void setWarehouses(List<WarehouseItem> warehouses) {this.warehouseItems = warehouses; }
     public void addWarehouse(WarehouseItem warehouse) {this.warehouseItems.add(warehouse); }

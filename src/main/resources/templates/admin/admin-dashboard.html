@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::section})}">
-<head><title>Admin Dashboard</title></head>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/layout-noSearch :: layout(title=~{::title}, content=~{::section})">
+<head>
+  <title>Admin Dashboard</title>
+</head>
 <section>
-  <div class="card shadow">
+  <div class="card shadow mt-4">
     <div class="card-header">
       <h4>Admin Dashboard</h4>
     </div>
     <div class="card-body">
       <p>Quick links:</p>
       <div class="d-flex flex-wrap gap-3">
-        <a href="/admin/users" class="btn btn-outline-primary">Manage Users</a>
-        <a href="/admin/register" class="btn btn-outline-success">Register New User</a>
-        <a href="/admin/logs" class="btn btn-outline-secondary">View Activity Logs</a>
+        <a th:href="@{/admin/users}" class="btn btn-outline-primary">Manage Users</a>
+        <a th:href="@{/admin/register}" class="btn btn-outline-success">Register New User</a>
+        <a th:href="@{/admin/logs}" class="btn btn-outline-secondary">View Activity Logs</a>
       </div>
     </div>
   </div>
