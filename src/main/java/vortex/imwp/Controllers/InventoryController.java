@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import vortex.imwp.Models.Item;
 import vortex.imwp.Models.Response;
 import vortex.imwp.Services.ItemService;
 import vortex.imwp.Services.WarehouseService;
@@ -29,8 +30,9 @@ public class InventoryController {
 						  @RequestParam String description,
 						  @RequestParam double price,
 						  @RequestParam Integer quantity,
+						  @RequestParam String sku,
 						  @RequestParam(required = false) List<Long> warehouseIds) {
-		ItemDTO itemDTO = new ItemDTO(name, description, price, quantity);
+		ItemDTO itemDTO = new ItemDTO(name, description, price, quantity, sku);
 		if (warehouseIds != null) {
 			for (Long wid : warehouseIds) {
 				warehouseService.getWarehouseById(wid)

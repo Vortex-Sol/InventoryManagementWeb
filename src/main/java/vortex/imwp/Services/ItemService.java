@@ -69,6 +69,8 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
+    public Optional<Item> getItemBySku(String sku) { return this.itemRepository.findBySku(sku); }
+
     public Item addItem(ItemDTO item) {
         return itemRepository.save(ItemDTOMapper.map(item));
     }

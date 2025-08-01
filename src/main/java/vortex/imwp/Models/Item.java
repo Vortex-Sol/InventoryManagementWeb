@@ -16,6 +16,7 @@ public class Item {
     private String name;
     private String description;
     private double price;
+    private String sku;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WarehouseItem> warehouseItems = new ArrayList<>();
@@ -24,31 +25,51 @@ public class Item {
     private List<SaleItem> saleItems = new ArrayList<>();
 
     public Item() {}
-    public Item(String name, String description, double price) {
+    public Item(String name, String description, double price, String sku) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.sku = sku;
     }
 
-    public Item(Long id, String name, String description, double price) {
+    public Item(Long id, String name, String description, double price, String sku) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.sku = sku;
     }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+
+    public void setSku(String sku) { this.sku = sku; }
+    public String getSku() { return sku; }
+
     public List<WarehouseItem> getWarehouses() { return warehouseItems; }
     public void setWarehouses(List<WarehouseItem> warehouses) {this.warehouseItems = warehouses; }
     public void addWarehouse(WarehouseItem warehouse) {this.warehouseItems.add(warehouse); }
     public void addSaleItem(SaleItem saleItem) {this.saleItems.add(saleItem);}
     public void removeSaleItem(SaleItem saleItem) {this.saleItems.remove(saleItem);}
     public List<SaleItem> getSaleItems() { return saleItems; }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", sku='" + sku + '\'' +
+                '}';
+    }
 }
