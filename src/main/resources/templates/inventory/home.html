@@ -12,6 +12,28 @@
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">+ Add Item</button>
         </div>
         <div class="card-body p-0">
+            <div class="p-3">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <label class="form-label">Filter by Price</label>
+                        <input type="number" class="form-control" id="filterPrice" placeholder="Max Price">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Filter by Quantity</label>
+                        <input type="number" class="form-control" id="filterQuantity" placeholder="Min Quantity">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Filter by Warehouse</label>
+                        <label class="form-label">Filter by Warehouse</label>
+                        <select id="filterWarehouse" class="form-select">
+                            <option value="">-- All Warehouses --</option>
+                            <option th:each="wh : ${warehouses}"
+                                    th:value="${wh.address}"
+                                    th:text="${wh.address}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover table-bordered mb-0">
                     <thead class="table-secondary">
