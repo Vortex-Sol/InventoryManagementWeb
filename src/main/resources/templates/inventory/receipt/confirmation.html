@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+
+<head>
+  <title th:fragment="title">Receipt Confirmation</title>
+</head>
+
+<section th:fragment="section">
+  <div class="card shadow">
+    <div class="card-header text-center">
+      <h4 class="mb-0">Receipt Generated</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Sale ID:</strong> <span th:text="${receipt.sale.id}"></span></p>
+      <p><strong>Payment Method:</strong> <span th:text="${receipt.paymentMethod}"></span></p>
+      <p><strong>Total Amount:</strong> <span th:text="${receipt.totalAmount} + ' $'"></span></p>
+      <p><strong>Date:</strong> <span th:text="${#temporals.format(receipt.createdAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+      <p><strong>Amount Received:</strong>
+        <span th:text="${receipt.amountReceived != null ? receipt.amountReceived + ' $' : 'N/A'}"></span>
+      </p>
+      <p><strong>Change Given:</strong>
+        <span th:text="${receipt.changeGiven != null ? receipt.changeGiven + ' $' : 'N/A'}"></span>
+      </p>
+
+    </div>
+  </div>
+</section>
+</html>

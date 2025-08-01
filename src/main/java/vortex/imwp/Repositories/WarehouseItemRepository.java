@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, WarehouseItemID> {
 	List<WarehouseItem> findByItem(Item item);
+	void deleteByItem(Item item);
 }

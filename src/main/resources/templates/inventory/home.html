@@ -42,7 +42,7 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Price</th>
-                        <th>Quantity</th>
+<!--                        <th>Quantity</th>-->
                         <th>Warehouses</th>
                         <th>Actions</th>
                     </tr>
@@ -53,18 +53,21 @@
                         <td th:text="${item.name}"></td>
                         <td th:text="${item.description}"></td>
                         <td th:text="${item.price}"></td>
-                        <td th:text="${item.quantity}"></td>
+<!--                        <td th:text="${item.quantity}"></td>-->
                         <td>
-                            <span th:each="wh, whStat : ${item.warehouses}"
-                                  th:text="${wh.address ?: 'No address'}"
-                                  th:append="${!whStat.last} ? ', ' : ''"></span>
+                            <span th:each="wh, stat : ${item.warehouses}">
+                                <span th:text="${wh.address != null ? wh.address : 'No address'}"></span>
+                                <span th:if="${!stat.last}">, </span>
+                            </span>
                         </td>
+
                         <td>
                             <form th:action="@{/delete}" method="post" style="display:inline;">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <input type="hidden" name="item_id" th:value="${item.id}" />
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                             </form>
+                            <a th:href="@{/edit/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary ms-2">Edit</a>
                         </td>
                     </tr>
                     </tbody>
@@ -87,10 +90,10 @@
                             <label for="itemName" class="form-label">Name</label>
                             <input type="text" class="form-control" id="itemName" name="name" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="itemQuantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="itemQuantity" name="quantity" required>
-                        </div>
+<!--                        <div class="col-md-6">-->
+<!--                            <label for="itemQuantity" class="form-label">Quantity</label>-->
+<!--                            <input type="number" class="form-control" id="itemQuantity" name="quantity" required>-->
+<!--                        </div>-->
                         <div class="col-md-12">
                             <label for="itemDescription" class="form-label">Description</label>
                             <textarea class="form-control" id="itemDescription" name="description" rows="2"></textarea>

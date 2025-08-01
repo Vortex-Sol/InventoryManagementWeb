@@ -87,7 +87,9 @@ CREATE TABLE Receipt (
                          Sale_ID BIGINT NOT NULL,
                          Total_Amount DECIMAL(10, 3) NOT NULL,
                          Created_At TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                         Payment_Method VARCHAR(50) NOT NULL
+                         Payment_Method VARCHAR(50) NOT NULL,
+                         Amount_Received DECIMAL(10, 3),
+                         Change_Given DECIMAL(10, 3)
 );
 
 -- === FOREIGN KEYS ===

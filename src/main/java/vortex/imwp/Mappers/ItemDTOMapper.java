@@ -5,13 +5,14 @@ import vortex.imwp.Models.Item;
 
 public class ItemDTOMapper {
     public static ItemDTO map(Item item) {
-        return new ItemDTO(
+        ItemDTO dto = new ItemDTO(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getPrice(),
-                0
+                item.getPrice()
         );
+
+        return dto;
     }
 
     public static Item map(ItemDTO dto) {

@@ -18,7 +18,7 @@ public class SaleItem {
     @JoinColumn(name = "Item_ID")
     private Item item;
     @Column(name = "Quantity_Sold")
-    private int quantity;
+    private long quantity;
 
     public SaleItem() {}
     public SaleItem(Sale sale, Item item, int quantity) {
@@ -33,6 +33,6 @@ public class SaleItem {
     public void setSale(Sale sale) { this.sale = sale; }
     public Item getItem() { return item; }
     public void setItem(Item item) { this.item = item; }
-    public int getQuantity() { return quantity; }
+    public long getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
 }

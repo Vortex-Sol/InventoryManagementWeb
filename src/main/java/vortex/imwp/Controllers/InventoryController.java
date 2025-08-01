@@ -1,16 +1,19 @@
 package vortex.imwp.Controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import vortex.imwp.DTOs.ItemDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import vortex.imwp.Models.Item;
 import vortex.imwp.Models.Response;
 import vortex.imwp.Services.ItemService;
 import vortex.imwp.Services.WarehouseService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,10 +30,9 @@ public class InventoryController {
 	@PostMapping("/add")
 	public String addItem(@RequestParam String name,
 						  @RequestParam String description,
-						  @RequestParam double price,
-						  @RequestParam Integer quantity,
+						  @RequestParam BigDecimal price,
 						  @RequestParam(required = false) List<Long> warehouseIds) {
-		ItemDTO itemDTO = new ItemDTO(name, description, price, quantity);
+		ItemDTO itemDTO = new ItemDTO(name, description, price);
 		if (warehouseIds != null) {
 			for (Long wid : warehouseIds) {
 				warehouseService.getWarehouseById(wid)
@@ -74,5 +76,36 @@ public class InventoryController {
 	public String inventoryHome() {
 		return "inventory/checkout";
 	}
+
+	@GetMapping("/edit/{id}")
+	public String showEditForm(@PathVariable Long id, Model model) {
+		Optional<Item> itemOpt = itemService.getItemById(id);
+		if (itemOpt.isEmpty()) {
+			return "redirect:/inventory/home";
+		}
+		ItemDTO dto = itemService.mapToDTO(itemOpt.get());
+		model.addAttribute("item", dto);
+		model.addAttribute("warehouses", warehouseService.getAllWarehouses());
+		return "inventory/edit-item";
+	}
+
+	@PostMapping("/update")
+	public String updateItem(@RequestParam Long id,
+							 @RequestParam String name,
+							 @RequestParam String description,
+							 @RequestParam BigDecimal price,
+							 @RequestParam(required = false) List<Long> warehouseIds) {
+
+		ItemDTO dto = new ItemDTO(id, name, description, price);
+		if (warehouseIds != null) {
+			for (Long wid : warehouseIds) {
+				warehouseService.getWarehouseById(wid).ifPresent(dto::addWarehouse);
+			}
+		}
+
+		itemService.updateItem(dto);
+		return "redirect:/inventory/home";
+	}
+
 
 }

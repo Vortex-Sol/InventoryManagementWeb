@@ -3,6 +3,7 @@ package vortex.imwp.Services;
 import vortex.imwp.DTOs.ItemDTO;
 import vortex.imwp.Mappers.ItemDTOMapper;
 import vortex.imwp.Models.Item;
+import vortex.imwp.Models.Warehouse;
 import vortex.imwp.Models.WarehouseItem;
 import vortex.imwp.Repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,6 @@ public class ItemService {
 
         for (Item item : list) {
             ItemDTO dto = ItemDTOMapper.map(item);
-
-            List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
-            int totalQty = warehouseItems.stream()
-                    .mapToInt(WarehouseItem::getQuantityInStock)
-                    .sum();
-
-            dto.setQuantity(totalQty);
-            warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
-
             items.add(dto);
         }
 
@@ -54,7 +46,6 @@ public class ItemService {
                     .mapToInt(WarehouseItem::getQuantityInStock)
                     .sum();
 
-            dto.setQuantity(totalQty);
             warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
 
             dtos.add(dto);
@@ -63,7 +54,25 @@ public class ItemService {
         return dtos;
     }
 
+    public Item updateItem(ItemDTO dto) {
+        Item item = ItemDTOMapper.map(dto);
+        itemRepository.save(item);
+        warehouseItemRepository.deleteByItem(item);
+        for (Warehouse wh : dto.getWarehouses()) {
+            //fake quantity
+            WarehouseItem wi = new WarehouseItem(wh, item,0);
+            warehouseItemRepository.save(wi);
+        }
 
+        return item;
+    }
+    public ItemDTO mapToDTO(Item item) {
+        ItemDTO dto = ItemDTOMapper.map(item);
+        List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
+        int totalQty = warehouseItems.stream().mapToInt(WarehouseItem::getQuantityInStock).sum();
+        warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
+        return dto;
+    }
 
     public Optional<Item> getItemById(Long id) {
         return itemRepository.findById(id);

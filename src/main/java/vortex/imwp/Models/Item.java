@@ -2,6 +2,7 @@ package vortex.imwp.Models;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +16,7 @@ public class Item {
     private Long id;
     private String name;
     private String description;
-    private double price;
+    private BigDecimal price;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WarehouseItem> warehouseItems = new ArrayList<>();
@@ -24,13 +25,13 @@ public class Item {
     private List<SaleItem> saleItems = new ArrayList<>();
 
     public Item() {}
-    public Item(String name, String description, double price) {
+    public Item(String name, String description, BigDecimal price) {
         this.name = name;
         this.description = description;
         this.price = price;
     }
 
-    public Item(Long id, String name, String description, double price) {
+    public Item(Long id, String name, String description, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -43,12 +44,13 @@ public class Item {
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
     public List<WarehouseItem> getWarehouses() { return warehouseItems; }
     public void setWarehouses(List<WarehouseItem> warehouses) {this.warehouseItems = warehouses; }
     public void addWarehouse(WarehouseItem warehouse) {this.warehouseItems.add(warehouse); }
     public void addSaleItem(SaleItem saleItem) {this.saleItems.add(saleItem);}
     public void removeSaleItem(SaleItem saleItem) {this.saleItems.remove(saleItem);}
     public List<SaleItem> getSaleItems() { return saleItems; }
+    public List<WarehouseItem> getWarehouseItems() {return warehouseItems;}
 }

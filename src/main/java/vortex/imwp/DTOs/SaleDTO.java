@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import vortex.imwp.Models.Employee;
 import vortex.imwp.Models.SaleItem;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
