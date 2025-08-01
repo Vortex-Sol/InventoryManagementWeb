@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
 
 <head>
   <title th:fragment="title">Search Results</title>
