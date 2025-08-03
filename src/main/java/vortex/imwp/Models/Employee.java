@@ -42,7 +42,10 @@ public class Employee {
     private List<Job> jobs = new ArrayList<>();
 
     @OneToMany(mappedBy = "salesman")
-    private List<Sale> sales;
+    private List<Sale> sales = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee")
+    private List<LoginAudit> loginAudits = new ArrayList<>();
 
     public Employee() {}
     public Employee(String username, String password, String email) {
@@ -90,6 +93,8 @@ public class Employee {
     public Long getWarehouseID() { return warehouseID; }
     public Long getBossID() { return bossID; }
     public List<Job> getJobs() { return jobs; }
+    public List<Sale> getSales() { return sales; }
+    public List<LoginAudit> getLoginAudits() { return loginAudits; }
 
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
@@ -102,6 +107,16 @@ public class Employee {
     public void setEndDate(Date endDate) { this.endDate = endDate; }
     public void setWarehouseID(Long warehouseID) { this.warehouseID = warehouseID; }
     public void setBossID(Long bossID) { this.bossID = bossID; }
+    public void setJobs(List<Job> jobs) { this.jobs = jobs; }
+    public void setSales(List<Sale> sales) { this.sales = sales; }
+    public void setLoginAudits(List<LoginAudit> loginAudits) { this.loginAudits = loginAudits; }
+
+    public void addLoginAudit(LoginAudit loginAudit) { this.loginAudits.add(loginAudit); }
+    public void removeLoginAudit(LoginAudit loginAudit) { this.loginAudits.remove(loginAudit); }
+
+    public void addSale(Sale sale) { this.sales.add(sale); }
+    public void removeSale(Sale sale) { this.sales.remove(sale); }
+
     public void addJob(Job job) { jobs.add(job); }
     public void removeJob(Job job) { jobs.remove(job); }
 }
