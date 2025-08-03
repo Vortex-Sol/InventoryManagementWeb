@@ -77,6 +77,12 @@
                             <label for="itemPrice" class="form-label">Price ($)</label>
                             <input type="number" step="0.01" class="form-control" id="itemPrice" name="price" required>
                         </div>
+
+                        <div class="col-md-6">
+                            <label for="itemSku" class="form-label">Sku</label>
+                            <input type="text" class="form-control" id="itemSku" name="sku" required>
+                        </div>
+
                         <div class="col-md-6">
                             <label class="form-label">Select Warehouses</label>
                             <div class="form-check" th:each="wh : ${warehouses}">
