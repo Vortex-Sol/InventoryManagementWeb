@@ -32,7 +32,11 @@ CREATE TABLE Login_Audit (
                              Username VARCHAR(50) NOT NULL,
                              IP_Address VARCHAR(100) NOT NULL,
                              Login_Time TIMESTAMP NOT NULL,
-                             Success_Failure BOOLEAN NOT NULL
+                             Success_Failure BOOLEAN NOT NULL,
+                             employee_id BIGINT NOT NULL,
+                             CONSTRAINT fk_audit_employee
+                                 FOREIGN KEY (employee_id)
+                                     REFERENCES Employee(ID)
 );
 
 CREATE TABLE Employee_Login_Audit (
@@ -96,8 +100,6 @@ ALTER TABLE Employee ADD FOREIGN KEY (Boss_ID) REFERENCES Employee(ID);
 ALTER TABLE Employee ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
 ALTER TABLE Employee_Job ADD FOREIGN KEY (Employee_ID) REFERENCES Employee(ID);
 ALTER TABLE Employee_Job ADD FOREIGN KEY (Job_ID) REFERENCES Job(ID);
-ALTER TABLE Employee_Login_Audit ADD FOREIGN KEY (Login_Audit_ID) REFERENCES Login_Audit(ID);
-ALTER TABLE Employee_Login_Audit ADD FOREIGN KEY (Employee_ID) REFERENCES Employee(ID);
 ALTER TABLE Sale ADD FOREIGN KEY (Salesman_ID) REFERENCES Employee(ID);
 ALTER TABLE Item_Sale ADD FOREIGN KEY (Item_ID) REFERENCES Item(ID);
 ALTER TABLE Item_Sale ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID);

@@ -24,3 +24,10 @@ spring:
       mode: always
       schema-locations: classpath:sql/schema.sql
       data-locations: classpath:sql/data.sql
+
+server:
+  tomcat:
+    remoteip:
+      remote-ip-header: x-forwarded-for
+      protocol-header: x-forwarded-proto
+      internal-proxies: .*
