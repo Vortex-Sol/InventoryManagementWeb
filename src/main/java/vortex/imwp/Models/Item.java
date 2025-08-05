@@ -13,9 +13,14 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String description;
+    @Column(nullable = false)
     private double price;
+    @Column(nullable = false)
+    private Long barcode;
     private String sku;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -25,42 +30,40 @@ public class Item {
     private List<SaleItem> saleItems = new ArrayList<>();
 
     public Item() {}
-    public Item(String name, String description, double price, String sku) {
+    public Item(String name, String description, double price, Long barcode) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.sku = sku;
+        this.barcode = barcode;
     }
 
-    public Item(Long id, String name, String description, double price, String sku) {
+    public Item(Long id, String name, String description, double price, Long barcode) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.sku = sku;
+        this.barcode = barcode;
     }
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
     public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
     public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
-
-    public void setSku(String sku) { this.sku = sku; }
-    public String getSku() { return sku; }
-
     public List<WarehouseItem> getWarehouses() { return warehouseItems; }
+    public String getSku() { return sku; }
+    public List<SaleItem> getSaleItems() { return saleItems; }
+    public Long getBarcode() { return barcode; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
+    public void setPrice(double price) { this.price = price; }
+    public void setSku(String sku) { this.sku = sku; }
     public void setWarehouses(List<WarehouseItem> warehouses) {this.warehouseItems = warehouses; }
     public void addWarehouse(WarehouseItem warehouse) {this.warehouseItems.add(warehouse); }
     public void addSaleItem(SaleItem saleItem) {this.saleItems.add(saleItem);}
     public void removeSaleItem(SaleItem saleItem) {this.saleItems.remove(saleItem);}
-    public List<SaleItem> getSaleItems() { return saleItems; }
+    public void setBarcode(Long barcode) { this.barcode = barcode; }
 
     @Override
     public String toString() {

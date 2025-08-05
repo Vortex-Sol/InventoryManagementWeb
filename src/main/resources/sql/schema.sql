@@ -51,11 +51,12 @@ CREATE TABLE Warehouse (
 );
 
 CREATE TABLE Item (
-                      ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-                      Name VARCHAR(50) NOT NULL,
-                      Description VARCHAR(200) NOT NULL,
-                      Sku VARCHAR(50) NOT NULL,
-                      Price DECIMAL(10,3) NOT NULL
+    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Description VARCHAR(200) NOT NULL,
+    Barcode BIGINT NOT NULL,
+    Sku VARCHAR(50),
+    Price DECIMAL(10,2) NOT NULL
 );
 
 CREATE TABLE Sale (

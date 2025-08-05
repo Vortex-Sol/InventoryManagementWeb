@@ -30,9 +30,9 @@ public class InventoryController {
 						  @RequestParam String description,
 						  @RequestParam double price,
 						  @RequestParam Integer quantity,
-						  @RequestParam String sku,
+						  @RequestParam Long barcode,
 						  @RequestParam(required = false) List<Long> warehouseIds) {
-		ItemDTO itemDTO = new ItemDTO(name, description, price, quantity, sku);
+		ItemDTO itemDTO = new ItemDTO(name, description, price, quantity, barcode);
 		if (warehouseIds != null) {
 			for (Long wid : warehouseIds) {
 				warehouseService.getWarehouseById(wid)

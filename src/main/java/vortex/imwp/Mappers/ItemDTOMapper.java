@@ -11,7 +11,7 @@ public class ItemDTOMapper {
                 item.getDescription(),
                 item.getPrice(),
                 0,
-                item.getSku()
+                item.getBarcode()
         );
     }
 
@@ -21,7 +21,7 @@ public class ItemDTOMapper {
                 dto.getName(),
                 dto.getDescription(),
                 dto.getPrice(),
-                dto.getSku()
+                dto.getBarcode()
         );
     }
 }

@@ -28,11 +28,11 @@ INSERT INTO Employee_Job (Employee_ID, Job_ID) VALUES
                                                    (4, 1);
 
 -- Items
-INSERT INTO Item (Name, Description, Sku, Price) VALUES
-                                                     ('Laptop', 'Gaming laptop with 16GB RAM', 'SKU-LAP-001', 1200.500),
-                                                     ('Mouse', 'Wireless ergonomic mouse', 'SKU-MOU-002', 25.999),
-                                                     ('Keyboard', 'Mechanical RGB keyboard', 'SKU-KEY-003', 75.250),
-                                                     ('Monitor', '27\" 4K monitor', 'SKU-MON-004', 299.990);
+INSERT INTO Item (Name, Description, Price, Barcode) VALUES
+                                                     ('Laptop', 'Gaming laptop with 16GB RAM', 1200.50, 415515516),
+                                                     ('Mouse', 'Wireless ergonomic mouse', 25.99, 512656616),
+                                                     ('Keyboard', 'Mechanical RGB keyboard', 75.25, 6126261969),
+                                                     ('Monitor', '27\" 4K monitor', 299.99, 525196596);
 
 -- Warehouse Items (assumes item and warehouse IDs inserted in order)
 INSERT INTO Warehouse_Items (Warehouse_ID, Item_ID, Quantity_in_Stock) VALUES
