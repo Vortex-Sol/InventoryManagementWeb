@@ -8,7 +8,8 @@ public class ReportDTOMapper {
         return new ReportDTO(
                 report.getType(),
                 report.getEmployeeIdCreated(),
-                report.getCreatedAtWarehouseID()
+                report.getCreatedAtWarehouseID(),
+                report.getId()
         );
     }
 

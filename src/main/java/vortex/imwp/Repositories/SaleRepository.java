@@ -1,6 +1,8 @@
 package vortex.imwp.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vortex.imwp.Models.Sale;
 import java.sql.Timestamp;
@@ -8,6 +10,24 @@ import java.util.List;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
-    //TODO: Fix - Program does not compile
-    //List<Sale> findByTimestampBetweenOrderByTimestampAsc(Timestamp start, Timestamp end);
+
+    // it shows error at least in Intellij, but works fine
+    @Query(
+            value = """
+      SELECT
+        ID,
+        Sale_Time,
+        Salesman_ID
+      FROM Sale
+      WHERE Sale_Time BETWEEN :start AND :end
+      ORDER BY Sale_Time ASC
+      """,
+            nativeQuery = true
+    )
+    List<Sale> findSalesBetweenTimestamps(
+            @Param("start") Timestamp start,
+            @Param("end")   Timestamp end
+    );
+
+
 }
