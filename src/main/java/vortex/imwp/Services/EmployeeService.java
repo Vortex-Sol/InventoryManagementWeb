@@ -1,5 +1,6 @@
 package vortex.imwp.Services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vortex.imwp.DTOs.EmployeeDTO;
@@ -11,6 +12,7 @@ import vortex.imwp.Repositories.JobRepository;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -46,5 +48,48 @@ public class EmployeeService {
         user.addJob(jobRepository.findById(0L));
         employeeRepository.save(user);
         return user;
+    }
+
+    public Optional<List<EmployeeDTO>> getAllEmployees() {
+        Iterable<Employee> list = employeeRepository.findAll();
+        List<EmployeeDTO> employees = new ArrayList<>();
+        if (list.iterator().hasNext()) {
+            for (Employee employee : list) employees.add(EmployeeDTOMapper.map(employee));
+            return Optional.of(employees);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<EmployeeDTO> getEmployeeById(long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.map(EmployeeDTOMapper::map);
+    }
+
+    @Transactional
+    public Optional<EmployeeDTO> updateEmployee(Long id, EmployeeDTO employee) {
+        return employeeRepository.findById(id).map(
+                existing -> {
+                    existing.setUsername(employee.getUsername());
+                    existing.setPassword(employee.getPassword());
+                    existing.setName(employee.getName());
+                    existing.setSurname(employee.getSurname());
+                    existing.setDob(employee.getDob());
+                    existing.setPhone(employee.getPhone());
+                    existing.setEmail(employee.getEmail());
+                    existing.setStartDate(employee.getStartDate());
+                    existing.setEndDate(employee.getEndDate());
+                    existing.setWarehouseID(employee.getWarehouseID());
+                    existing.setBossID(employee.getBossID());
+
+                    Employee saved = employeeRepository.save(existing);
+                    return EmployeeDTOMapper.map(saved);
+                }
+        );
+
+    }
+
+    @Transactional
+    public void deleteEmployee(long id) {
+        employeeRepository.deleteById(id);
     }
 }

@@ -6,17 +6,22 @@ import vortex.imwp.Models.Item;
 public class ItemDTOMapper {
     public static ItemDTO map(Item item) {
         return new ItemDTO(
+                item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getPrice()
+                item.getPrice(),
+                0,
+                item.getSku()
         );
     }
 
     public static Item map(ItemDTO dto) {
         return new Item(
+                dto.getId(),
                 dto.getName(),
                 dto.getDescription(),
-                dto.getPrice()
+                dto.getPrice(),
+                dto.getSku()
         );
     }
 }

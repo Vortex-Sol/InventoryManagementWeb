@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import vortex.imwp.Models.Item;
 import vortex.imwp.Models.Response;
 import vortex.imwp.Services.ItemService;
 import vortex.imwp.Services.WarehouseService;
@@ -30,8 +31,11 @@ public class InventoryController {
 						  @RequestParam String description,
 						  @RequestParam double price,
 						  @RequestParam Integer quantity,
+						  @RequestParam String sku,
 						  @RequestParam(required = false) List<Long> warehouseIds) {
-		ItemDTO itemDTO = new ItemDTO(name, description, price);
+    
+		ItemDTO itemDTO = new ItemDTO(name, description, price, quantity, sku);
+
 		if (warehouseIds != null) {
 			for (Long wid : warehouseIds) {
 				warehouseService.getWarehouseById(wid)
@@ -39,19 +43,41 @@ public class InventoryController {
 			}
 		}
 		itemService.addItem(itemDTO);
-		return "redirect:/";
+		return "redirect:/inventory/home";
+
+	}
+	@PostMapping("/delete")
+	public String deleteItem(@RequestParam("item_id") Long itemId) {
+		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
+		return "redirect:/inventory/home";
 	}
 
 	@GetMapping("/api/items")
 	public ResponseEntity<Response> getItems() {
-		Response resp = new vortex.imwp.Models.Response();
+		Response resp = new Response();
 
-		Optional<List<ItemDTO>> items = itemService.getAll();
-		resp.setSuccess(items.isPresent());
-		resp.setData(itemService.getAll());
-		if (resp.isSuccess()) resp.setMessage("Items found");
-		else resp.setMessage("Items not found");
+		List<ItemDTO> items = itemService.getAll();
+		resp.setSuccess(!items.isEmpty());
+		resp.setData(items);
+
+		if (resp.isSuccess()) {
+			resp.setMessage("Items found");
+		} else {
+			resp.setMessage("Items not found");
+		}
 
 		return ResponseEntity.ok(resp);
 	}
+	@GetMapping("/search")
+	public String searchItems(@RequestParam("keyword") String keyword, Model model) {
+		List<ItemDTO> results = itemService.searchAndMap(keyword);
+		model.addAttribute("items", results);
+		model.addAttribute("keyword", keyword);
+		return "inventory/search-results";
+	}
+	@GetMapping("/checkout")
+	public String inventoryHome() {
+		return "inventory/checkout";
+	}
+
 }

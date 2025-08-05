@@ -3,10 +3,7 @@ package vortex.imwp.Controllers;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vortex.imwp.Models.Employee;
 import vortex.imwp.Models.Sale;
 import vortex.imwp.Repositories.EmployeeRepository;
@@ -34,5 +31,9 @@ public class SaleController {
         /*sale.setAmount(amount);
         sale.setEmployee(employee);*/
         return saleRepository.save(sale);
+    }
+    @GetMapping("/checkout")
+    public String inventoryHome() {
+        return "inventory/checkout";
     }
 }

@@ -3,6 +3,7 @@ package vortex.imwp.Models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "Item_Sale")
 public class SaleItem {
     @EmbeddedId
     private SaleItemID id = new SaleItemID();
@@ -16,7 +17,7 @@ public class SaleItem {
     @MapsId("itemId")
     @JoinColumn(name = "Item_ID")
     private Item item;
-
+    @Column(name = "Quantity_Sold")
     private int quantity;
 
     public SaleItem() {}

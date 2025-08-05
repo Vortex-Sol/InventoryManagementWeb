@@ -5,18 +5,18 @@ import java.util.Objects;
 
 public class WarehouseItemID implements Serializable {
     private Long warehouseId;
-    private String itemId;
+    private Long itemId;
 
     public WarehouseItemID(){}
-    public WarehouseItemID(Long warehouseId, String itemId) {
+    public WarehouseItemID(Long warehouseId, Long itemId) {
         this.warehouseId = warehouseId;
         this.itemId = itemId;
     }
 
     public Long getWarehouseId() { return warehouseId; }
     public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }
-    public String getItemId() { return itemId; }
-    public void setItemId(String itemId) { this.itemId = itemId; }
+    public Long getItemId() { return itemId; }
+    public void setItemId(Long itemId) { this.itemId = itemId; }
 
     @Override
     public boolean equals(Object o) {

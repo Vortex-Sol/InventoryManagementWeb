@@ -32,7 +32,11 @@ CREATE TABLE Login_Audit (
                              Username VARCHAR(50) NOT NULL,
                              IP_Address VARCHAR(100) NOT NULL,
                              Login_Time TIMESTAMP NOT NULL,
-                             Success_Failure BOOLEAN NOT NULL
+                             Success_Failure BOOLEAN NOT NULL,
+                             employee_id BIGINT NOT NULL,
+                             CONSTRAINT fk_audit_employee
+                                 FOREIGN KEY (employee_id)
+                                     REFERENCES Employee(ID)
 );
 
 CREATE TABLE Employee_Login_Audit (
@@ -82,14 +86,20 @@ CREATE TABLE Report (
                         Created_At_Warehouse_ID BIGINT NOT NULL
 );
 
+CREATE TABLE Receipt (
+                         ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         Sale_ID BIGINT NOT NULL,
+                         Total_Amount DECIMAL(10, 3) NOT NULL,
+                         Created_At TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                         Payment_Method VARCHAR(50) NOT NULL
+);
+
 -- === FOREIGN KEYS ===
 
 ALTER TABLE Employee ADD FOREIGN KEY (Boss_ID) REFERENCES Employee(ID);
 ALTER TABLE Employee ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
 ALTER TABLE Employee_Job ADD FOREIGN KEY (Employee_ID) REFERENCES Employee(ID);
 ALTER TABLE Employee_Job ADD FOREIGN KEY (Job_ID) REFERENCES Job(ID);
-ALTER TABLE Employee_Login_Audit ADD FOREIGN KEY (Login_Audit_ID) REFERENCES Login_Audit(ID);
-ALTER TABLE Employee_Login_Audit ADD FOREIGN KEY (Employee_ID) REFERENCES Employee(ID);
 ALTER TABLE Sale ADD FOREIGN KEY (Salesman_ID) REFERENCES Employee(ID);
 ALTER TABLE Item_Sale ADD FOREIGN KEY (Item_ID) REFERENCES Item(ID);
 ALTER TABLE Item_Sale ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID);
@@ -97,3 +107,4 @@ ALTER TABLE Warehouse_Item ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(I
 ALTER TABLE Warehouse_Item ADD FOREIGN KEY (Item_ID) REFERENCES Item(ID);
 ALTER TABLE Report ADD FOREIGN KEY (Employee_ID_Created) REFERENCES Employee(ID);
 ALTER TABLE Report ADD FOREIGN KEY (Created_At_Warehouse_ID) REFERENCES Warehouse(ID);
+ALTER TABLE Receipt ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID)
