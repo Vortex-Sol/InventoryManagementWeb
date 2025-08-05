@@ -63,7 +63,15 @@ public class ItemService {
         return dtos;
     }
 
-
+    public Optional<ItemDTO> getItemByBarcode(Long barcode) {
+        Optional<Item> item = itemRepository.findByBarcode(barcode);
+        System.out.println("Item: " + item);
+        if (item.isPresent()) {
+            ItemDTO dto = ItemDTOMapper.map(item.get());
+            return Optional.of(dto);
+        }
+        return Optional.empty();
+    }
 
     public Optional<Item> getItemById(Long id) {
         return itemRepository.findById(id);

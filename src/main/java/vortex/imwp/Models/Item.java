@@ -72,6 +72,7 @@ public class Item {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
+                ", barcode=" + barcode +
                 ", sku='" + sku + '\'' +
                 '}';
     }

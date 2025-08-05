@@ -52,4 +52,16 @@ public class ItemDTO {
     public void addWarehouse(Warehouse warehouse) {this.warehouses.add(warehouse); }
     public void removeWarehouse(Warehouse warehouse) {this.warehouses.remove(warehouse); }
     public void setBarcode(Long barcode) { this.barcode = barcode; }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", barcode=" + barcode +
+                ", sku='" + sku + '\'' +
+                '}';
+    }
 }
