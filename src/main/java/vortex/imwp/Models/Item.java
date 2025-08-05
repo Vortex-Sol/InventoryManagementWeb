@@ -39,7 +39,7 @@ public class Item {
         this.price = price;
         this.sku = sku;
     }
-
+  
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -54,7 +54,6 @@ public class Item {
 
     public void setSku(String sku) { this.sku = sku; }
     public String getSku() { return sku; }
-
     public List<WarehouseItem> getWarehouses() { return warehouseItems; }
     public void setWarehouses(List<WarehouseItem> warehouses) {this.warehouseItems = warehouses; }
     public void addWarehouse(WarehouseItem warehouse) {this.warehouseItems.add(warehouse); }

@@ -42,11 +42,8 @@ public class ItemDTO {
     public void setPrice(double price) { this.price = price; }
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
-
     public String getSku() { return sku; }
-
     public void setSku(String sku) { this.sku = sku; }
-
     public Set<Warehouse> getWarehouses() { return warehouses; }
     public void setWarehouses(Set<Warehouse> warehouses) {this.warehouses = warehouses; }
     public void addWarehouse(Warehouse warehouse) {this.warehouses.add(warehouse); }
