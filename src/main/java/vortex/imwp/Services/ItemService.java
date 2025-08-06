@@ -25,11 +25,11 @@ public class ItemService {
     public List<ItemDTO> getAll() {
         Iterable<Item> list = itemRepository.findAll();
         List<ItemDTO> items = new ArrayList<>();
-//
-//        for (Item item : list) {
-//            ItemDTO dto = ItemDTOMapper.map(item);
-//            items.add(dto);
-//        }
+
+        for (Item item : list) {
+            ItemDTO dto = ItemDTOMapper.map(item);
+            items.add(dto);
+        }
 
         return items;
     }

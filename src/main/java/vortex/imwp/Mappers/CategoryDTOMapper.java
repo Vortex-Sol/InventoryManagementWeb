@@ -8,21 +8,14 @@ public class CategoryDTOMapper {
     public static CategoryDTO map(Category category) {
         return new CategoryDTO(
                 category.getId(),
-                category.getName(),
-                category.getItems()
-                        .stream()
-                        .map(ItemDTOMapper::map)
-                        .collect(Collectors.toSet())
+                category.getName()
         );
     }
 
     public static Category map(CategoryDTO dto) {
         return new Category(
-                dto.getName(),
-                dto.getItems()
-                        .stream()
-                        .map(ItemDTOMapper::map)
-                        .collect(Collectors.toSet())
+                dto.getName()
+
         );
     }
 }

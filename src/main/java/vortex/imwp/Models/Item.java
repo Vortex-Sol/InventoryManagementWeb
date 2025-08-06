@@ -23,9 +23,6 @@ public class Item {
     @JoinColumn(name = "Category_ID")
     private Category category;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WarehouseItem> warehouseItems = new ArrayList<>();
-
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<SaleItem> saleItems = new ArrayList<>();
 
@@ -49,7 +46,7 @@ public class Item {
     public String getName() { return name; }
     public String getDescription() { return description; }
     public Double getPrice() { return price; }
-    public List<WarehouseItem> getWarehouses() { return warehouseItems; }
+
     public List<SaleItem> getSaleItems() { return saleItems; }
     public Long getBarcode() { return barcode; }
     public Category getCategory() { return category; }
@@ -58,8 +55,6 @@ public class Item {
     public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }
     public void setPrice(Double price) { this.price = price; }
-    public void setWarehouses(List<WarehouseItem> warehouses) {this.warehouseItems = warehouses; }
-    public void addWarehouse(WarehouseItem warehouse) {this.warehouseItems.add(warehouse); }
     public void addSaleItem(SaleItem saleItem) {this.saleItems.add(saleItem);}
     public void removeSaleItem(SaleItem saleItem) {this.saleItems.remove(saleItem);}
     public void setBarcode(Long barcode) { this.barcode = barcode; }
