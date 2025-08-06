@@ -11,10 +11,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.ForwardedHeaderFilter;
+import vortex.imwp.Auth.CustomAuthenticationSuccessHandler;
 import vortex.imwp.Auth.CustomEmployeeDetailsService;
 
 @Configuration
 public class SecurityConfig {
+    private final CustomAuthenticationSuccessHandler successHandler;
+    public SecurityConfig(CustomAuthenticationSuccessHandler successHandler) {
+        this.successHandler = successHandler;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder();}
 
@@ -40,7 +46,7 @@ public class SecurityConfig {
         http.formLogin(login -> login
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/auth/login")
-                .defaultSuccessUrl("/api/home", true)
+                .successHandler(successHandler)
                 .permitAll());
 
         return http.build();
