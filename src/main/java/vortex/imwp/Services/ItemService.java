@@ -64,7 +64,7 @@ public class ItemService {
     }
 
     public Optional<ItemDTO> getItemByBarcode(Long barcode) {
-        Optional<Item> item = itemRepository.findByBarcode(barcode);
+        Optional<Item> item = itemRepository.findItemByBarcode(barcode);
         System.out.println("Item: " + item);
         if (item.isPresent()) {
             ItemDTO dto = ItemDTOMapper.map(item.get());
@@ -77,7 +77,8 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    public Optional<Item> getItemBySku(String sku) { return this.itemRepository.findBySku(sku); }
+    //SKU MOVED TO WarehouseItem
+    //public Optional<Item> getItemBySku(String sku) { return this.itemRepository.findBySku(sku); }
 
     public Item addItem(ItemDTO item) {
         return itemRepository.save(ItemDTOMapper.map(item));

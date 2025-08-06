@@ -21,6 +21,57 @@ public class WarehouseItem {
     @Column(name = "Quantity_In_Stock")
     private int quantityInStock;
 
+    @Column(nullable = false, unique = true)
+    private String sku;
+
+    @PrePersist
+    public void generateSKU(){
+        if (sku == null || sku.isBlank()) {
+            this.sku = generateCustomSKU();
+        }
+    }
+
+    private String generateCustomSKU(){
+        long warehouseIdTemp = warehouse.getId();
+        long itemCategoryIDTemp = item.getCategory().getId();
+        String skuTemp = "";
+
+        int counter = 0;
+        while(warehouseIdTemp > 0){
+            warehouseIdTemp /= 10;
+            ++counter;
+        }
+
+        if(counter == 3) sku += warehouseIdTemp;
+        else if (counter == 2) sku += "0" + warehouseIdTemp;
+        else if (counter == 1) sku += "00" + warehouseIdTemp;
+        else throw new RuntimeException("Unknown SKU id: " + warehouseIdTemp);
+        skuTemp += "-";
+
+        counter = 0;
+        while(itemCategoryIDTemp > 0){
+            itemCategoryIDTemp /= 10;
+            ++counter;
+        }
+
+        if(counter == 3) sku += itemCategoryIDTemp;
+        else if (counter == 2) sku += "0" + itemCategoryIDTemp;
+        else if (counter == 1) sku += "00" + itemCategoryIDTemp;
+        else throw new RuntimeException("Unknown Category id: " + itemCategoryIDTemp);
+        skuTemp += "-";
+
+        String randomSequence = "";
+        counter = 6;
+        while(counter > 0){
+            int randomInt = (int) (Math.random() * 2);
+            if(randomInt == 0) randomSequence += (char) (65+ (Math.random() * 26));
+            else randomSequence += (char) (49 + (Math.random() * 11));
+            --counter;
+        }
+
+        return skuTemp;
+    }
+
     public WarehouseItem() {}
     public WarehouseItem(Warehouse warehouse, Item item, int quantityInStock) {
         this.warehouse = warehouse;

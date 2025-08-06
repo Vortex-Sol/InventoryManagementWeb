@@ -5,6 +5,8 @@ import vortex.imwp.DTOs.ItemDTO;
 import vortex.imwp.DTOs.WarehouseItemDTO;
 import vortex.imwp.Mappers.ItemDTOMapper;
 import vortex.imwp.Mappers.WarehouseItemDTOMapper;
+import vortex.imwp.Models.Item;
+import vortex.imwp.Models.Warehouse;
 import vortex.imwp.Models.WarehouseItem;
 import vortex.imwp.Repositories.WarehouseItemRepository;
 
@@ -26,9 +28,10 @@ public class WarehouseItemService {
 
         if (itemDTO.isPresent()) {
             ItemDTO item = itemDTO.get();
-            System.out.println("Item: " + item);
+            System.out.println("Item Trial: " + item);
 
-            List<WarehouseItem> tempList = warehouseItemRepository.findByItem(ItemDTOMapper.map(item));
+            List<WarehouseItem> tempList = warehouseItemRepository.findAllByItemId(ItemDTOMapper.map(item).getId());
+            System.out.println("List: " + tempList);
             List<WarehouseItemDTO> warehouseItemDTOS = new ArrayList<>();
 
             for (WarehouseItem warehouseItem : tempList) warehouseItemDTOS.add(WarehouseItemDTOMapper.map(warehouseItem));

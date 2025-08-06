@@ -8,6 +8,5 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByNameContainingIgnoreCase(String keyword);
     List<Item> findAll();
-    Optional<Item> findBySku(String sku);
-    Optional<Item> findByBarcode(Long itemBarcode);
+    Optional<Item> findItemByBarcode(Long itemBarcode);
 }

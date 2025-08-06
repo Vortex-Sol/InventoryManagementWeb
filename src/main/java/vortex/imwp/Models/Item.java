@@ -21,7 +21,10 @@ public class Item {
     private double price;
     @Column(nullable = false)
     private Long barcode;
-    private String sku;
+
+    @ManyToOne
+    @JoinColumn(name = "Category_ID")
+    private Category category;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WarehouseItem> warehouseItems = new ArrayList<>();
@@ -50,20 +53,20 @@ public class Item {
     public String getDescription() { return description; }
     public double getPrice() { return price; }
     public List<WarehouseItem> getWarehouses() { return warehouseItems; }
-    public String getSku() { return sku; }
     public List<SaleItem> getSaleItems() { return saleItems; }
     public Long getBarcode() { return barcode; }
+    public Category getCategory() { return category; }
 
     public void setId(Long id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }
     public void setPrice(double price) { this.price = price; }
-    public void setSku(String sku) { this.sku = sku; }
     public void setWarehouses(List<WarehouseItem> warehouses) {this.warehouseItems = warehouses; }
     public void addWarehouse(WarehouseItem warehouse) {this.warehouseItems.add(warehouse); }
     public void addSaleItem(SaleItem saleItem) {this.saleItems.add(saleItem);}
     public void removeSaleItem(SaleItem saleItem) {this.saleItems.remove(saleItem);}
     public void setBarcode(Long barcode) { this.barcode = barcode; }
+    public void setCategory(Category category) { this.category = category; }
 
     @Override
     public String toString() {
@@ -73,7 +76,7 @@ public class Item {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", barcode=" + barcode +
-                ", sku='" + sku + '\'' +
+                ", category=" + category +
                 '}';
     }
 }
