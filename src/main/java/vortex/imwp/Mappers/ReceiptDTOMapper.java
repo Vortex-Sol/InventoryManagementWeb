@@ -10,6 +10,7 @@ public class ReceiptDTOMapper {
                 receipt.getTotalAmount(),
                 receipt.getPaymentMethod()
         );
+
     }
 
     public static Receipt map(ReceiptDTO receiptDTO) {
