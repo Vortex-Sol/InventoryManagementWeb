@@ -1,7 +1,6 @@
 package vortex.imwp.Models;
 
 import jakarta.persistence.*;
-
 import java.util.*;
 
 @Entity
@@ -46,6 +45,9 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private List<LoginAudit> loginAudits = new ArrayList<>();
+
+    @OneToMany(mappedBy = "managerId")
+    private List<Settings> settings = new ArrayList<>();
 
     public Employee() {}
     public Employee(String username, String password, String email) {
@@ -95,6 +97,7 @@ public class Employee {
     public List<Job> getJobs() { return jobs; }
     public List<Sale> getSales() { return sales; }
     public List<LoginAudit> getLoginAudits() { return loginAudits; }
+    public List<Settings> getSettings() { return settings; }
 
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
@@ -110,6 +113,7 @@ public class Employee {
     public void setJobs(List<Job> jobs) { this.jobs = jobs; }
     public void setSales(List<Sale> sales) { this.sales = sales; }
     public void setLoginAudits(List<LoginAudit> loginAudits) { this.loginAudits = loginAudits; }
+    public void setSettings(List<Settings> settings) { this.settings = settings; }
 
     public void addLoginAudit(LoginAudit loginAudit) { this.loginAudits.add(loginAudit); }
     public void removeLoginAudit(LoginAudit loginAudit) { this.loginAudits.remove(loginAudit); }

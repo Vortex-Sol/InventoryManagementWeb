@@ -1,7 +1,6 @@
 package vortex.imwp.DTOs;
 
 import vortex.imwp.Models.Employee;
-
 import java.sql.Timestamp;
 
 public class LoginAuditDTO {

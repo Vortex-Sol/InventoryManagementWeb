@@ -26,7 +26,8 @@ public class ItemService {
         Iterable<Item> list = itemRepository.findAll();
         List<ItemDTO> items = new ArrayList<>();
 
-        for (Item item : list) {
+        //TODO: Fix Needed based on new ItemDTO class version (DO NOT CHANGE MODEL & DTO CLASSES)
+        /*for (Item item : list) {
             ItemDTO dto = ItemDTOMapper.map(item);
 
             List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
@@ -38,7 +39,7 @@ public class ItemService {
             warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
 
             items.add(dto);
-        }
+        }*/
 
         return items;
     }
@@ -46,7 +47,8 @@ public class ItemService {
         List<Item> items = itemRepository.findByNameContainingIgnoreCase(keyword);
         List<ItemDTO> dtos = new ArrayList<>();
 
-        for (Item item : items) {
+        //TODO: Fix based on new ItemDTO (DO NOT CHANGE MODEL & DTO CLASSES)
+        /*for (Item item : items) {
             ItemDTO dto = ItemDTOMapper.map(item);
             List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
 
@@ -58,18 +60,27 @@ public class ItemService {
             warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
 
             dtos.add(dto);
-        }
+        }*/
 
         return dtos;
     }
 
-
+    public Optional<ItemDTO> getItemByBarcode(Long barcode) {
+        Optional<Item> item = itemRepository.findItemByBarcode(barcode);
+        System.out.println("Item: " + item);
+        if (item.isPresent()) {
+            ItemDTO dto = ItemDTOMapper.map(item.get());
+            return Optional.of(dto);
+        }
+        return Optional.empty();
+    }
 
     public Optional<Item> getItemById(Long id) {
         return itemRepository.findById(id);
     }
 
-    public Optional<Item> getItemBySku(String sku) { return this.itemRepository.findBySku(sku); }
+    //SKU MOVED TO WarehouseItem
+    //public Optional<Item> getItemBySku(String sku) { return this.itemRepository.findBySku(sku); }
 
     public Item addItem(ItemDTO item) {
         return itemRepository.save(ItemDTOMapper.map(item));

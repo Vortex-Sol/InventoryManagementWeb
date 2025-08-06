@@ -1,14 +1,14 @@
-package vortex.imwp.Models;
+package vortex.imwp.DTOs;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class WarehouseItemID implements Serializable {
+public class WarehouseItemIdDTO implements Serializable{
     private Long warehouseId;
     private Long itemId;
 
-    public WarehouseItemID(){}
-    public WarehouseItemID(Long warehouseId, Long itemId) {
+    public WarehouseItemIdDTO(){}
+    public WarehouseItemIdDTO(Long warehouseId, Long itemId) {
         this.warehouseId = warehouseId;
         this.itemId = itemId;
     }
@@ -18,15 +18,6 @@ public class WarehouseItemID implements Serializable {
 
     public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }
     public void setItemId(Long itemId) { this.itemId = itemId; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WarehouseItemID)) return false;
-        WarehouseItemID that = (WarehouseItemID) o;
-        return Objects.equals(warehouseId, that.warehouseId) &&
-                Objects.equals(itemId, that.itemId);
-    }
 
     @Override
     public int hashCode() {

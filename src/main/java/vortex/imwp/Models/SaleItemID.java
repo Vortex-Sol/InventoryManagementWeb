@@ -14,8 +14,9 @@ public class SaleItemID implements Serializable {
     }
 
     public Long getSaleId() { return saleId; }
-    public void setSaleId(Long saleId) { this.saleId = saleId; }
     public Long getItemId() { return itemId; }
+
+    public void setSaleId(Long saleId) { this.saleId = saleId; }
     public void setItemId(Long itemId) { this.itemId = itemId; }
 
     @Override

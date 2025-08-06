@@ -1,9 +1,6 @@
 package vortex.imwp.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.json.simple.JSONObject;
 
 @Entity
@@ -11,25 +8,38 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Type", nullable = false, length = 50)
+    private ReportType.Type type;
+    @Column(name = "Employee_ID_Created", nullable = false)
     private Long EmployeeIdCreated;
+    @Column(name = "Created_At_Warehouse_ID", nullable = false)
     private Long createdAtWarehouseID;
+    @Column(name = "Data", columnDefinition = "CLOB", nullable = false)
+    private String data;
 
     public Report() {}
-    public Report(String type, Long employeeIdCreated, Long createdAtWarehouseID) {
+    public Report(ReportType.Type type, Long employeeIdCreated, Long createdAtWarehouseID) {
         this.type = type;
         EmployeeIdCreated = employeeIdCreated;
         this.createdAtWarehouseID = createdAtWarehouseID;
     }
+    public Report(ReportType.Type type, Long employeeIdCreated, Long createdAtWarehouseID, JSONObject data) {
+        this.type = type;
+        EmployeeIdCreated = employeeIdCreated;
+        this.createdAtWarehouseID = createdAtWarehouseID;
+        this.data = data.toJSONString();
+    }
 
     public Long getId() { return id; }
-    public String getType() { return type; }
+    public ReportType.Type getType() { return type; }
     public Long getEmployeeIdCreated() { return EmployeeIdCreated; }
     public Long getCreatedAtWarehouseID() { return createdAtWarehouseID; }
+    public String getData() { return data; }
 
-    public void setType(String type) { this.type = type; }
+    public void setId(Long id) { this.id = id; }
+    public void setType(ReportType.Type type) { this.type = type; }
     public void setEmployeeIdCreated(Long employeeIdCreated) { EmployeeIdCreated = employeeIdCreated; }
     public void setCreatedAtWarehouseID(Long createdAtWarehouseID) { this.createdAtWarehouseID = createdAtWarehouseID; }
-
-    public JSONObject generateReport() { return new JSONObject(); }
+    public void setData(JSONObject data) { this.data = data.toJSONString(); }
 }

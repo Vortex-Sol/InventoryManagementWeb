@@ -1,7 +1,6 @@
 package vortex.imwp.Models;
 
 import jakarta.persistence.*;
-
 import java.security.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +11,7 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "Sale_Time")
+    @Column(name = "Sale_Time", nullable = false)
     private Timestamp sale_Time;
 
     @ManyToOne(fetch = FetchType.EAGER)

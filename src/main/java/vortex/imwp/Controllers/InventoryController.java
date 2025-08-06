@@ -30,16 +30,17 @@ public class InventoryController {
 						  @RequestParam String description,
 						  @RequestParam double price,
 						  @RequestParam Integer quantity,
-						  @RequestParam String sku,
+						  @RequestParam Long barcode,
 						  @RequestParam(required = false) List<Long> warehouseIds) {
-		ItemDTO itemDTO = new ItemDTO(name, description, price, quantity, sku);
+		//TODO: Fix Needed as now ItemDTO has additional classes (such as CategoryDTO)
+		/*ItemDTO itemDTO = new ItemDTO(name, description, price, quantity, barcode);
 		if (warehouseIds != null) {
 			for (Long wid : warehouseIds) {
 				warehouseService.getWarehouseById(wid)
 						.ifPresent(itemDTO::addWarehouse);
 			}
 		}
-		itemService.addItem(itemDTO);
+		itemService.addItem(itemDTO);*/
 		return "redirect:/inventory/home";
 
 	}

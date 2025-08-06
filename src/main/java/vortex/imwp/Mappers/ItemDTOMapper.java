@@ -2,6 +2,7 @@ package vortex.imwp.Mappers;
 
 import vortex.imwp.DTOs.ItemDTO;
 import vortex.imwp.Models.Item;
+import java.util.stream.Collectors;
 
 public class ItemDTOMapper {
     public static ItemDTO map(Item item) {
@@ -10,8 +11,16 @@ public class ItemDTOMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getPrice(),
-                0,
-                item.getSku()
+                item.getBarcode(),
+                CategoryDTOMapper.map(item.getCategory()),
+                item.getWarehouses()
+                        .stream()
+                        .map(WarehouseItemDTOMapper::map)
+                        .collect(Collectors.toList()),
+                item.getSaleItems()
+                        .stream()
+                        .map(SaleItemDTOMapper::map)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -21,7 +30,7 @@ public class ItemDTOMapper {
                 dto.getName(),
                 dto.getDescription(),
                 dto.getPrice(),
-                dto.getSku()
+                dto.getBarcode()
         );
     }
 }
