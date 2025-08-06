@@ -19,7 +19,7 @@ public class WarehouseItem {
     private Item item;
 
     @Column(name = "Quantity_In_Stock")
-    private int quantityInStock;
+    private Integer quantityInStock;
 
     @Column(nullable = false, unique = true)
     private String sku;
@@ -31,6 +31,9 @@ public class WarehouseItem {
         }
     }
 
+    /**
+     * Method should stay private as it is utilized by generateSKU() under the condition sku is blank.
+     * */
     private String generateCustomSKU(){
         long warehouseIdTemp = warehouse.getId();
         long itemCategoryIDTemp = item.getCategory().getId();
@@ -78,12 +81,13 @@ public class WarehouseItem {
         this.item = item;
         this.quantityInStock = quantityInStock;
     }
-    public Warehouse getWarehouse() { return warehouse; }
-    public void setWarehouse(Warehouse warehouse) { this.warehouse = warehouse; }
-    public Item getItem() { return item; }
-    public void setItem(Item item) { this.item = item; }
-    public int getQuantityInStock() { return quantityInStock; }
-    public void setQuantityInStock(int quantityInStock) { this.quantityInStock = quantityInStock; }
     public WarehouseItemID getId() { return id; }
+    public Warehouse getWarehouse() { return warehouse; }
+    public Item getItem() { return item; }
+    public int getQuantityInStock() { return quantityInStock; }
+
+    public void setWarehouse(Warehouse warehouse) { this.warehouse = warehouse; }
+    public void setItem(Item item) { this.item = item; }
+    public void setQuantityInStock(int quantityInStock) { this.quantityInStock = quantityInStock; }
     public void setId(WarehouseItemID id) { this.id = id; }
 }

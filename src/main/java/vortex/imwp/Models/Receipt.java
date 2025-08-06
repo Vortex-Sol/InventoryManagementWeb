@@ -38,6 +38,7 @@ public class Receipt {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public String getPaymentMethod() { return paymentMethod; }
 
+    public void setId(Long id) { this.id = id; }
     public void setSale(Sale sale) { this.sale = sale; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

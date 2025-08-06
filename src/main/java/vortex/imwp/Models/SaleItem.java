@@ -28,11 +28,12 @@ public class SaleItem {
     }
 
     public SaleItemID getId() { return id; }
-    public void setId(SaleItemID id) { this.id = id; }
     public Sale getSale() { return sale; }
-    public void setSale(Sale sale) { this.sale = sale; }
     public Item getItem() { return item; }
-    public void setItem(Item item) { this.item = item; }
     public int getQuantity() { return quantity; }
+
+    public void setId(SaleItemID id) { this.id = id; }
+    public void setSale(Sale sale) { this.sale = sale; }
+    public void setItem(Item item) { this.item = item; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
 }

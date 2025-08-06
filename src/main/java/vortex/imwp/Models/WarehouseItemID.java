@@ -14,8 +14,9 @@ public class WarehouseItemID implements Serializable {
     }
 
     public Long getWarehouseId() { return warehouseId; }
-    public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }
     public Long getItemId() { return itemId; }
+
+    public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }
     public void setItemId(Long itemId) { this.itemId = itemId; }
 
     @Override
