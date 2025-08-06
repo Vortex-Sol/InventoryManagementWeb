@@ -42,14 +42,4 @@ public class Report {
     public void setEmployeeIdCreated(Long employeeIdCreated) { EmployeeIdCreated = employeeIdCreated; }
     public void setCreatedAtWarehouseID(Long createdAtWarehouseID) { this.createdAtWarehouseID = createdAtWarehouseID; }
     public void setData(JSONObject data) { this.data = data.toJSONString(); }
-
-    public JSONObject generateTodayGeneralReport() { return new JSONObject(); }
-    public JSONObject generateTodaySaleReport() { return new JSONObject(); }
-    public JSONObject generateTodayInventoryReport() { return new JSONObject(); }
-    public JSONObject generateTodayEmployeeReport() { return new JSONObject(); }
-
-    public JSONObject generatePeriodGeneralReport() { return new JSONObject(); }
-    public JSONObject generatePeriodSaleReport() { return new JSONObject(); }
-    public JSONObject generatePeriodInventoryReport() { return new JSONObject(); }
-    public JSONObject generatePeriodEmployeeReport() { return new JSONObject(); }
 }
