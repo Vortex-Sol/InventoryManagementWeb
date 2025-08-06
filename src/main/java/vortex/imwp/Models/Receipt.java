@@ -29,6 +29,8 @@ public class Receipt {
     @Column(name = "Change_Given", precision = 10, scale = 3)
     private BigDecimal changeGiven;
 
+//  To do: add Taxes
+
     public Receipt() {}
     public Receipt(Sale sale, BigDecimal totalAmount, String paymentMethod) {
         this.sale = sale;

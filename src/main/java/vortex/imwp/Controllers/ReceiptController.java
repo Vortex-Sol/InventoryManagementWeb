@@ -14,6 +14,7 @@ import vortex.imwp.Services.SaleService;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/receipt")
@@ -31,11 +32,9 @@ public class ReceiptController {
 	@GetMapping("/checkout/{saleId}")
 	public String checkoutForm(@PathVariable Long saleId, Model model) {
 		Sale sale = saleService.getSaleById(saleId);
-		BigDecimal total = sale.getSaleItems().stream()
-				.map(saleItem -> saleItem.getItem().getPrice()
-						.multiply(BigDecimal.valueOf(saleItem.getQuantity())))
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-
+		double total = sale.getSaleItems().stream()
+				.mapToDouble(saleItem -> saleItem.getItem().getPrice().doubleValue() * saleItem.getQuantity())
+				.sum();
 		model.addAttribute("sale", sale);
 		model.addAttribute("totalAmount", total);
 		return "inventory/receipt/checkout";
@@ -80,11 +79,28 @@ public class ReceiptController {
 	}
 	@PostMapping("/addItem-form")
 	public String addItemToSaleForm(@RequestParam Long saleId,
-									@RequestParam Long itemId,
-									@RequestParam int quantity) {
-		saleService.addItemToSale(saleId, itemId, quantity);
+	                                @RequestParam(required = false) Long itemId,
+	                                @RequestParam(required = false) String barcode,
+	                                @RequestParam int quantity) {
+
+		Long resolvedItemId = null;
+
+		if (barcode != null && !barcode.isBlank()) {
+			Optional<ItemDTO> item = itemService.getItemByBarcode(itemId);
+			if (item.isEmpty()) {
+				return "redirect:/api/receipt/" + saleId + "/add-items?error=ItemNotFound";
+			}
+			resolvedItemId = item.get().getId();
+		} else if (itemId != null) {
+			resolvedItemId = itemId;
+		} else {
+			return "redirect:/api/receipt/" + saleId + "/add-items?error=NoItemSelected";
+		}
+
+		saleService.addItemToSale(saleId, resolvedItemId, quantity);
 		return "redirect:/api/receipt/" + saleId + "/add-items";
 	}
+
 
 
 

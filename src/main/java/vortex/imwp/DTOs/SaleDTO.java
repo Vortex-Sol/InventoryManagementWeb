@@ -1,6 +1,6 @@
 package vortex.imwp.DTOs;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 public class SaleDTO {
 

@@ -13,14 +13,21 @@
     <div class="card-body">
       <form th:action="@{/api/receipt/addItem-form}" method="post">
         <input type="hidden" name="saleId" th:value="${sale.id}" />
-
         <div class="mb-3">
-          <label class="form-label">Select Product</label>
-          <select class="form-select" name="itemId" required>
+          <label class="form-label">Select Product (by name)</label>
+          <select class="form-select" name="itemId">
+            <option value="">-- Select a product --</option>
             <option th:each="item : ${items}"
                     th:value="${item.id}"
-                    th:text="${item.name + ' (ID: ' + item.id + ')'}"></option>
+                    th:text="${item.name + ' (Barcode: ' + item.barcode +')' }">
+            </option>
           </select>
+          <small class="form-text text-muted">Or enter barcode below.</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Enter Barcode</label>
+          <input type="text" class="form-control" name="barcode" placeholder="Enter barcode" />
+          <small class="form-text text-muted">If this is filled, it will override the dropdown.</small>
         </div>
 
         <div class="mb-3">

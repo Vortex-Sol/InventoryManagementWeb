@@ -30,10 +30,10 @@ public class SaleService {
     public Optional<List<SaleDTO>> getAll() {
         Iterable<Sale> list = saleRepository.findAll();
         List<SaleDTO> sales = new ArrayList<>();
-        if (list.iterator().hasNext()) {
-            for (Sale sale : list) sales.add(SaleDTOMapper.map(sale));
-            return Optional.of(sales);
-        }
+//        if (list.iterator().hasNext()) {
+//            for (Sale sale : list) sales.add(SaleDTOMapper.map(sale));
+//            return Optional.of(sales);
+//        }
         return Optional.empty();
     }
 

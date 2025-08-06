@@ -24,9 +24,11 @@ public class ReceiptService {
 
 	@Transactional
 	public Receipt createReceipt(Sale sale, String paymentMethod, BigDecimal amountReceived) {
-		BigDecimal total = sale.getSaleItems().stream()
-				.map(saleItem -> saleItem.getItem().getPrice().multiply(BigDecimal.valueOf(saleItem.getQuantity())))
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		double totalDouble = sale.getSaleItems().stream()
+				.mapToDouble(saleItem -> saleItem.getItem().getPrice().doubleValue() * saleItem.getQuantity())
+				.sum();
+
+		BigDecimal total = BigDecimal.valueOf(totalDouble);
 
 		Receipt receipt = new Receipt(sale, total, paymentMethod);
 		receipt.setCreatedAt(LocalDateTime.now());

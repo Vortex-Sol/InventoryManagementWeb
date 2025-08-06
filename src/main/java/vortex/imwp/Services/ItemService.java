@@ -25,24 +25,15 @@ public class ItemService {
     public List<ItemDTO> getAll() {
         Iterable<Item> list = itemRepository.findAll();
         List<ItemDTO> items = new ArrayList<>();
-
-        //TODO: Fix Needed based on new ItemDTO class version (DO NOT CHANGE MODEL & DTO CLASSES)
-        /*for (Item item : list) {
-            ItemDTO dto = ItemDTOMapper.map(item);
-
-            List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
-            int totalQty = warehouseItems.stream()
-                    .mapToInt(WarehouseItem::getQuantityInStock)
-                    .sum();
-
-            dto.setQuantity(totalQty);
-            warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
-
-            items.add(dto);
-        }*/
+//
+//        for (Item item : list) {
+//            ItemDTO dto = ItemDTOMapper.map(item);
+//            items.add(dto);
+//        }
 
         return items;
     }
+
     public List<ItemDTO> searchAndMap(String keyword) {
         List<Item> items = itemRepository.findByNameContainingIgnoreCase(keyword);
         List<ItemDTO> dtos = new ArrayList<>();
