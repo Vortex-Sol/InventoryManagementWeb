@@ -1,7 +1,6 @@
 package vortex.imwp.Models;
 
 import jakarta.persistence.*;
-
 import java.sql.Timestamp;
 
 @Entity

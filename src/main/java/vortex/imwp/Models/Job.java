@@ -1,7 +1,6 @@
 package vortex.imwp.Models;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -10,7 +9,9 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String description;
 
     @ManyToMany(mappedBy = "jobs")
@@ -26,7 +27,9 @@ public class Job {
     public String getName() {return this.name;}
     public String getDescription() {return this.description;}
     public List<Employee> getEmployees() {return this.employees;}
+
     public void setId(Long id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }
+    public void setEmployees(List<Employee> employees) { this.employees = employees; }
 }

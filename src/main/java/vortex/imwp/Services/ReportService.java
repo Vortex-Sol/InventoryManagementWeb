@@ -1,5 +1,6 @@
 package vortex.imwp.Services;
 
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import vortex.imwp.DTOs.ReportDTO;
 import vortex.imwp.Mappers.ReportDTOMapper;
@@ -34,4 +35,14 @@ public class ReportService {
     public Report updateReport(Report report) { return reportRepository.save(report); }
 
     public void deleteReport(Long id) { reportRepository.deleteById(id); }
+
+    public JSONObject generateTodayGeneralReport() { return new JSONObject(); }
+    public JSONObject generateTodaySaleReport() { return new JSONObject(); }
+    public JSONObject generateTodayInventoryReport() { return new JSONObject(); }
+    public JSONObject generateTodayEmployeeReport() { return new JSONObject(); }
+
+    public JSONObject generatePeriodGeneralReport() { return new JSONObject(); }
+    public JSONObject generatePeriodSaleReport() { return new JSONObject(); }
+    public JSONObject generatePeriodInventoryReport() { return new JSONObject(); }
+    public JSONObject generatePeriodEmployeeReport() { return new JSONObject(); }
 }

@@ -1,8 +1,5 @@
 package vortex.imwp.DTOs;
 
-import jakarta.persistence.ManyToMany;
-import vortex.imwp.Models.Employee;
-
 import java.util.List;
 
 public class JobDTO {
