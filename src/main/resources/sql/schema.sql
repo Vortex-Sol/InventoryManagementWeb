@@ -55,6 +55,30 @@ CREATE TABLE Category(
     Name VARCHAR(20) NOT NULL
 );
 
+CREATE TABLE Settings(
+    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    Manager_ID BIGINT NOT NULL,
+    Alert_When_Stock_Is_Low BOOLEAN NOT NULL,
+    Auto_Generate_Report BOOLEAN NOT NULL,
+    Auto_Generate_Report_Time TIME,
+    CHECK (
+        Auto_Generate_Report = FALSE OR Auto_Generate_Report_Time IS NOT NULL
+    ),
+    Notify_Minimum_Cash_Discrepancy DECIMAL(10, 2) NOT NULL,
+    Destroy_Refund_Data_After_N_Days SMALLINT NOT NULL,
+    Cash_Count_Start_Time TIME NOT NULL,
+    Cash_Count_End_Time TIME NOT NULL
+);
+
+CREATE TABLE Settings_Change_Log(
+    Setting_ID BIGINT NOT NULL,
+    Warehouse_ID BIGINT NOT NULL,
+    Admin_ID BIGINT NOT NULL,
+    Changed_At TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    Settings_Changed VARCHAR(2000) NOT NULL,
+    PRIMARY KEY (Setting_ID, Warehouse_ID, Admin_ID)
+);
+
 CREATE TABLE Item (
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(50) NOT NULL,
@@ -115,4 +139,8 @@ ALTER TABLE Warehouse_Items ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(
 ALTER TABLE Warehouse_Items ADD FOREIGN KEY (Item_ID) REFERENCES Item(ID);
 ALTER TABLE Report ADD FOREIGN KEY (Employee_ID_Created) REFERENCES Employee(ID);
 ALTER TABLE Report ADD FOREIGN KEY (Created_At_Warehouse_ID) REFERENCES Warehouse(ID);
-ALTER TABLE Receipt ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID)
+ALTER TABLE Receipt ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID);
+ALTER TABLE Settings ADD FOREIGN KEY (Manager_ID) REFERENCES Employee(ID);
+ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Setting_ID) REFERENCES Settings(ID);
+ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
+ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Admin_ID) REFERENCES Employee(ID);
