@@ -1,14 +1,8 @@
 package vortex.imwp.DTOs;
-import vortex.imwp.Models.Category;
-import vortex.imwp.Models.SaleItem;
-import vortex.imwp.Models.Warehouse;
-import vortex.imwp.Models.WarehouseItem;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ItemDTO {
     private Long id;

@@ -1,9 +1,5 @@
 package vortex.imwp.DTOs;
 
-import jakarta.persistence.*;
-import vortex.imwp.Models.Item;
-import vortex.imwp.Models.Warehouse;
-import vortex.imwp.Models.WarehouseItem;
 import vortex.imwp.Models.WarehouseItemID;
 
 public class WarehouseItemDTO {

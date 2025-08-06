@@ -1,7 +1,5 @@
 package vortex.imwp.DTOs;
 
-import vortex.imwp.Models.SaleItemID;
-
 import java.util.Objects;
 
 public class SaleItemIdDTO {

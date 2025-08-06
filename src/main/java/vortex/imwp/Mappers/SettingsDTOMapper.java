@@ -1,6 +1,5 @@
 package vortex.imwp.Mappers;
 
-import vortex.imwp.DTOs.EmployeeDTO;
 import vortex.imwp.DTOs.SettingsDTO;
 import vortex.imwp.Models.Settings;
 

@@ -1,7 +1,5 @@
 package vortex.imwp.DTOs;
 
-import vortex.imwp.Models.SettingsChangeLogID;
-
 import java.time.LocalDateTime;
 
 public class SettingsChangeLogDTO {

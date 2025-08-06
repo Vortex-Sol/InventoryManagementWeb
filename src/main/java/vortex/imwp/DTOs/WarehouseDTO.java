@@ -1,8 +1,5 @@
 package vortex.imwp.DTOs;
 
-import jakarta.persistence.*;
-import vortex.imwp.Models.WarehouseItem;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -5,7 +5,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import vortex.imwp.DTOs.ReportDTO;
 import vortex.imwp.Models.Report;
-import vortex.imwp.Models.ReportType;
 
 public class ReportDTOMapper {
     public static ReportDTO map(Report report){

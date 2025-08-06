@@ -1,6 +1,5 @@
 package vortex.imwp.DTOs;
 
-import vortex.imwp.Models.Item;
 import java.util.HashSet;
 import java.util.Set;
 

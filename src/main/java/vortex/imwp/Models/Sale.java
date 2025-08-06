@@ -1,7 +1,6 @@
 package vortex.imwp.Models;
 
 import jakarta.persistence.*;
-
 import java.security.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
