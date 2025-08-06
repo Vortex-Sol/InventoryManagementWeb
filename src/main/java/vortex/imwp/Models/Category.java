@@ -1,10 +1,7 @@
 package vortex.imwp.Models;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +20,10 @@ public class Category {
     public Category() {}
     public Category(String name) {
         this.name = name;
+    }
+    public Category(String name, Set<Item> items) {
+        this.name = name;
+        this.items = items;
     }
 
     public Long getId() { return id; }

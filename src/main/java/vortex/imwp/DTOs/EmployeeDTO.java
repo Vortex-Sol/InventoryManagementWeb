@@ -1,5 +1,4 @@
 package vortex.imwp.DTOs;
-import vortex.imwp.Models.Job;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -69,6 +68,7 @@ public class EmployeeDTO {
     public Long getBossID() { return bossID; }
     public Set<String> getJobs() { return jobs; }
 
+    public void setId(Long id) { this.id = id; }
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
     public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }

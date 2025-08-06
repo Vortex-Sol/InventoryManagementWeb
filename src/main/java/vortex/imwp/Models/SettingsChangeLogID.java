@@ -22,7 +22,7 @@ public class SettingsChangeLogID implements Serializable{
     public SettingsChangeLogID(Long settingID, Long warehouseID, Long adminID) {
         this.settingID = settingID;
         this.warehouseID = warehouseID;
-
+        this.adminID = adminID;
     }
 
     public Long getSettingID() { return settingID; }

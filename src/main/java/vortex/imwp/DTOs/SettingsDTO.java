@@ -1,43 +1,20 @@
-package vortex.imwp.Models;
-
-import jakarta.persistence.*;
+package vortex.imwp.DTOs;
 
 import java.sql.Time;
 
-@Entity
-@Table(name = "Settings")
-public class Settings {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class SettingsDTO {
     private Long id;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Manager_ID", nullable = false)
-    private Employee managerId;
-
-    @JoinColumn(name = "Alert_When_Stock_Is_Low", nullable = false)
+    private EmployeeDTO managerId;
     private Boolean alertWhenStockIsLow;
-
-    @JoinColumn(name = "Auto_Generate_Report", nullable = false)
     private Boolean autoGenerateReport;
-
-    @JoinColumn(name = "Auto_Generate_Report_Time")
     private Time autoGenerateReportTime;
-
-    @JoinColumn(name = "Notify_Minimum_Cash_Discrepancy", nullable = false)
     private Double notifyMinimumCashDiscrepancy;
-
-    @JoinColumn(name = "Destroy_Refund_Data_After_N_Days", nullable = false)
     private Integer destroyRefundDataAfterNDays;
-
-    @JoinColumn(name = "Cash_Count_Start_Time", nullable = false)
     private Time cashCountStartTime;
-
-    @JoinColumn(name = "Cash_Count_End_Time", nullable = false)
     private Time cashCountEndTime;
 
-    public Settings() {}
-    public Settings(Employee managerId, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime) {
+    public SettingsDTO() {}
+    public SettingsDTO(Long id, EmployeeDTO managerId, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime) {
         this.managerId = managerId;
         this.alertWhenStockIsLow = alertWhenStockIsLow;
         this.autoGenerateReport = autoGenerateReport;
@@ -49,7 +26,7 @@ public class Settings {
     }
 
     public Long getId() { return id; }
-    public Employee getManagerId() { return managerId; }
+    public EmployeeDTO getManagerId() { return managerId; }
     public Boolean getAlertWhenStockIsLow() { return alertWhenStockIsLow; }
     public Boolean getAutoGenerateReport() { return autoGenerateReport; }
     public Time getAutoGenerateReportTime() { return autoGenerateReportTime; }
@@ -59,7 +36,7 @@ public class Settings {
     public Time getCashCountEndTime() { return cashCountEndTime; }
 
     public void setId(Long id) { this.id = id; }
-    public void setManagerId(Employee managerId) { this.managerId = managerId; }
+    public void setManagerId(EmployeeDTO managerId) { this.managerId = managerId; }
     public void setAlertWhenStockIsLow(Boolean alertWhenStockIsLow) { this.alertWhenStockIsLow = alertWhenStockIsLow; }
     public void setAutoGenerateReport(Boolean autoGenerateReport) { this.autoGenerateReport = autoGenerateReport; }
     public void setAutoGenerateReportTime(Time autoGenerateReportTime) { this.autoGenerateReportTime = autoGenerateReportTime; }
