@@ -23,6 +23,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if (roles.contains("ROLE_ADMIN")) response.sendRedirect("/api/admin");
         else if (roles.contains("ROLE_MANAGER")) response.sendRedirect("/api/manager");
         else if (roles.contains("ROLE_STOCKER")) response.sendRedirect("/api/home"); //TODO: Proper Controllers [IMPORTANT] home is kinda like the stocker dashboard (adding/editing/removing items)
-        else response.sendRedirect("/api/salesman"); //
+        else response.sendRedirect("/api/salesman");
     }
 }

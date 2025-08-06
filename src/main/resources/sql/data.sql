@@ -28,6 +28,7 @@ VALUES
 -- Note: Get the auto-generated employee IDs using SELECTs if needed in Java code.
 
 -- Employee Jobs (assumes IDs inserted in order)
+
 INSERT INTO
     Employee_Job (Employee_ID, Job_ID)
 VALUES
