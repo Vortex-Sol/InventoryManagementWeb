@@ -17,4 +17,5 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Wa
 	List<WarehouseItem> findByItem(Item item);
 
 	List<WarehouseItem> findAllByItemId(Long id);
+
 }

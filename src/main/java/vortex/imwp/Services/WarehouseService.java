@@ -1,10 +1,16 @@
 package vortex.imwp.Services;
 
+import vortex.imwp.DTOs.ItemDTO;
+import vortex.imwp.DTOs.WarehouseDTO;
+import vortex.imwp.Mappers.ItemDTOMapper;
+import vortex.imwp.Mappers.WarehouseDTOMapper;
+import vortex.imwp.Models.Item;
 import vortex.imwp.Models.Warehouse;
 import vortex.imwp.Repositories.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +21,15 @@ public class WarehouseService {
 		this.warehouseRepository = warehouseRepository;
 	}
 
-	public List<Warehouse> getAllWarehouses() {
-		return warehouseRepository.findAll();
+	public List<WarehouseDTO> getAllWarehouses() {
+		Iterable<Warehouse> list = warehouseRepository.findAll();
+		List<WarehouseDTO> warehouses = new ArrayList<>();
+
+		for (Warehouse warehouse : list) {
+			WarehouseDTO warehouseDTO = WarehouseDTOMapper.map(warehouse);
+			warehouses.add(warehouseDTO);
+		}
+		return warehouses;
 	}
 
 	public Optional<Warehouse> getWarehouseById(Long id) {

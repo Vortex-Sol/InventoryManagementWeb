@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vortex.imwp.Repositories.WarehouseItemRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ItemService {
@@ -56,6 +54,25 @@ public class ItemService {
         return dtos;
     }
 
+    public Map<Long, List<String>> getItemWarehousesMap() {
+        Map<Long, List<String>> map = new HashMap<>();
+
+        List<Item> items = itemRepository.findAll();
+        for (Item item : items) {
+            List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
+
+            List<String> addresses = warehouseItems.stream()
+                    .map(wi -> wi.getWarehouse().getAddress())
+                    .distinct()
+                    .toList();
+
+            map.put(item.getId(), addresses);
+        }
+
+        return map;
+    }
+
+
     public Optional<ItemDTO> getItemByBarcode(Long barcode) {
         Optional<Item> item = itemRepository.findItemByBarcode(barcode);
         System.out.println("Item: " + item);
@@ -65,6 +82,22 @@ public class ItemService {
         }
         return Optional.empty();
     }
+    public Map<Long, Integer> getQuantitiesForAllItems() {
+        Map<Long, Integer> itemQuantities = new HashMap<>();
+
+        Iterable<Item> items = itemRepository.findAll();
+        for (Item item : items) {
+            List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
+            int totalQty = warehouseItems.stream()
+                    .mapToInt(WarehouseItem::getQuantityInStock)
+                    .sum();
+
+            itemQuantities.put(item.getId(), totalQty);
+        }
+
+        return itemQuantities;
+    }
+
 
     public Optional<Item> getItemById(Long id) {
         return itemRepository.findById(id);

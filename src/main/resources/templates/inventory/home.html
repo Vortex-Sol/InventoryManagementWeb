@@ -12,26 +12,29 @@
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">+ Add Item</button>
         </div>
         <div class="card-body p-0">
-            <div class="p-3">
-                <div class="row g-2">
-                    <div class="col-md-4">
-                        <label class="form-label">Filter by Price</label>
-                        <input type="number" class="form-control" id="filterPrice" placeholder="Max Price">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Filter by Quantity</label>
-                        <input type="number" class="form-control" id="filterQuantity" placeholder="Min Quantity">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Filter by Warehouse</label>
-                        <label class="form-label">Filter by Warehouse</label>
-                        <select id="filterWarehouse" class="form-select">
-                            <option value="">-- All Warehouses --</option>
-                            <option th:each="wh : ${warehouses}"
-                                    th:value="${wh.address}"
-                                    th:text="${wh.address}"></option>
-                        </select>
-                    </div>
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <label class="form-label">Filter by Price</label>
+                    <input type="number" class="form-control" id="filterPrice" placeholder="Max Price">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Filter by Quantity</label>
+                    <input type="number" class="form-control" id="filterQuantity" placeholder="Min Quantity">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Filter by Warehouse</label>
+                    <select id="filterWarehouse" class="form-select">
+                        <option value="">-- All Warehouses --</option>
+                        <option th:each="wh : ${warehouses}" th:value="${wh.address}" th:text="${wh.address}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Filter by Category</label>
+                    <input type="text" class="form-control" id="filterCategory" placeholder="Category name">
+                </div>
+                <div class="col-md-3 mt-2">
+                    <label class="form-label">Filter by Barcode</label>
+                    <input type="text" class="form-control" id="filterBarcode" placeholder="Barcode">
                 </div>
             </div>
             <div class="table-responsive">
@@ -42,7 +45,9 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Price</th>
-<!--                        <th>Quantity</th>-->
+                        <th>Quantity</th>
+                        <th>Barcode</th>
+                        <th>Category</th>
                         <th>Warehouses</th>
                         <th>Actions</th>
                     </tr>
@@ -53,10 +58,12 @@
                         <td th:text="${item.name}"></td>
                         <td th:text="${item.description}"></td>
                         <td th:text="${item.price}"></td>
-<!--                        <td th:text="${item.quantity}"></td>-->
+                        <td th:text="${quantities[item.id] != null ? quantities[item.id] : 0}">0</td>
+                        <td th:text="${item.barcode}">---</td>
+                        <td th:text="${item.category != null ? item.category.name : 'N/A'}">N/A</td>
                         <td>
-                            <span th:each="wh, stat : ${item.warehouses}">
-                                <span th:text="${wh.address != null ? wh.address : 'No address'}"></span>
+                            <span th:each="addr, stat : ${itemWarehouses[item.id]}">
+                                <span th:text="${addr}"></span>
                                 <span th:if="${!stat.last}">, </span>
                             </span>
                         </td>
@@ -90,10 +97,17 @@
                             <label for="itemName" class="form-label">Name</label>
                             <input type="text" class="form-control" id="itemName" name="name" required>
                         </div>
-<!--                        <div class="col-md-6">-->
-<!--                            <label for="itemQuantity" class="form-label">Quantity</label>-->
-<!--                            <input type="number" class="form-control" id="itemQuantity" name="quantity" required>-->
-<!--                        </div>-->
+                        <div class="col-md-6">
+                            <label for="categorySelect" class="form-label">Category</label>
+                            <select class="form-select" id="categorySelect" name="categoryId">
+                                <option value="">-- Select Category --</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="newCategory" class="form-label">Or Create New Category</label>
+                            <input type="text" class="form-control" id="newCategory" name="newCategoryName" placeholder="Enter new category">
+                        </div>
                         <div class="col-md-12">
                             <label for="itemDescription" class="form-label">Description</label>
                             <textarea class="form-control" id="itemDescription" name="description" rows="2"></textarea>
@@ -102,18 +116,21 @@
                             <label for="itemPrice" class="form-label">Price ($)</label>
                             <input type="number" step="0.01" class="form-control" id="itemPrice" name="price" required>
                         </div>
-
                         <div class="col-md-6">
-                            <label for="itemSku" class="form-label">Sku</label>
-                            <input type="text" class="form-control" id="itemSku" name="sku" required>
+                            <label for="itemBarcode" class="form-label">Barcode</label>
+                            <input type="number" class="form-control" id="itemBarcode" name="barcode" required>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label">Select Warehouses</label>
-                            <div class="form-check" th:each="wh : ${warehouses}">
-                                <input class="form-check-input" type="checkbox" name="warehouseIds"
-                                       th:value="${wh.id}" th:id="${'wh_' + wh.id}">
-                                <label class="form-check-label" th:for="${'wh_' + wh.id}" th:text="${wh.address}"></label>
+                            <div class="mb-2" th:each="wh : ${warehouses}">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" th:id="${'wh_' + wh.id}" name="warehouseIds"
+                                           th:value="${wh.id}">
+                                    <label class="form-check-label me-2" th:for="${'wh_' + wh.id}" th:text="${wh.address}">Warehouse</label>
+
+                                    <input type="number" class="form-control d-inline-block w-25 ms-2" name="warehouseQtys"
+                                           placeholder="Qty" min="0">
+                                </div>
                             </div>
                         </div>
                     </div>

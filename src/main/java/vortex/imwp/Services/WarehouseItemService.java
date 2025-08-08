@@ -42,4 +42,7 @@ public class WarehouseItemService {
         }
 
     }
+    public void saveWarehouseItem(WarehouseItem wi) {
+        warehouseItemRepository.save(wi);
+    }
 }

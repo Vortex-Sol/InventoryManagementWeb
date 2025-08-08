@@ -8,23 +8,31 @@
 
 <section th:fragment="section">
   <div class="container mt-5">
-    <h4 th:text="'Results for: ' + ${keyword}"></h4>
+    <h4 th:text="'Results for: ' + ${keyword}">Results for: ...</h4>
 
     <div th:if="${#lists.isEmpty(items)}">
       <p>No items found.</p>
     </div>
 
-    <div class="row" th:each="item : ${items}">
-      <div class="col-md-4 mb-4">
+    <div class="row" th:if="${!#lists.isEmpty(items)}">
+      <div class="col-md-4 mb-4" th:each="item : ${items}">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
             <h5 class="card-title" th:text="${item.name}">Item Name</h5>
             <p class="card-text" th:text="${item.description}">Item Description</p>
             <p><strong>Price:</strong> $<span th:text="${item.price}">0.00</span></p>
-            <p><strong>Quantity:</strong> <span th:text="${item.quantity}">0</span></p>
+            <p><strong>Barcode:</strong> <span th:text="${item.barcode}">---</span></p>
+            <p><strong>Category:</strong>
+              <span th:text="${item.category != null ? item.category.name : 'N/A'}">N/A</span>
+            </p>
+            <p><strong>Quantity:</strong>
+              <span th:text="${quantities[item.id] != null ? quantities[item.id] : 0}">0</span>
+            </p>
+
             <p><strong>Warehouses:</strong></p>
             <ul>
-              <li th:each="wh : ${item.warehouses}" th:text="${wh.address}">Warehouse Address</li>
+              <li th:each="addr : ${itemWarehouses[item.id]}" th:text="${addr}">Warehouse Address</li>
+              <li th:if="${#lists.isEmpty(itemWarehouses[item.id])}">None</li>
             </ul>
           </div>
         </div>
