@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+
+<head>
+    <title th:fragment="title">Checkout</title>
+</head>
+
+<section th:fragment="section">
+    <div class="card shadow">
+        <div class="card-header text-center">
+            <h4 class="mb-0">Receipt Checkout</h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/api/receipt/checkout}" method="post">
+                <input type="hidden" name="saleId" th:value="${sale.id}" />
+
+                <div class="mb-3">
+                    <label class="form-label">Payment Method</label>
+                    <select class="form-select" name="paymentMethod" id="paymentMethod" required>
+                        <option value="Cash">Cash</option>
+                        <option value="Card">Card</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" id="cashFields" style="display: none;">
+                    <label class="form-label">Amount Received</label>
+                    <input type="number" class="form-control" name="amountReceived" min="0" step="0.01" th:required="${paymentMethod == 'Cash'}">
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const paymentMethod = document.getElementById('paymentMethod');
+                        const cashFields = document.getElementById('cashFields');
+
+                        function toggleCashFields() {
+                            if (paymentMethod.value === 'Cash') {
+                                cashFields.style.display = 'block';
+                            } else {
+                                cashFields.style.display = 'none';
+                            }
+                        }
+
+                        paymentMethod.addEventListener('change', toggleCashFields);
+                        toggleCashFields();
+                    });
+                </script>
+                <h5 class="mt-4">Items</h5>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                        th:each="item : ${sale.saleItems}">
+                        <span th:text="${item.item.name} + ' x ' + ${item.quantity}"></span>
+                        <span th:text="${itemTotals[item.item.id]} + ' $'"></span>
+                    </li>
+                </ul>
+                <div class="text-end mt-3">
+                    <strong>Total: </strong><span th:text="${totalAmount} + ' $'"></span>
+                </div>
+
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Confirm Checkout</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+  <title th:fragment="title">Add Items to Sale</title>
+</head>
+
+<section th:fragment="section">
+  <div class="card shadow">
+    <div class="card-header text-center">
+      <h4>Add Items to Sale</h4>
+    </div>
+    <div class="card-body">
+      <form th:action="@{/api/receipt/addItem-form}" method="post">
+        <input type="hidden" name="saleId" th:value="${sale.id}" />
+
+        <div class="mb-3">
+          <label class="form-label">Select Warehouse</label>
+          <select class="form-select" name="warehouseId" required>
+            <option value="">-- Select a warehouse --</option>
+            <option th:each="warehouse : ${warehouses}"
+                    th:value="${warehouse.id}"
+                    th:text="${warehouse.address}">
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Select Product (by name)</label>
+          <select class="form-select" name="itemId">
+            <option value="">-- Select a product --</option>
+            <option th:each="item : ${items}"
+                    th:value="${item.id}"
+                    th:text="${item.name + ' | Barcode: ' + item.barcode + ' | Price: ' + item.price + ' | Stock: ' + stockMap[item.id]}">
+            </option>
+          </select>
+          <small class="form-text text-muted">Or search by barcode below. If barcode is filled, it overrides product selection.</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Enter Barcode</label>
+          <input type="text" class="form-control" name="barcode" placeholder="Enter barcode" />
+        </div>
+
+        <!-- Quantity -->
+        <div class="mb-3">
+          <label class="form-label">Quantity</label>
+          <input type="number" class="form-control" name="quantity" min="1" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add to Sale</button>
+      </form>
+
+      <hr class="my-4"/>
+
+      <!-- Sale Items -->
+      <div th:if="${sale.saleItems.size() > 0}">
+        <h5>Current Items in Sale</h5>
+        <ul class="list-group">
+          <li class="list-group-item" th:each="item : ${sale.saleItems}">
+            <span th:text="${item.item.name + ' x ' + item.quantity +
+                             ' @ ' + item.item.price + ' $ each' +
+                             ' | Barcode: ' + item.item.barcode +
+                             ' | Category: ' + item.item.category.name}">
+            </span>
+          </li>
+        </ul>
+
+        <div th:if="${param.error}">
+          <div class="alert alert-danger" th:text="${param.error}"></div>
+        </div>
+
+        <div class="mt-4">
+          <a class="btn btn-success" th:href="@{/api/receipt/checkout/{id}(id=${sale.id})}">Proceed to Checkout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</html>

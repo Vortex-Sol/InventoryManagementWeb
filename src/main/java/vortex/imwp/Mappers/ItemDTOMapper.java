@@ -12,15 +12,7 @@ public class ItemDTOMapper {
                 item.getDescription(),
                 item.getPrice(),
                 item.getBarcode(),
-                CategoryDTOMapper.map(item.getCategory()),
-                item.getWarehouses()
-                        .stream()
-                        .map(WarehouseItemDTOMapper::map)
-                        .collect(Collectors.toList()),
-                item.getSaleItems()
-                        .stream()
-                        .map(SaleItemDTOMapper::map)
-                        .collect(Collectors.toList())
+                CategoryDTOMapper.map(item.getCategory())
         );
     }
 

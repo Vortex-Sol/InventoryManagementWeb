@@ -1,0 +1,158 @@
+package vortex.imwp.Controllers;
+
+import org.hibernate.sql.ast.tree.expression.CaseSimpleExpression;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import vortex.imwp.DTOs.ItemDTO;
+import vortex.imwp.Models.Receipt;
+import vortex.imwp.Models.Sale;
+import vortex.imwp.Services.ItemService;
+import vortex.imwp.Services.ReceiptService;
+import vortex.imwp.Services.SaleService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vortex.imwp.Services.WarehouseService;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+
+@Controller
+@RequestMapping("/api/receipt")
+public class ReceiptController {
+	private final ReceiptService receiptService;
+	private final SaleService saleService;
+	private final ItemService itemService;
+	private final WarehouseService warehouseService;
+
+	public ReceiptController(ReceiptService receiptService, SaleService saleService,
+							 ItemService itemService,WarehouseService warehouseService) {
+		this.receiptService = receiptService;
+		this.saleService = saleService;
+		this.itemService = itemService;
+		this.warehouseService = warehouseService;
+	}
+
+	@GetMapping("/checkout/{saleId}")
+	public String checkoutForm(@PathVariable Long saleId, Model model) {
+		Sale sale = saleService.getSaleById(saleId);
+
+		Map<Long, BigDecimal> itemTotals = new HashMap<>();
+		AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
+
+		sale.getSaleItems().forEach(saleItem -> {
+			BigDecimal price = BigDecimal.valueOf(saleItem.getItem().getPrice());
+			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(saleItem.getQuantity()));
+			itemTotals.put(saleItem.getItem().getId(), itemTotal);
+			total.set(total.get().add(itemTotal)); //
+		});
+
+		model.addAttribute("sale", sale);
+		model.addAttribute("totalAmount", total.get());
+		model.addAttribute("itemTotals", itemTotals);
+		return "inventory/receipt/checkout";
+	}
+
+
+	@GetMapping("/confirm/{receiptId}")
+	public String viewReceipt(@PathVariable Long receiptId, Model model) {
+		Receipt receipt = receiptService.getReceipt(receiptId);
+		String receiptJson = receiptService.generateReceiptJson(receipt);
+
+		model.addAttribute("receipt", receipt);
+		model.addAttribute("receiptJson", receiptJson);
+
+		return "inventory/receipt/confirmation";
+	}
+
+	@GetMapping("/{saleId}/add-items")
+	public String showAddItemsPage(@PathVariable Long saleId, Model model) {
+		Sale sale = saleService.getSaleById(saleId);
+		List<ItemDTO> items = itemService.getAll();
+		Map<Long, Integer> stockMap = itemService.getQuantitiesForAllItems();
+
+		model.addAttribute("sale", sale);
+		model.addAttribute("items", items);
+		model.addAttribute("stockMap", stockMap);
+		model.addAttribute("warehouses", warehouseService.getAllWarehouses());
+		return "inventory/receipt/add-items";
+	}
+
+	@GetMapping("/start-checkout")
+	public String startCheckout(@AuthenticationPrincipal UserDetails userDetails) {
+		Sale sale = saleService.createSale(userDetails.getUsername());
+		return "redirect:/api/receipt/" + sale.getId() + "/add-items";
+	}
+	@PostMapping("/checkout")
+	public String checkout(@RequestParam Long saleId,
+						   @RequestParam String paymentMethod,
+						   @RequestParam(required = false) BigDecimal amountReceived,
+						   Model model) {
+		Sale sale = saleService.getSaleById(saleId);
+
+		try {
+			Receipt receipt = receiptService.createReceipt(sale, paymentMethod, amountReceived);
+			return "redirect:/api/receipt/confirm/" + receipt.getId();
+		} catch (IllegalArgumentException e) {
+			model.addAttribute("sale", sale);
+			model.addAttribute("error", e.getMessage());
+			return "inventory/receipt/checkout";
+		}
+	}
+
+	@PostMapping("/addItem-form")
+	public String addItemToSaleForm(@RequestParam Long saleId,
+									@RequestParam Long warehouseId,
+									@RequestParam(required = false) Long itemId,
+									@RequestParam(required = false) String barcode,
+									@RequestParam int quantity,
+									RedirectAttributes redirectAttributes) {
+
+		Long resolvedItemId = null;
+
+		if (barcode != null && !barcode.isBlank()) {
+			Optional<ItemDTO> item = itemService.getItemByBarcode(Long.parseLong(barcode));
+			if (item.isEmpty()) {
+				redirectAttributes.addAttribute("error", "Item not found for barcode: " + barcode);
+				return "redirect:/api/receipt/" + saleId + "/add-items";
+			}
+			resolvedItemId = item.get().getId();
+		} else if (itemId != null) {
+			resolvedItemId = itemId;
+		} else {
+			redirectAttributes.addAttribute("error", "Please select a product or enter a barcode.");
+			return "redirect:/api/receipt/" + saleId + "/add-items";
+		}
+
+		try {
+			saleService.addItemToSale(saleId, warehouseId, resolvedItemId, quantity);
+		} catch (IllegalArgumentException e) {
+			redirectAttributes.addAttribute("error", e.getMessage());
+		}
+
+		return "redirect:/api/receipt/" + saleId + "/add-items";
+	}
+
+
+
+
+	@PostMapping("/cancel/{receiptId}")
+	public String cancelReceipt(@PathVariable Long receiptId,
+								@AuthenticationPrincipal UserDetails userDetails,
+								RedirectAttributes redirectAttributes) {
+		try {
+			receiptService.cancelReceipt(receiptId, userDetails.getUsername());
+			redirectAttributes.addFlashAttribute("success", "Receipt cancelled successfully.");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Cancellation failed: " + e.getMessage());
+		}
+		return "redirect:/api/receipt/confirm/" + receiptId;
+	}
+
+
+}

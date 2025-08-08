@@ -1,7 +1,7 @@
 package vortex.imwp.Models;
 
 import jakarta.persistence.*;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +15,7 @@ public class Sale {
     private Timestamp sale_Time;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ID", nullable = false)
+    @JoinColumn(name = "Salesman_ID", nullable = false)
     private Employee salesman;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
