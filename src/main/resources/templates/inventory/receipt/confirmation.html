@@ -22,8 +22,20 @@
       <p><strong>Change Given:</strong>
         <span th:text="${receipt.changeGiven != null ? receipt.changeGiven + ' $' : 'N/A'}"></span>
       </p>
-
+      <pre th:text="${receiptJson}"></pre>
     </div>
+    <div th:if="${!receipt.cancelled}">
+      <form th:action="@{/api/receipt/cancel/{id}(id=${receipt.id})}" method="post">
+        <button type="submit" class="btn btn-danger">Cancel Receipt</button>
+      </form>
+    </div>
+
+    <div th:if="${receipt.cancelled}">
+      <p class="text-danger"><strong>This receipt has been cancelled.</strong></p>
+      <p><strong>Cancelled By:</strong> <span th:text="${receipt.cancelledBy.name}"></span></p>
+      <p><strong>Cancelled At:</strong> <span th:text="${#temporals.format(receipt.cancelledAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+    </div>
+
   </div>
 </section>
 </html>

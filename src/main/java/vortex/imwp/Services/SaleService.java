@@ -3,13 +3,8 @@ package vortex.imwp.Services;
 import org.springframework.stereotype.Service;
 import vortex.imwp.DTOs.SaleDTO;
 import vortex.imwp.Mappers.SaleDTOMapper;
-import vortex.imwp.Models.Employee;
-import vortex.imwp.Models.Item;
-import vortex.imwp.Models.Sale;
-import vortex.imwp.Models.SaleItem;
-import vortex.imwp.Repositories.EmployeeRepository;
-import vortex.imwp.Repositories.ItemRepository;
-import vortex.imwp.Repositories.SaleRepository;
+import vortex.imwp.Models.*;
+import vortex.imwp.Repositories.*;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,11 +16,14 @@ public class SaleService {
     private final SaleRepository saleRepository;
     private final ItemRepository itemRepository;
     private final EmployeeRepository employeeRepository;
+    private final WarehouseItemRepository warehouseItemRepository;
 
-    public SaleService(SaleRepository saleRepository, ItemRepository itemRepository, EmployeeRepository employeeRepository) {
+    public SaleService(SaleRepository saleRepository, ItemRepository itemRepository
+            , EmployeeRepository employeeRepository, WarehouseItemRepository warehouseItemRepository) {
         this.saleRepository = saleRepository;
         this.itemRepository = itemRepository;
         this.employeeRepository = employeeRepository;
+        this.warehouseItemRepository = warehouseItemRepository;
     }
     public Optional<List<SaleDTO>> getAll() {
         Iterable<Sale> list = saleRepository.findAll();
@@ -58,17 +56,38 @@ public class SaleService {
         return saleRepository.save(sale);
     }
 
-    public Sale addItemToSale(Long saleId, Long itemId, int quantity) {
+    public Sale addItemToSale(Long saleId, Long warehouseId, Long itemId, int quantity) {
         Sale sale = saleRepository.findById(saleId)
                 .orElseThrow(() -> new RuntimeException("Sale not found"));
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
-        SaleItem saleItem = new SaleItem(sale, item, quantity);
-        sale.getSaleItems().add(saleItem);
+        WarehouseItem warehouseItem = warehouseItemRepository.findByWarehouseIdAndItemId(warehouseId, itemId)
+                .orElseThrow(() -> new RuntimeException("Item not available in selected warehouse"));
+
+        if (warehouseItem.getQuantityInStock() < quantity) {
+            throw new IllegalArgumentException("Insufficient stock in selected warehouse");
+        }
+
+        warehouseItem.setQuantityInStock(warehouseItem.getQuantityInStock() - quantity);
+        warehouseItemRepository.save(warehouseItem);
+
+        Optional<SaleItem> existing = sale.getSaleItems().stream()
+                .filter(si -> si.getItem().getId().equals(itemId))
+                .findFirst();
+
+        if (existing.isPresent()) {
+            SaleItem saleItem = existing.get();
+            saleItem.setQuantity(saleItem.getQuantity() + quantity);
+        } else {
+            SaleItem saleItem = new SaleItem(sale, item, quantity);
+            sale.getSaleItems().add(saleItem);
+        }
+
         return saleRepository.save(sale);
     }
+
 
     public Sale getSaleById(Long saleId) {
         return saleRepository.findById(saleId)

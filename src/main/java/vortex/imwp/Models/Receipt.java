@@ -29,6 +29,16 @@ public class Receipt {
     @Column(name = "Change_Given", precision = 10, scale = 3)
     private BigDecimal changeGiven;
 
+    @Column(name = "Is_Cancelled", nullable = false)
+    private boolean isCancelled = false;
+
+    @Column(name = "Cancelled_At")
+    private LocalDateTime cancelledAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Cancelled_By")
+    private Employee cancelledBy;
+
 //  To do: add Taxes
 
     public Receipt() {}
@@ -49,6 +59,8 @@ public class Receipt {
         this.changeGiven = changeGiven;
     }
 
+
+
     public Long getId() { return id; }
     public Sale getSale() { return sale; }
     public BigDecimal getTotalAmount() { return totalAmount; }
@@ -56,7 +68,18 @@ public class Receipt {
     public String getPaymentMethod() { return paymentMethod; }
     public BigDecimal getAmountReceived() { return amountReceived; }
     public BigDecimal getChangeGiven() { return changeGiven; }
+    public boolean isCancelled() { return isCancelled; }
+    public LocalDateTime getCancelledAt() { return cancelledAt; }
+    public Employee getCancelledBy() { return cancelledBy; }
 
+
+    public void setCancelled(LocalDateTime cancelledAt,Employee cancelledBy) {
+        isCancelled = true;
+        setCancelledAt(cancelledAt);
+        setCancelledBy(cancelledBy);
+       }
+    public void setCancelledAt(LocalDateTime cancelledAt) {this.cancelledAt = cancelledAt;}
+    public void setCancelledBy(Employee cancelledBy) {this.cancelledBy = cancelledBy;}
     public void setId(Long id) { this.id = id; }
     public void setSale(Sale sale) { this.sale = sale; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }

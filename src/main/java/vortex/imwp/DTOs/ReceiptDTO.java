@@ -11,8 +11,12 @@ public class ReceiptDTO {
     private String paymentMethod;
     private BigDecimal amountReceived;
     private BigDecimal changeGiven;
+    private boolean isCancelled;
+    private LocalDateTime cancelledAt;
+    private EmployeeDTO cancelledBy;
 
     public ReceiptDTO() {}
+
     public ReceiptDTO(SaleDTO sale, BigDecimal totalAmount, String paymentMethod) {
         this.sale = sale;
         this.totalAmount = totalAmount;
@@ -20,7 +24,9 @@ public class ReceiptDTO {
         this.createdAt = LocalDateTime.now();
     }
 
-    public ReceiptDTO(Long id, SaleDTO sale, BigDecimal totalAmount, LocalDateTime createdAt, String paymentMethod, BigDecimal amountReceived, BigDecimal changeGiven) {
+    public ReceiptDTO(Long id, SaleDTO sale, BigDecimal totalAmount, LocalDateTime createdAt,
+                      String paymentMethod, BigDecimal amountReceived, BigDecimal changeGiven,
+                      boolean isCancelled, LocalDateTime cancelledAt, EmployeeDTO cancelledBy) {
         this.id = id;
         this.sale = sale;
         this.totalAmount = totalAmount;
@@ -28,6 +34,9 @@ public class ReceiptDTO {
         this.paymentMethod = paymentMethod;
         this.amountReceived = amountReceived;
         this.changeGiven = changeGiven;
+        this.isCancelled = isCancelled;
+        this.cancelledAt = cancelledAt;
+        this.cancelledBy = cancelledBy;
     }
 
     public Long getId() { return id; }
@@ -37,6 +46,9 @@ public class ReceiptDTO {
     public String getPaymentMethod() { return paymentMethod; }
     public BigDecimal getAmountReceived() { return amountReceived; }
     public BigDecimal getChangeGiven() { return changeGiven; }
+    public boolean isCancelled() { return isCancelled; }
+    public LocalDateTime getCancelledAt() { return cancelledAt; }
+    public EmployeeDTO getCancelledBy() { return cancelledBy; }
 
     public void setSale(SaleDTO sale) { this.sale = sale; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
@@ -44,4 +56,7 @@ public class ReceiptDTO {
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
     public void setAmountReceived(BigDecimal amountReceived) { this.amountReceived = amountReceived; }
     public void setChangeGiven(BigDecimal changeGiven) { this.changeGiven = changeGiven; }
+    public void setCancelled(boolean cancelled) { isCancelled = cancelled; }
+    public void setCancelledAt(LocalDateTime cancelledAt) { this.cancelledAt = cancelledAt; }
+    public void setCancelledBy(EmployeeDTO cancelledBy) { this.cancelledBy = cancelledBy; }
 }
