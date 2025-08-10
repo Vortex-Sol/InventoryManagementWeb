@@ -14,25 +14,25 @@ public class Settings {
     @JoinColumn(name = "Manager_ID", nullable = false)
     private Employee managerId;
 
-    @JoinColumn(name = "Alert_When_Stock_Is_Low", nullable = false)
+    @Column(name = "Alert_When_Stock_Is_Low", nullable = false)
     private Boolean alertWhenStockIsLow;
 
-    @JoinColumn(name = "Auto_Generate_Report", nullable = false)
+    @Column(name = "Auto_Generate_Report", nullable = false)
     private Boolean autoGenerateReport;
 
-    @JoinColumn(name = "Auto_Generate_Report_Time")
+    @Column(name = "Auto_Generate_Report_Time")
     private Time autoGenerateReportTime;
 
-    @JoinColumn(name = "Notify_Minimum_Cash_Discrepancy", nullable = false)
+    @Column(name = "Notify_Minimum_Cash_Discrepancy", nullable = false)
     private Double notifyMinimumCashDiscrepancy;
 
-    @JoinColumn(name = "Destroy_Refund_Data_After_N_Days", nullable = false)
+    @Column(name = "Destroy_Refund_Data_After_N_Days", nullable = false)
     private Integer destroyRefundDataAfterNDays;
 
-    @JoinColumn(name = "Cash_Count_Start_Time", nullable = false)
+    @Column(name = "Cash_Count_Start_Time", nullable = false)
     private Time cashCountStartTime;
 
-    @JoinColumn(name = "Cash_Count_End_Time", nullable = false)
+    @Column(name = "Cash_Count_End_Time", nullable = false)
     private Time cashCountEndTime;
 
     public Settings() {}
@@ -66,4 +66,33 @@ public class Settings {
     public void setDestroyRefundDataAfterNDays(Integer destroyRefundDataAfterNDays) { this.destroyRefundDataAfterNDays = destroyRefundDataAfterNDays; }
     public void setCashCountStartTime(Time cashCountStartTime) { this.cashCountStartTime = cashCountStartTime; }
     public void setCashCountEndTime(Time cashCountEndTime) { this.cashCountEndTime = cashCountEndTime; }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "id=" + id +
+                ", managerId=" + "{" +
+                "id=" + managerId.getId() +
+                        ", username='" + managerId.getUsername() + '\'' +
+                        ", password='" + managerId.getPassword() + '\'' +
+                        ", name='" + managerId.getName() + '\'' +
+                        ", surname='" + managerId.getSurname() + '\'' +
+                        ", dob=" + managerId.getDob() +
+                        ", phone='" + managerId.getPhone() + '\'' +
+                        ", email='" + managerId.getEmail() + '\'' +
+                        ", startDate=" + managerId.getStartDate() +
+                        ", endDate=" + managerId.getEndDate() +
+                        ", warehouseID=" + managerId.getWarehouseID() +
+                        ", bossID=" + managerId.getBossID() +
+                        ", jobs=" + managerId.getJobs() +
+                        '}' +
+                ", alertWhenStockIsLow=" + alertWhenStockIsLow +
+                ", autoGenerateReport=" + autoGenerateReport +
+                ", autoGenerateReportTime=" + autoGenerateReportTime +
+                ", notifyMinimumCashDiscrepancy=" + notifyMinimumCashDiscrepancy +
+                ", destroyRefundDataAfterNDays=" + destroyRefundDataAfterNDays +
+                ", cashCountStartTime=" + cashCountStartTime +
+                ", cashCountEndTime=" + cashCountEndTime +
+                '}';
+    }
 }

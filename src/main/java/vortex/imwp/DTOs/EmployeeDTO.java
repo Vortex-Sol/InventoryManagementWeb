@@ -53,6 +53,21 @@ public class EmployeeDTO {
         this.jobs = jobs;
     }
 
+    public EmployeeDTO(Long id, String username, String password, String name, String surname, String phone, String email, Date startDate, Date endDate, Long warehouseID, Set<String> jobs) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.phone = phone;
+        this.email = email;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.warehouseID = warehouseID;
+        this.jobs = jobs;
+    }
+
+
     public Long getId() { return id; }
     public String getUsername() { return username; }
     public String getConfirmPassword() { return confirmPassword; }
@@ -83,4 +98,24 @@ public class EmployeeDTO {
     public void setBossID(Long bossID) { this.bossID = bossID; }
     public void addJob(String job) { jobs.add(job); }
     public void removeJob(String  job) { jobs.remove(job); }
+
+    @Override
+    public String toString() {
+        return "EmployeeDTO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", dob=" + dob +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", warehouseID=" + warehouseID +
+                ", bossID=" + bossID +
+                ", jobs=" + jobs +
+                '}';
+    }
 }

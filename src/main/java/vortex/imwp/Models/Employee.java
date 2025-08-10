@@ -123,4 +123,26 @@ public class Employee {
 
     public void addJob(Job job) { jobs.add(job); }
     public void removeJob(Job job) { jobs.remove(job); }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", dob=" + dob +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", warehouseID=" + warehouseID +
+                ", bossID=" + bossID +
+                ", jobs=" + jobs +
+                ", sales=" + sales +
+                ", loginAudits=" + loginAudits +
+                ", settings=" + settings +
+                '}';
+    }
 }

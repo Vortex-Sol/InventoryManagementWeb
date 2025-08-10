@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class EmployeeDTOMapper {
     public static EmployeeDTO map(Employee employee){
         return new EmployeeDTO(
+                employee.getId(),
                 employee.getUsername(),
                 employee.getPassword(),
                 employee.getName(),

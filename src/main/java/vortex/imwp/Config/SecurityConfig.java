@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,15 +40,25 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(request -> request
-                .requestMatchers("/auth/login","/auth/register","/icon-cart.png", "/js/**").permitAll()
-                .anyRequest().authenticated());
 
-        http.formLogin(login -> login
-                .loginPage("/auth/login")
-                .loginProcessingUrl("/auth/login")
-                .successHandler(successHandler)
-                .permitAll());
+        http
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/auth/login", "/auth/register", "/icon-cart.png", "/js/**").permitAll()
+                        .requestMatchers("/images/**", "/fonts/**", "/styles/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+
+                .formLogin(login -> login
+                        .loginPage("/auth/login")
+                        .loginProcessingUrl("/auth/login")
+                        .successHandler(successHandler)
+                        .permitAll()
+                );
 
         return http.build();
     }

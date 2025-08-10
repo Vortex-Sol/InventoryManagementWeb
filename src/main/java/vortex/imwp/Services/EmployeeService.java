@@ -1,6 +1,7 @@
 package vortex.imwp.Services;
 
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vortex.imwp.DTOs.EmployeeDTO;
@@ -31,6 +32,10 @@ public class EmployeeService {
     public Optional<EmployeeDTO> getEmployeeByUsername(String username){
         return employeeRepository.findByUsernameWithJobs(username)
                 .map(EmployeeDTOMapper::map);
+    }
+
+    public Employee getEmployeeByUsername(Authentication authentication){
+        return employeeRepository.getByUsername(authentication.getName());
     }
 
     public Employee registerEmployee(EmployeeDTO employee) {

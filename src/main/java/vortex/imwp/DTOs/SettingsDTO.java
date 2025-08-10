@@ -15,6 +15,7 @@ public class SettingsDTO {
 
     public SettingsDTO() {}
     public SettingsDTO(Long id, EmployeeDTO managerId, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime) {
+        this.id = id;
         this.managerId = managerId;
         this.alertWhenStockIsLow = alertWhenStockIsLow;
         this.autoGenerateReport = autoGenerateReport;
@@ -44,4 +45,19 @@ public class SettingsDTO {
     public void setDestroyRefundDataAfterNDays(Integer destroyRefundDataAfterNDays) { this.destroyRefundDataAfterNDays = destroyRefundDataAfterNDays; }
     public void setCashCountStartTime(Time cashCountStartTime) { this.cashCountStartTime = cashCountStartTime; }
     public void setCashCountEndTime(Time cashCountEndTime) { this.cashCountEndTime = cashCountEndTime; }
+
+    @Override
+    public String toString() {
+        return "SettingsDTO{" +
+                "id=" + id +
+                ", managerId=" + managerId +
+                ", alertWhenStockIsLow=" + alertWhenStockIsLow +
+                ", autoGenerateReport=" + autoGenerateReport +
+                ", autoGenerateReportTime=" + autoGenerateReportTime +
+                ", notifyMinimumCashDiscrepancy=" + notifyMinimumCashDiscrepancy +
+                ", destroyRefundDataAfterNDays=" + destroyRefundDataAfterNDays +
+                ", cashCountStartTime=" + cashCountStartTime +
+                ", cashCountEndTime=" + cashCountEndTime +
+                '}';
+    }
 }
