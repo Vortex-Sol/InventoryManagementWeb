@@ -43,20 +43,23 @@ public class SettingsController {
             Model model,
             RedirectAttributes redirectAttributes) {
         try{
-            Employee manager = employeeService.getEmployeeByUsername(authentication);
+            Employee manager = employeeService.getEmployeeByAuthentication(authentication);
 
-            Settings settings = settingsService.getSettingsByMangerId(manager);
+            if (manager != null && manager.getJobs() != null &&
+                    manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
+                Settings settings = settingsService.getSettingsByMangerId(manager);
 
-            System.out.println(settings);
-            System.out.println(settings.getManagerId());
+                SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
 
-            SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
-            System.out.println(settingsDto);
-            model.addAttribute("settingsDto", settingsDto);
-            return "settings";
+                model.addAttribute("settingsDto", settingsDto);
+                return "settings";
+            }
+
+            return "redirect:/api/home";
+
         } catch (Exception e){
             redirectAttributes.addFlashAttribute("message", "Settings not found");
-            return "redirect:/api/admin";
+            return "redirect:/api/home";
         }
 
 
@@ -64,16 +67,28 @@ public class SettingsController {
 
     @PostMapping
     public String changeSettings(@ModelAttribute("settingsDto") SettingsDTO settingsDto,
+                                 Authentication authentication,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            // при ошибках валидации вернём форму (модель уже содержит settingsDto и ошибки)
-            return "settings";
+
+        Employee manager = employeeService.getEmployeeByAuthentication(authentication);
+
+        if (manager != null && manager.getJobs() != null &&
+                manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
+
+            if (bindingResult.hasErrors()) {
+                // при ошибках валидации вернём форму (модель уже содержит settingsDto и ошибки)
+                return "settings";
+            }
+            System.out.println(settingsDto);
+            settingsService.updateSettings(settingsDto, authentication);
+            redirectAttributes.addFlashAttribute("message", "Saved");
+            return "redirect:/settings";
         }
-        System.out.println(settingsDto);
-        settingsService.updateSettings(SettingsDTOMapper.map(settingsDto));
-        redirectAttributes.addFlashAttribute("message", "Saved");
-        return "redirect:/settings";
+
+        return "redirect:/api/home";
+
+
     }
 
     @InitBinder

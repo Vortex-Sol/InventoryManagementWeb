@@ -34,7 +34,7 @@ public class EmployeeService {
                 .map(EmployeeDTOMapper::map);
     }
 
-    public Employee getEmployeeByUsername(Authentication authentication){
+    public Employee getEmployeeByAuthentication(Authentication authentication){
         return employeeRepository.getByUsername(authentication.getName());
     }
 
