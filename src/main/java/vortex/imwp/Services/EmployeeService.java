@@ -23,6 +23,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JobRepository jobRepository;
+
     public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, JobRepository jobRepository) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
@@ -36,6 +37,29 @@ public class EmployeeService {
 
     public Employee getEmployeeByAuthentication(Authentication authentication){
         return employeeRepository.getByUsername(authentication.getName());
+    }
+
+    public List<Employee> getAllEmployeesFromWarehouse(Long warehouseID){
+        List<Employee> employeesAll = employeeRepository.findAll();
+        List<Employee> employees = new ArrayList<>();
+        for (Employee employee : employeesAll) {
+            if (employee.getWarehouseID().equals(warehouseID)) {
+                employees.add(employee);
+            }
+        }
+        return employees;
+    }
+
+    public List<Employee> getAllEmployeesFromWarehouseWithJob(Long warehouseID, String jobName){
+        List<Employee> employeesAll = employeeRepository.findAll();
+        List<Employee> employees = new ArrayList<>();
+        for (Employee employee : employeesAll) {
+            if (employee.getWarehouseID().equals(warehouseID) &&
+            employee.getJobs().stream().anyMatch(job -> jobName.equals(job.getName()))) {
+                employees.add(employee);
+            }
+        }
+        return employees;
     }
 
     public Employee registerEmployee(EmployeeDTO employee) {

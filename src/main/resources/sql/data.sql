@@ -67,7 +67,9 @@ INSERT INTO
 VALUES
     ('2025-07-20 10:00:00', 2),
     ('2025-07-21 15:30:00', 4),
-    ('2025-07-22 09:15:00', 1);
+    ('2025-07-22 09:15:00', 1),
+    ('2025-08-11 11:50:00', 1),
+    ('2025-08-11 11:55:00', 1);
 
 -- Item Sales
 INSERT INTO
@@ -76,7 +78,10 @@ VALUES
     (1, 1, 1),
     (2, 1, 2),
     (3, 2, 1),
-    (4, 3, 1);
+    (4, 3, 1),
+    (2, 4, 4),
+    (1, 4, 1),
+    (3, 5, 2);
 
 INSERT INTO
     Settings (Manager_ID, Alert_When_Stock_Is_Low, Auto_Generate_Report, Auto_Generate_Report_Time, Notify_Minimum_Cash_Discrepancy, Destroy_Refund_Data_After_N_Days, Cash_Count_Start_Time, Cash_Count_End_Time)

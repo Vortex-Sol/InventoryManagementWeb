@@ -7,6 +7,10 @@ import vortex.imwp.Repositories.EmployeeRepository;
 import vortex.imwp.Repositories.LoginAuditRepository;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +34,22 @@ public class LoginAuditService {
         Employee employee = employee_check.get();
         LoginAudit loginAudit = new LoginAudit(employee.getUsername(), ipAddress, timestamp, success, employee);
         loginAuditRepository.save(loginAudit);
+    }
+
+    public List<LoginAudit> getLoginAuditsByEmployee(Employee employee) {
+        return loginAuditRepository.findByEmployee(employee);
+    }
+
+    public List<LoginAudit> getLoginAuditsByEmployeeAndDate(Employee employee, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay(); // exclusive
+        return loginAuditRepository.findByEmployeeAndLoginTimeGreaterThanEqualAndLoginTimeLessThan(
+                employee, Timestamp.valueOf(start), Timestamp.valueOf(end));
+    }
+
+    public List<LoginAudit> getLoginAuditsByEmployeeAndPeriod(Employee employee, Timestamp start, Timestamp end) {
+        return loginAuditRepository.findByEmployeeAndLoginTimeGreaterThanEqualAndLoginTimeLessThan(
+                employee, start, end);
     }
 
 }
