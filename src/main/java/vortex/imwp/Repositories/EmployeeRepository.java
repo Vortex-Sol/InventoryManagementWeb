@@ -15,4 +15,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query("SELECT e FROM Employee e LEFT JOIN FETCH e.jobs WHERE e.username = :username")
     Optional<Employee> findByUsernameWithJobs(@Param("username") String username);
+
+    Employee getByUsername(String username);
 }

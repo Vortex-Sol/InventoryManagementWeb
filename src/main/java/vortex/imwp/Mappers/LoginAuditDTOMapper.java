@@ -11,7 +11,7 @@ public class LoginAuditDTOMapper {
                 loginAudit.getIpAddress(),
                 loginAudit.getLoginTime(),
                 loginAudit.getSuccessFailure(),
-                loginAudit.getEmployee()
+                EmployeeDTOMapper.map(loginAudit.getEmployee())
         );
     }
 
@@ -22,7 +22,7 @@ public class LoginAuditDTOMapper {
                 loginAuditDTO.getIpAddress(),
                 loginAuditDTO.getLoginDate(),
                 loginAuditDTO.getSuccessFailure(),
-                loginAuditDTO.getEmployee()
+                EmployeeDTOMapper.map(loginAuditDTO.getEmployee())
         );
     }
 }

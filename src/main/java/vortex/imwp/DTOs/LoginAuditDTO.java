@@ -9,11 +9,11 @@ public class LoginAuditDTO {
     private String ipAddress;
     private Timestamp loginDate;
     private boolean successFailure;
-    private Employee employee;
+    private EmployeeDTO employee;
 
     public LoginAuditDTO() {}
 
-    public LoginAuditDTO(String username, String ipAddress, Timestamp loginDate, boolean successFailure, Employee employee) {
+    public LoginAuditDTO(String username, String ipAddress, Timestamp loginDate, boolean successFailure, EmployeeDTO employee) {
         this.username = username;
         this.ipAddress = ipAddress;
         this.loginDate = loginDate;
@@ -21,7 +21,7 @@ public class LoginAuditDTO {
         this.employee = employee;
     }
 
-    public LoginAuditDTO(Long id, String username, String ipAddress, Timestamp loginDate, boolean successFailure, Employee employee) {
+    public LoginAuditDTO(Long id, String username, String ipAddress, Timestamp loginDate, boolean successFailure, EmployeeDTO employee) {
         this.id = id;
         this.username = username;
         this.ipAddress = ipAddress;
@@ -70,11 +70,11 @@ public class LoginAuditDTO {
         this.successFailure = successFailure;
     }
 
-    public Employee getEmployee() {
+    public EmployeeDTO getEmployee() {
         return employee;
     }
 
-    public void setEmployee(Employee employee) {
+    public void setEmployee(EmployeeDTO employee) {
         this.employee = employee;
     }
 }

@@ -6,7 +6,7 @@ import vortex.imwp.Models.Sale;
 public class SaleDTOMapper {
     public static SaleDTO map(Sale sale){
         return new SaleDTO(
-                sale.getSale_Time(),
+                sale.getSaleTime(),
                 EmployeeDTOMapper.map(sale.getSalesman())
         );
     }

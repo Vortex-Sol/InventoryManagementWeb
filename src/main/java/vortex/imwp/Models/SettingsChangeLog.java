@@ -18,7 +18,14 @@ public class SettingsChangeLog {
     public SettingsChangeLog() {}
     public SettingsChangeLog(SettingsChangeLogID id, LocalDateTime changedAt, String settingsChanged) {
         this.id = id;
+        this.changedAt = changedAt;
         this.settingsChanged = settingsChanged;
+    }
+
+    public SettingsChangeLog(String settingsChanged, SettingsChangeLogID id) {
+        this.settingsChanged = settingsChanged;
+        this.changedAt = LocalDateTime.now();
+        this.id = id;
     }
 
     public SettingsChangeLogID getId() { return id; }

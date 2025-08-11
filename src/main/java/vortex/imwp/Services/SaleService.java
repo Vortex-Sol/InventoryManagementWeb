@@ -1,15 +1,19 @@
 package vortex.imwp.Services;
 
 import org.springframework.stereotype.Service;
+import vortex.imwp.DTOs.ItemDTO;
 import vortex.imwp.DTOs.SaleDTO;
+import vortex.imwp.Mappers.ItemDTOMapper;
 import vortex.imwp.Mappers.SaleDTOMapper;
+import vortex.imwp.Mappers.SaleItemDTOMapper;
 import vortex.imwp.Models.*;
 import vortex.imwp.Repositories.*;
 
+import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class SaleService {
@@ -35,15 +39,42 @@ public class SaleService {
         return Optional.empty();
     }
 
-    //TODO: Fix Needed - Program Does not Compile
     public Optional<List<SaleDTO>> getByPeriod(Timestamp start, Timestamp end) {
-        /*Iterable<Sale> list = saleRepository.findByTimestampBetweenOrderByTimestampAsc(start, end);
+        Iterable<Sale> list = saleRepository.findSalesBetweenTimestamps(start, end);
         List<SaleDTO> sales = new ArrayList<>();
         if (list.iterator().hasNext()) {
             for (Sale sale : list) sales.add(SaleDTOMapper.map(sale));
             return Optional.of(sales);
-        }*/
+        }
         return Optional.empty();
+    }
+
+    public List<Sale> getByEmployee(Employee employee) {
+        return saleRepository.findSalesBySalesman(employee);
+    }
+
+    public List<Sale> getByEmployeeAndDate(Employee employee, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+        return saleRepository.findSalesBySalesmanAndSaleTimeGreaterThanEqualAndSaleTimeLessThan(
+                employee, Timestamp.valueOf(start), Timestamp.valueOf(end));
+    }
+
+    public List<Sale> getByEmployeeAndPeriod(Employee employee, Timestamp start, Timestamp end) {
+        return saleRepository.findSalesBySalesmanAndSaleTimeGreaterThanEqualAndSaleTimeLessThan(
+                employee, start, end);
+    }
+
+    public List<Sale> getByWarehouseIdAndDate(Long warehouseID, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+        return saleRepository.findSalesBySalesman_WarehouseIDAndSaleTimeGreaterThanEqualAndSaleTimeLessThan(
+                warehouseID, Timestamp.valueOf(start), Timestamp.valueOf(end));
+    }
+
+    public List<Sale> getByWarehouseIdAndPeriod(Long warehouseID, Timestamp start, Timestamp end) {
+        return saleRepository.findSalesBySalesman_WarehouseIDAndSaleTimeGreaterThanEqualAndSaleTimeLessThan(
+                warehouseID, start, end);
     }
 
     public Sale createSale(String username) {
@@ -51,9 +82,23 @@ public class SaleService {
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
         Sale sale = new Sale();
-        sale.setSale_Time(new Timestamp(System.currentTimeMillis()));
+        sale.setSaleTime(new Timestamp(System.currentTimeMillis()));
         sale.setEmployee(employee);
         return saleRepository.save(sale);
+    }
+
+    public Map<ItemDTO, Integer> getItemsWithQuantity(Long saleId) {
+        Map<ItemDTO, Integer> items = new HashMap<>();
+        Optional<Sale> saleCheck = saleRepository.findById(saleId);
+        if (saleCheck.isPresent()) {
+            Sale sale = saleCheck.get();
+            Set<SaleItem> saleItems =sale.getSaleItems();
+            for (SaleItem saleItem : saleItems) {
+                items.put(ItemDTOMapper.map(saleItem.getItem()), saleItem.getQuantity());
+            }
+            return items;
+        }
+        return items;
     }
 
     public Sale addItemToSale(Long saleId, Long warehouseId, Long itemId, int quantity) {

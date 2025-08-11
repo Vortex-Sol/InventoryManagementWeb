@@ -12,7 +12,7 @@ public class Sale {
     private Long id;
 
     @Column(name = "Sale_Time", nullable = false)
-    private Timestamp sale_Time;
+    private Timestamp saleTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Salesman_ID", nullable = false)
@@ -22,15 +22,15 @@ public class Sale {
     private Set<SaleItem> saleItems = new HashSet<>();
 
     public Sale(){}
-    public Sale(Timestamp sale_Time, Employee salesman) {
-        this.sale_Time = sale_Time;
+    public Sale(Timestamp saleTime, Employee salesman) {
+        this.saleTime = saleTime;
         this.salesman = salesman;
     }
 
     public Long getId() { return id; }
-    public Timestamp getSale_Time() { return sale_Time; }
+    public Timestamp getSaleTime() { return saleTime; }
     public Employee getSalesman() { return salesman; }
     public Set<SaleItem> getSaleItems() { return saleItems; }
     public void setEmployee(Employee employee) { salesman = employee; }
-    public void setSale_Time(Timestamp sale_Time) { this.sale_Time = sale_Time; }
+    public void setSaleTime(Timestamp sale_Time) { this.saleTime = sale_Time; }
 }
