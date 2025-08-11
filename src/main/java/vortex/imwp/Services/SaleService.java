@@ -65,7 +65,17 @@ public class SaleService {
                 employee, start, end);
     }
 
+    public List<Sale> getByWarehouseIdAndDate(Long warehouseID, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+        return saleRepository.findSalesBySalesman_WarehouseIDAndSaleTimeGreaterThanEqualAndSaleTimeLessThan(
+                warehouseID, Timestamp.valueOf(start), Timestamp.valueOf(end));
+    }
 
+    public List<Sale> getByWarehouseIdAndPeriod(Long warehouseID, Timestamp start, Timestamp end) {
+        return saleRepository.findSalesBySalesman_WarehouseIDAndSaleTimeGreaterThanEqualAndSaleTimeLessThan(
+                warehouseID, start, end);
+    }
 
     public Sale createSale(String username) {
         Employee employee = employeeRepository.findByUsername(username)

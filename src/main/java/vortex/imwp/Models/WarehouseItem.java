@@ -85,6 +85,7 @@ public class WarehouseItem {
     public Warehouse getWarehouse() { return warehouse; }
     public Item getItem() { return item; }
     public int getQuantityInStock() { return quantityInStock; }
+    public String getSku() { return sku; }
 
     public void setWarehouse(Warehouse warehouse) { this.warehouse = warehouse; }
     public void setItem(Item item) { this.item = item; }

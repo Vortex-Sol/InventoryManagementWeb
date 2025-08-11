@@ -109,6 +109,79 @@ public class ReportController {
 //        return ResponseEntity.ok(new Response("inventory"));
     }
 
+    @GetMapping("/sales/period")
+    public ResponseEntity<Response> getPeriodSalesReport(
+            Authentication authentication,
+
+            @RequestParam(value = "start", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime start,
+
+            @RequestParam(value = "end", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime end){
+        Response resp = new vortex.imwp.Models.Response();
+
+        try{
+            JSONObject body = reportService.generatePeriodSaleReport(authentication, Timestamp.valueOf(start), Timestamp.valueOf(end));
+            System.out.println(body.toJSONString());
+            resp.setData(body);
+            resp.setMessage("Data found");
+            resp.setSuccess(true);
+
+            return ResponseEntity.ok(resp);
+        } catch (Exception e){
+            resp.setSuccess(false);
+            resp.setMessage("Data not found");
+            resp.setData(null);
+
+            return ResponseEntity.ok(resp);
+        }
+    }
+
+    @GetMapping("/sales/today")
+    public ResponseEntity<Response> getTodaySalesReport(Authentication authentication){
+        Response resp = new vortex.imwp.Models.Response();
+
+        try{
+            JSONObject body = reportService.generateTodaySaleReport(authentication);
+            System.out.println(body.toJSONString());
+            resp.setData(body);
+            resp.setMessage("Data found");
+            resp.setSuccess(true);
+
+            return ResponseEntity.ok(resp);
+        } catch (Exception e){
+            resp.setSuccess(false);
+            resp.setMessage("Data not found");
+            resp.setData(null);
+
+            return ResponseEntity.ok(resp);
+        }
+    }
+
+    @GetMapping("/inventory/today")
+    public ResponseEntity<Response> getTodayInventoryReport(Authentication authentication){
+        Response resp = new vortex.imwp.Models.Response();
+
+        try{
+            JSONObject body = reportService.generateTodayInventoryReport(authentication);
+            System.out.println(body.toJSONString());
+            resp.setData(body);
+            resp.setMessage("Data found");
+            resp.setSuccess(true);
+
+            return ResponseEntity.ok(resp);
+        } catch (Exception e){
+            resp.setSuccess(false);
+            resp.setMessage("Data not found");
+            resp.setData(null);
+
+            return ResponseEntity.ok(resp);
+        }
+    }
+
+
     @GetMapping("/employees/today")
     public ResponseEntity<Response> getTodayEmployeesReport(Authentication authentication){
         Response resp = new vortex.imwp.Models.Response();
