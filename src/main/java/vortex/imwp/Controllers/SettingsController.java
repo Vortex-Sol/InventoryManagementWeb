@@ -44,44 +44,46 @@ public class SettingsController {
             RedirectAttributes redirectAttributes) {
         try{
             Employee manager = employeeService.getEmployeeByAuthentication(authentication);
-
+            System.out.println("PLACE 0");
             if (manager != null && manager.getJobs() != null &&
                     manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
                 Settings settings = settingsService.getSettingsByMangerId(manager);
-
+                System.out.println("PLACE -1");
                 SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
 
                 model.addAttribute("settingsDto", settingsDto);
                 return "settings";
             }
-
+            System.out.println("PLACE 15");
             return "redirect:/api/home";
 
         } catch (Exception e){
             redirectAttributes.addFlashAttribute("message", "Settings not found");
+            System.out.println("PLACE 7");
             return "redirect:/api/home";
         }
 
 
     }
 
-    @PostMapping
+    @PostMapping()
     public String changeSettings(@ModelAttribute("settingsDto") SettingsDTO settingsDto,
                                  Authentication authentication,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
-
+        System.out.println("PLACE 24");
         Employee manager = employeeService.getEmployeeByAuthentication(authentication);
-
+        System.out.println("PLACE 2");
         if (manager != null && manager.getJobs() != null &&
                 manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
-
+            System.out.println("PLACE 1");
             if (bindingResult.hasErrors()) {
                 // при ошибках валидации вернём форму (модель уже содержит settingsDto и ошибки)
                 return "settings";
             }
             System.out.println(settingsDto);
             settingsService.updateSettings(settingsDto, authentication);
+            System.out.println("PLACE 3");
             redirectAttributes.addFlashAttribute("message", "Saved");
             return "redirect:/settings";
         }
