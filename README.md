@@ -200,6 +200,11 @@ Core Functionalities are tied to a user's warehouse. That is, user can only over
 | GET    | `/auth/login`   | Retrieves login         |
 | POST   | `/auth/logout`  | Logout and revoke token |
 
+### Home - [HomeController](src/main/java/vortex/imwp/controllers/HomeController.java)
+| Method | Endpoint    | Description                            |
+|--------|-------------|----------------------------------------|
+| GET    | `/api/home` | Redirects user to his appropriate home |
+
 ### Inventory - [InventoryController](src/main/java/vortex/imwp/controllers/InventoryController.java)
 
 | Method | Endpoint              | Description                 |
@@ -280,20 +285,41 @@ Core Functionalities are tied to a user's warehouse. That is, user can only over
 
 ### Database Schema (SQL)
 
-> Full SQL setup for H2 is available under `/sql/schema.sql`.
+> Full SQL setup for H2 is available under [schema.sql](src/main/resources/sql/schema.sql).
 
-### Sample Tables:
-- **Employee**
-- **Item**
-- **Sale**
-- **Warehouse**
-- **Employee_Job**
-- **Item_Sale**
-- **Warehouse_Items**
+---
 
-### Notes:
-- Proper **foreign keys** for relational integrity
-- Includes `ALTER` and `DROP` scripts for migration handling
+## Systems
+
+### Audit System
+
+### Notification System (Future)
+
+### Report System
+We can a few report types:
+- salesman
+- inventory
+- receipts
+- general (all 3)
+
+Report can be either generated based on period, e.g. from 15th to 20th FEB, or based on Today.
+For employees, it should provide employee login audits, (and logouts but we didn't implement a registree for logouts, frontend wise we will leave that to konrad), sales an employee was responsible for.
+Sales should present data of totals profits based on period and product. It should also contain information on refunds (we dont have refund entity yet, igmore this) and canceled/failed transactions.
+Inventory should present data about new stock/quantity of products that came, and current stock.
+
+### Receipt System
+
+### Setting System
+The setting system should enable to toggle on/off or set the following settings:
+
+1. Alert When a Stock is Low (True / False) >> if true the notification system (we need to build a notification system but this is for the future) sends email
+2. Auto Generate a Report: (True / False)
+3. Set Auto Generate a Report Time (if 2. is set to True)
+4. Set Minimum cash discrepancy (the minimum amount of money that does not add up: expected money in cash register vs actual amount)
+5. Set the number of days a refund is possible
+6. At what time counting cash must start
+7. At what time does counting cash (at the end of day) must start
+8. At what time should the system generate an inventory report
 
 ---
 
