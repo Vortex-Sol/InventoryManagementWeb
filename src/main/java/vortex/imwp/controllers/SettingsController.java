@@ -36,7 +36,6 @@ public class SettingsController {
             RedirectAttributes redirectAttributes) {
         try{
             Employee manager = employeeService.getEmployeeByAuthentication(authentication);
-
             if (manager != null && manager.getJobs() != null &&
                     manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
                 Settings settings = settingsService.getSettingsByMangerId(manager);
@@ -57,6 +56,7 @@ public class SettingsController {
 
     }
 
+
     @PostMapping
     public String changeSettings(@ModelAttribute("settingsDto") SettingsDTO settingsDto,
                                  Authentication authentication,
@@ -64,7 +64,6 @@ public class SettingsController {
                                  RedirectAttributes redirectAttributes) {
 
         Employee manager = employeeService.getEmployeeByAuthentication(authentication);
-
         if (manager != null && manager.getJobs() != null &&
                 manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
 
@@ -75,12 +74,10 @@ public class SettingsController {
             System.out.println(settingsDto);
             settingsService.updateSettings(settingsDto, authentication);
             redirectAttributes.addFlashAttribute("message", "Saved");
-            return "redirect:/admin/settings";
+            return "redirect:/api/settings";
         }
 
         return "redirect:/api/home";
-
-
     }
 
     @InitBinder
