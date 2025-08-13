@@ -75,7 +75,7 @@ public class SettingsController {
             System.out.println(settingsDto);
             settingsService.updateSettings(settingsDto, authentication);
             redirectAttributes.addFlashAttribute("message", "Saved");
-            return "redirect:/settings";
+            return "redirect:/admin/settings";
         }
 
         return "redirect:/api/home";
