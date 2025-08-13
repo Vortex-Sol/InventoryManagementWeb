@@ -202,41 +202,66 @@ Core Functionalities are tied to a user's warehouse. That is, user can only over
 
 ### Inventory - [InventoryController](src/main/java/vortex/imwp/controllers/InventoryController.java)
 
-| Method | Endpoint          | Description                  |
-|--------|-------------------|------------------------------|
-| GET    | `/api/items`      | List all items (filterable)  |
-| GET    | `/api/items/{id}` | Get item details             |
-| POST   | `/api/items`      | Create new item              |
-| PUT    | `/api/items/{id}` | Update item                  |
-| DELETE | `/api/items/{id}` | Delete item                  |
+| Method | Endpoint              | Description                 |
+|--------|-----------------------|-----------------------------|
+| GET    | `/api/items`          | List all items (filterable) |
+| GET    | `/api/items/{id}`     | Get item details            |
+| POST   | `/api/items/add`      | Create new item             |
+| GET    | `/api/items/search`   | Finds list of items         |
+| PUT    | `/api/items/{id}`     | Update item                 |
+| DELETE | `/api/items/{id}`     | Delete item                 |
+| GET    | `/api/items/checkout` | Retrieves checkout page     |
 
-### Stock Adjustments
-| Method | Endpoint                         | Description                      |
-|--------|----------------------------------|----------------------------------|
-| POST   | `/api/items/{id}/adjust`         | Adjust stock (delta & reason)    |
-| POST   | `/api/items/{id}/write-off`      | Write-off item                   |
+### Warehouse - [WarehouseController](src/main/java/vortex/imwp/controllers/WarehouseController.java)
+| Method | Endpoint         | Description                                                               |
+|--------|------------------|---------------------------------------------------------------------------|
+| GET    | `/api/warehouse` | Retrieves stocker's warehouse information on items, quantity with filters |
 
-### Sales
-| Method | Endpoint             | Description                     |
-|--------|----------------------|---------------------------------|
-| GET    | `/api/sales`         | List sales (filterable)         |
-| GET    | `/api/sales/{id}`    | Sale details                    |
-| POST   | `/api/sales`         | Record sale                     |
+### Sales - [SaleController](src/main/java/vortex/imwp/controllers/SaleController.java)
+| Method | Endpoint             | Description             |
+|--------|----------------------|-------------------------|
+| GET    | `/api/sales`         | List sales (filterable) |
+| GET    | `/api/sales/{id}`    | Sale details            |
+| POST   | `/api/sales`         | Record a new sale       |
 
-### Users
-| Method | Endpoint             | Description                     |
-|--------|----------------------|---------------------------------|
-| GET    | `/api/users`         | List users                      |
-| GET    | `/api/users/{id}`    | Get user profile                |
-| POST   | `/api/users`         | Create user                     |
-| PUT    | `/api/users/{id}`    | Update user                     |
-| DELETE | `/api/users/{id}`    | Delete user                     |
+### Employees - [EmployeeController](src/main/java/vortex/imwp/controllers/EmployeeController.java)
+| Method | Endpoint              | Description               |
+|--------|-----------------------|---------------------------|
+| GET    | `/api/employees`      | Returns all employee      |
+| GET    | `/api/employees/{id}` | Returns specific employee |
+| POST   | `/api/employees`      | Create user               |
+| PUT    | `/api/employees/{id}` | Update user               |
+| DELETE | `/api/employees/{id}` | Delete user               |
 
-### Reports
-| Method | Endpoint                        | Description                  |
-|--------|---------------------------------|------------------------------|
-| GET    | `/api/reports/inventory`        | View stock levels            |
-| GET    | `/api/reports/sales`            | Sales report by date         |
+### Receipts - [ReceiptController](src/main/java/vortex/imwp/controllers/ReceiptController)
+| Method | Endpoint                           | Description                                                                                                                                |
+|--------|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| GET    | `/api/receipt/checkout/{saleId}`   | Show checkout page for a given sale, including item totals and total amount.                                                               |
+| GET    | `/api/receipt/confirm/{receiptId}` | View a confirmed receipt and its JSON representation.                                                                                      |
+| GET    | `/api/receipt/{saleId}/add-items`  | Display page to add items to a sale, showing available items, stock, and warehouses.                                                       |
+| GET    | `/api/receipt/start-checkout`      | Create a new sale for the authenticated user and redirect to the add-items page.                                                           |
+| POST   | `/api/receipt/checkout`            | Process checkout for a sale with specified payment method and optional amount received; redirects to receipt confirmation or shows errors. |
+| POST   | `/api/receipt/addItem-form`        | Add an item to a sale via item ID or barcode, with quantity and warehouse; redirects back to add-items page with possible errors.          |
+| POST   | `/api/receipt/cancel/{receiptId}`  | Cancel a receipt; redirects to receipt confirmation page with success or error message.                                                    |
+
+### Reports - [ReportController](src/main/java/vortex/imwp/controllers/ReportController.java)
+| Method | Endpoint                        | Description                                                                               |
+|--------|---------------------------------|-------------------------------------------------------------------------------------------|
+| GET    | `/api/reports/employees/today`  | Generate employee activity report for today.                                              |
+| GET    | `/api/reports/employees/period` | Generate employee activity report for a specific period (`start` and `end` query params). |
+| GET    | `/api/reports/inventory`        | Generate inventory report for the authenticated user.                                     |
+| GET    | `/api/reports/inventory/today`  | Generate inventory report for today.                                                      |
+| GET    | `/api/reports/inventory/period` | Generate inventory report for a specific period (`start` and `end` query params).         | 
+| GET    | `/api/reports/sales`            | Generate sales report; optionally filter by period using `start` and `end` query params.  |
+| GET    | `/api/reports/sales/today`      | Generate sales report for today.                                                          |
+| GET    | `/api/reports/sales/period`     | Generate sales report for a specific period (`start` and `end` query params).             |
+
+### Settings - [SettingsController](src/main/java/vortex/imwp/controllers/SettingsController.java)
+| Method | Endpoint        | Description                                                 |
+|--------|-----------------|-------------------------------------------------------------|
+| GET    | `/api/settings` | Retrieve current settings for the authenticated admin user. |
+| POST   | `/api/settings` | Update settings for the authenticated admin user.           |
+
 
 ---
 

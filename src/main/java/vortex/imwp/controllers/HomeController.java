@@ -1,37 +1,30 @@
 package vortex.imwp.controllers;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import vortex.imwp.services.CategoryService;
-import vortex.imwp.services.ItemService;
-import vortex.imwp.services.WarehouseService;
+import vortex.imwp.models.Employee;
+import vortex.imwp.services.EmployeeService;
 
 @Controller
-@RequestMapping(
-        path = "/api"
-)
+@RequestMapping("/api/home")
 public class HomeController {
+    private final EmployeeService employeeService;
 
-    private final ItemService itemService;
-    private final WarehouseService warehouseService;
-    private final CategoryService categoryService;
-    public HomeController(ItemService itemService, WarehouseService warehouseService, CategoryService categoryService) {
-        this.itemService = itemService;
-        this.warehouseService = warehouseService ;
-        this.categoryService = categoryService;
+    public HomeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
-    @GetMapping("/home")
-    public String home(Model model) {
-        model.addAttribute("items", itemService.getAll());
-        model.addAttribute("quantities", itemService.getQuantitiesForAllItems());
-        model.addAttribute("itemWarehouses", itemService.getItemWarehousesMap());
-        model.addAttribute("warehouses", warehouseService.getAllWarehouses());
-        model.addAttribute("categories", categoryService.getAllCategoryDTOs());
-        return "inventory/home";
+    @GetMapping
+    public String home(Authentication auth) {
+        Employee employee = employeeService.getEmployeeByAuthentication(auth);
+        if (employee != null && employee.getJobs() != null) {
+            if (employee.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))) return "redirect:/api/admin";
+            else if(employee.getJobs().stream().anyMatch(job -> "MANAGER".equals(job.getName()))) return "redirect:/api/manager";
+            else if(employee.getJobs().stream().anyMatch(job -> "SALESMAN".equals(job.getName()))) return "redirect:/api/salesman";
+            else if(employee.getJobs().stream().anyMatch(job -> "STOCKER".equals(job.getName()))) return "redirect:/api/warehouse";
+        }
+        return "/error";
     }
-
-
 }
