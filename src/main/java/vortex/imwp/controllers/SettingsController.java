@@ -39,11 +39,13 @@ public class SettingsController {
             if (manager != null && manager.getJobs() != null &&
                     manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
                 Settings settings = settingsService.getSettingsByMangerId(manager);
+
                 SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
 
                 model.addAttribute("settingsDto", settingsDto);
                 return "/admin/settings";
             }
+
             return "redirect:/api/home";
 
         } catch (Exception e){
@@ -54,14 +56,17 @@ public class SettingsController {
 
     }
 
-    @PostMapping()
+
+    @PostMapping
     public String changeSettings(@ModelAttribute("settingsDto") SettingsDTO settingsDto,
                                  Authentication authentication,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
+
         Employee manager = employeeService.getEmployeeByAuthentication(authentication);
         if (manager != null && manager.getJobs() != null &&
                 manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
+
             if (bindingResult.hasErrors()) {
                 // при ошибках валидации вернём форму (модель уже содержит settingsDto и ошибки)
                 return "/admin/settings";

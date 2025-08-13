@@ -201,6 +201,7 @@ Core Functionalities are tied to a user's warehouse. That is, user can only over
 | POST   | `/auth/logout`  | Logout and revoke token |
 
 ### Inventory - [InventoryController](src/main/java/vortex/imwp/controllers/InventoryController.java)
+
 | Method | Endpoint          | Description                  |
 |--------|-------------------|------------------------------|
 | GET    | `/api/items`      | List all items (filterable)  |
