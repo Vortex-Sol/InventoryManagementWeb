@@ -12,7 +12,7 @@
                     <h4>Register New User</h4>
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/auth/register}" method="post" th:object="${user}" onsubmit="return validatePasswords()">
+                    <form th:action="@{/api/register}" method="post" th:object="${user}" onsubmit="return validatePasswords()">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                         <div class="mb-3">
@@ -55,6 +55,6 @@
         </div>
     </div>
 
-    <script src="/js/validatePasswords.js"></script>
+    <script src="/js/validate-passwords.js"></script>
 </section>
 </html>
