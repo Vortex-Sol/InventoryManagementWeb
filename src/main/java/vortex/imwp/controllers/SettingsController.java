@@ -36,22 +36,18 @@ public class SettingsController {
             RedirectAttributes redirectAttributes) {
         try{
             Employee manager = employeeService.getEmployeeByAuthentication(authentication);
-            System.out.println("PLACE 0");
             if (manager != null && manager.getJobs() != null &&
                     manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
                 Settings settings = settingsService.getSettingsByMangerId(manager);
-                System.out.println("PLACE -1");
                 SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
 
                 model.addAttribute("settingsDto", settingsDto);
                 return "/admin/settings";
             }
-            System.out.println("PLACE 15");
             return "redirect:/api/home";
 
         } catch (Exception e){
             redirectAttributes.addFlashAttribute("message", "Settings not found");
-            System.out.println("PLACE 7");
             return "redirect:/api/home";
         }
 
@@ -63,26 +59,20 @@ public class SettingsController {
                                  Authentication authentication,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
-        System.out.println("PLACE 24");
         Employee manager = employeeService.getEmployeeByAuthentication(authentication);
-        System.out.println("PLACE 2");
         if (manager != null && manager.getJobs() != null &&
                 manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
-            System.out.println("PLACE 1");
             if (bindingResult.hasErrors()) {
                 // при ошибках валидации вернём форму (модель уже содержит settingsDto и ошибки)
                 return "/admin/settings";
             }
             System.out.println(settingsDto);
             settingsService.updateSettings(settingsDto, authentication);
-            System.out.println("PLACE 3");
             redirectAttributes.addFlashAttribute("message", "Saved");
-            return "redirect:/admin/settings";
+            return "redirect:/api/settings";
         }
 
         return "redirect:/api/home";
-
-
     }
 
     @InitBinder
