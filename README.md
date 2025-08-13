@@ -10,7 +10,7 @@ A web-based inventory management system built to streamline warehouse operations
 - Add, remove, or sell items from inventory via web interface.
 
 ### Version 2: Barcode Integration
-- Automatically generate unique barcode IDs for new items.
+- Automatically generate unique SKU for new items.
 - Print barcodes for tagging products.
 
 ### Version 3: Barcode Scanning
@@ -23,65 +23,87 @@ A web-based inventory management system built to streamline warehouse operations
 
 ---
 
-## Contributing
-To contribute, please follow the steps below to ensure a smooth and successful submission
+## Prerequisites
 
-1. **Fork the Repository**
-Create a personal copy of the repository:
-- Click the "Fork" button in the top-right corner of the repository on GitHub
-- This will create a copy under your own GitHub account
-
-2. **Clone Your Forker**
-Clone the forked repository to your local machine:
-    ```bash
-    git clone https://github.com/your-username/your-forked-repo.github
-    cd your-forked-repo
-    ```
-
-3. **Create a New Branch**
-Create a new branch to isolate your changes. Use a descriptive branch name:
-    ```bash
-    git checkout -b feature/short-description
-    ```
-> **Tip:** Avoid making changes on the main branch
-
-4. **Make Your Changes**
-- Make your edits or additions to the codebase
-- Ensure your code is **formatted properly** and follows standard style guides
-- **Write test**, if applicable, for any new functionality
-- Verify everything works correctly before commiting
-
-5. **Commit Your Changes**
-Use clear, descriptive commit messages
-    ```bash
-    git add .
-    git commit -m "Add: implemented feature XYZ"
-    ```
-6. **Push to Your Fork**
-Push changes to your forked repository:
-    ```bash
-    git push origin feature/short-description
-    ```
-
-7. **Open a Pull Request (PR)**
-- Go to the original repository on GitHub
-- Click "Compare & Pull Request" next to your recently pushed branch
-- Provide a clear **title** and **description** explaining:
-    - What the change does
-    - Any relevant issue numbers (e.g., API #123)
-- Submit the pull request for review
-
-8. **Respond to Review Feedback**
-- Be responsive to any comments or change requests from the maintainers
-- Push follow-up commits to the same branch; the PR will update automatically
+- **Java** 17 or higher
+- **Gradle** (Wrapper included)
+- **MySQL** (Database setup required >> FUTURE)
 
 ---
 
-## Prerequisites
+## Contributing
+To contribute, please follow the steps below to ensure a smooth and successful submission
 
-- **Java** 17 or higher  
-- **Gradle** (Wrapper included)  
-- **PostgreSQL** or **MySQL** (Database setup required)
+### Setup
+
+1. **Clone the Repository**
+Clone the repository to your local machine in your desired path (traverse to it using cd in terminal):
+    ```bash
+    git clone https://github.com/Vortex-Sol/InventoryManagementWeb.git
+    cd InventoryManagementWeb   
+    ```
+
+2. **Create a New Branch**
+Create a new branch to isolate your changes & features. Use a descriptive branch name:
+    ```bash
+    git checkout -b feature.name-category
+    ```
+
+Where:
+   - Feature is the code you are working on
+   - Category is the status of the feature; **use**: 
+     - _fix_ [You are fixing a bug]
+     - _patch_ [You forgot to add something] 
+     - _update_ [You are creating a new feature] 
+     - _temp_ [You are temporarily introducing a feature -> to be removed later]
+     
+Example branch name:
+```
+git checkout -b report.system-update
+```
+    
+> **Tip:** Avoid making changes on the main branch explicitly
+
+### Submitting Changes
+1. **Make Your Changes**
+   - Make your edits or additions to the codebase
+   - Ensure your code is **formatted properly** and follows standard style guides
+   - **Write test**, if applicable, for any new functionality
+   - Verify everything works correctly before commiting
+
+2. **Fetch Newest  Main**
+    - Make sure you are on the newest main
+    - Do ```git fetch origin main```
+    - To resolve any merge conflicts >> contact the team
+   
+3. **Commit Your Changes**
+Use clear, descriptive commit messages
+    ```bash
+    git add .
+    git commit -m "Update: implemented Report System" -m "I created the appropriate Mappers, DTOs and Models. We are missing a service class"
+    ```
+4. **Push to Your Fork**
+Push changes to your forked repository:
+    ```bash
+    git push origin report.system-update
+    ```
+
+5. **Open a Pull Request (PR)**
+- Go to the original repository on GitHub
+- Click "Compare & Pull Request" next to your recently pushed branch
+- Title should be relevant feature issue
+  - for e.g., **[3B] Report System**
+- Provide a detailed description of your changes and what they do
+  - for e.g., _The report system creates reports based on period or time for employees, receipts, inventory or all. A report includes...._ 
+- Submit the pull request for review
+  - assign 2 team members as reviewers to review your changes
+  - assign yourself as an assignee
+  - assign a label to the pull request
+
+6. **Respond to Review Feedback**
+- Be responsive to any comments, questions or change requests from the team members
+- Push follow-up commits to the same branch; the PR will update automatically
+- Finally merge to main once everyone approve
 
 ---
 
@@ -89,8 +111,8 @@ Push changes to your forked repository:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/darknbolt/inventory-management-web-app.git
-   cd inventory-management-web-app
+   git clone https://github.com/Vortex-Sol/InventoryManagementWeb.git
+   cd InventoryManagementWeb
    ```
    
 2. **Build the Application**
@@ -108,36 +130,39 @@ Push changes to your forked repository:
 
 ## System Users
 
-| Role              | Responsibilities                                                                 |
-|-------------------|------------------------------------------------------------------------------------|
-| Salesman          | Sell items, view sales history                                                     |
-| Warehouse Worker  | Add/write-off/update items                                                        |
-| Manager           | Full access, including user and report management                                  |
+| Role     | Responsibilities                                                  |
+|----------|-------------------------------------------------------------------|
+| Salesman | Sell items, view sales history                                    |
+| Stocker  | Add/write-off/update/delete items                                 |
+| Manager  | Same as Salesman & Stocker, has access to report & receipt system |
+| Admin    | Has IT settings system                                            |
 
 ---
 
 ## Technology Stack
 
-| Layer       | Technology                                        |
-|-------------|---------------------------------------------------|
-| Frontend    | HTML, CSS, Bootstrap 5, JavaScript                |
-| Templating  | Thymeleaf (Server-side rendering)                 |
-| Backend     | Java Spring Boot (MVC)                            |
-| Security    | Spring Security with JWT, Email Verification      |
-| ORM         | Spring Data JPA (Hibernate)                       |
-| Database    | PostgreSQL / MySQL                                |
-| Testing     | JUnit, Mockito, Spring Test                       |
+| Layer      | Technology                                   |
+|------------|----------------------------------------------|
+| Frontend   | HTML, CSS, Bootstrap 5, JavaScript           |
+| Templating | Thymeleaf (Server-side rendering)            |
+| Backend    | Java Spring Boot (MVC)                       |
+| Security   | Spring Security with JWT, Email Verification |
+| ORM        | Spring Data JPA (Hibernate)                  |
+| Database   | H2 (Development) & MySQL (Production)        |
+| Testing    | JUnit, Mockito, Spring Test                  |
 
 ---
 
 ## Core Functionalities
+Core Functionalities are tied to a user's warehouse. That is, user can only overlook and operate within his Warehouse bounds.
 
 ### Common to All Users
 - Login / Logout
-- View Inventory
 
-### Warehouse Worker
+### Stocker
 - Add Item
+- Delete Item
+- Edit Item
 - Write-off (damaged/lost)
 - Manual Stock Adjustments
 
@@ -147,21 +172,33 @@ Push changes to your forked repository:
 - View Own Sales History
 
 ### Manager
-- Full Inventory Control
-- User Management (CRUD)
-- Sales & Inventory Reports
+- Salesman & Stocker Functionalities
+- Capable of checking All employee data
+- Employee, Sales & Inventory Reports
 - Export to Google Sheets (optional)
 - Dashboard with charts/statistics (optional)
+
+### Admin
+- Manages warehouse contact details
+- Add/edits/removes employees
+- He can set settings regarding stock, reports, cash count times and more
 
 ---
 
 ## API Endpoints
 
+### Admin - AdminController
+| Method | Endpoint             | Description                      |
+|--------|----------------------|----------------------------------|
+| GET    | `/api/admin`         | Retrieves admin dashboard        |
+| GET    | `/api/register`      | Loads Employee registration page |
+| POST   | `/api/register`      | Creates Employee                 |
+
 ### Authentication
-| Method | Endpoint            | Description        |
-|--------|---------------------|--------------------|
-| POST   | `/api/auth/login`   | Authenticate user  |
-| POST   | `/api/auth/logout`  | Logout and revoke token |
+| Method | Endpoint        | Description             |
+|--------|-----------------|-------------------------|
+| GET    | `/auth/login`   | Retrieves login         |
+| POST   | `/auth/logout`  | Logout and revoke token |
 
 ### Inventory Items
 | Method | Endpoint                 | Description                   |
@@ -195,12 +232,14 @@ Push changes to your forked repository:
 | DELETE | `/api/users/{id}`    | Delete user                     |
 
 ### Reports
-| Method | Endpoint                        | Description                   |
-|--------|----------------------------------|-------------------------------|
-| GET    | `/api/reports/inventory`        | View stock levels             |
-| GET    | `/api/reports/sales`            | Sales report by date          |
+| Method | Endpoint                        | Description                  |
+|--------|---------------------------------|------------------------------|
+| GET    | `/api/reports/inventory`        | View stock levels            |
+| GET    | `/api/reports/sales`            | Sales report by date         |
 
 ---
+
+## Database
 
 ### Diagrams
 
@@ -213,9 +252,9 @@ Push changes to your forked repository:
 
 ---
 
-## Database Schema (SQL)
+### Database Schema (SQL)
 
-> Full SQL setup for PostgreSQL or MySQL is available under `/sql/schema.sql`.
+> Full SQL setup for H2 is available under `/sql/schema.sql`.
 
 ### Sample Tables:
 - **Employee**
@@ -232,7 +271,7 @@ Push changes to your forked repository:
 
 ---
 
-## Optional Features (Planned/Future)
+## Future Features
 - Dashboard with KPIs and charts
 - Barcode printing and scanning
 - POS integration
