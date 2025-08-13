@@ -1,6 +1,7 @@
 package vortex.imwp.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 import vortex.imwp.dtos.CategoryDTO;
 import vortex.imwp.dtos.ItemDTO;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/api/items")
 public class InventoryController {
 
 	WarehouseService warehouseService;
@@ -85,7 +87,7 @@ public class InventoryController {
 		return "redirect:/inventory/home";
 	}
 
-	@GetMapping("/api/items")
+	@GetMapping()
 	public ResponseEntity<Response> getItems() {
 		Response resp = new Response();
 
@@ -117,7 +119,7 @@ public class InventoryController {
 
 	@GetMapping("/checkout")
 	public String inventoryHome() {
-		return "inventory/checkout";
+		return "inventory/receipt/checkout";
 	}
 
 }

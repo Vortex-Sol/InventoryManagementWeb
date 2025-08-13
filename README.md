@@ -187,20 +187,20 @@ Core Functionalities are tied to a user's warehouse. That is, user can only over
 
 ## API Endpoints
 
-### Admin - AdminController
+### Admin - [AdminController](src/main/java/vortex/imwp/controllers/AdminController.java)
 | Method | Endpoint             | Description                      |
 |--------|----------------------|----------------------------------|
 | GET    | `/api/admin`         | Retrieves admin dashboard        |
 | GET    | `/api/register`      | Loads Employee registration page |
 | POST   | `/api/register`      | Creates Employee                 |
 
-### Authentication
+### Authentication - [AuthController](src/main/java/vortex/imwp/controllers/AuthController.java)
 | Method | Endpoint        | Description             |
 |--------|-----------------|-------------------------|
 | GET    | `/auth/login`   | Retrieves login         |
 | POST   | `/auth/logout`  | Logout and revoke token |
 
-### Inventory Items
+### Inventory - [InventoryController](src/main/java/vortex/imwp/controllers/InventoryController.java)
 | Method | Endpoint                 | Description                   |
 |--------|--------------------------|-------------------------------|
 | GET    | `/api/items`             | List all items (filterable)   |
