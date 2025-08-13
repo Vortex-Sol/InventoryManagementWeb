@@ -293,7 +293,17 @@ Core Functionalities are tied to a user's warehouse. That is, user can only over
 
 ### Audit System
 
+Audits should be created for the following entities, data and their respective situations:
+
+| Entity             | Situation                                          | Data                                                |
+|--------------------|----------------------------------------------------|-----------------------------------------------------|
+| LoginAudit         | Whenever a user logins                             | Username, IP Address, Login Time, Success/Failure   |
+| SettingChangeAudit | When an ADMIN has changed his Warehouse's settings | Time, Settings Changed                              |
+|
+
 ### Notification System (Future)
+
+
 
 ### Report System
 We can a few report types:
@@ -303,9 +313,9 @@ We can a few report types:
 - general (all 3)
 
 Report can be either generated based on period, e.g. from 15th to 20th FEB, or based on Today.
-For employees, it should provide employee login audits, (and logouts but we didn't implement a registree for logouts, frontend wise we will leave that to konrad), sales an employee was responsible for.
-Sales should present data of totals profits based on period and product. It should also contain information on refunds (we dont have refund entity yet, igmore this) and canceled/failed transactions.
-Inventory should present data about new stock/quantity of products that came, and current stock.
+For employees, it should provide employee login audits and logouts as well as sales an employee was responsible for.
+Receipts should present data of transactions, items bought, receipt id, total cost, and other Receipt data. It should also contain information on refunds (we don't have refund entity yet, ignore this) and canceled/failed transactions.
+Inventory should present data about new stock/quantity of products that came (inventory audits), and current stock.
 
 ### Receipt System
 

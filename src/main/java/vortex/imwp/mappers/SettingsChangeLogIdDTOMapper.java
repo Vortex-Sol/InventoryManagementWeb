@@ -1,10 +1,10 @@
 package vortex.imwp.mappers;
 
 import vortex.imwp.dtos.SettingsChangeLogIdDTO;
-import vortex.imwp.models.SettingsChangeLogID;
+import vortex.imwp.models.SettingsChangeAuditID;
 
 public class SettingsChangeLogIdDTOMapper {
-    public static SettingsChangeLogIdDTO map(SettingsChangeLogID settings) {
+    public static SettingsChangeLogIdDTO map(SettingsChangeAuditID settings) {
         return new SettingsChangeLogIdDTO(
                 settings.getSettingID(),
                 settings.getWarehouseID(),
@@ -12,8 +12,8 @@ public class SettingsChangeLogIdDTOMapper {
         );
     }
 
-    public static SettingsChangeLogID map(SettingsChangeLogIdDTO dto){
-        return new SettingsChangeLogID(
+    public static SettingsChangeAuditID map(SettingsChangeLogIdDTO dto){
+        return new SettingsChangeAuditID(
                 dto.getSettingID(),
                 dto.getWarehouseID(),
                 dto.getAdminID()

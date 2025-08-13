@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class SettingsChangeLogID implements Serializable{
+public class SettingsChangeAuditID implements Serializable{
     @Column(name = "Setting_ID")
     private Long settingID;
 
@@ -17,8 +17,8 @@ public class SettingsChangeLogID implements Serializable{
     @Column(name = "Admin_ID")
     private Long adminID;
 
-    public SettingsChangeLogID() {}
-    public SettingsChangeLogID(Long settingID, Long warehouseID, Long adminID) {
+    public SettingsChangeAuditID() {}
+    public SettingsChangeAuditID(Long settingID, Long warehouseID, Long adminID) {
         this.settingID = settingID;
         this.warehouseID = warehouseID;
         this.adminID = adminID;
@@ -35,8 +35,8 @@ public class SettingsChangeLogID implements Serializable{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SettingsChangeLogID)) return false;
-        SettingsChangeLogID that = (SettingsChangeLogID) o;
+        if (!(o instanceof SettingsChangeAuditID)) return false;
+        SettingsChangeAuditID that = (SettingsChangeAuditID) o;
         return Objects.equals(settingID, that.settingID) &&
                 Objects.equals(warehouseID, that.warehouseID) &&
                 Objects.equals(adminID, that.adminID);

@@ -15,7 +15,10 @@
         <a th:href="@{/admin/user-management}" class="btn btn-outline-primary">Manage Users</a>
         <a th:href="@{/admin/register}" class="btn btn-outline-success">Register New User</a>
         <a th:href="@{/admin/activity-log}" class="btn btn-outline-secondary">View Activity Logs</a>
-        <a th:href="@{settings}" class="btn btn-outline-danger">Edit Settings</a>
+        <a th:href="@{settings}" class="btn btn-outline-warning">Edit Settings</a>
+        <form class="d-flex ms-4" th:action="@{/auth/logout}" method="post">
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
       </div>
     </div>
   </div>

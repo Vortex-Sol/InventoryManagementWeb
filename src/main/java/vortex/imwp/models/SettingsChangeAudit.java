@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Settings_Change_Log")
-public class SettingsChangeLog {
+public class SettingsChangeAudit {
     @EmbeddedId
-    private SettingsChangeLogID id;
+    private SettingsChangeAuditID id;
 
     @Column(name = "Changed_At", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime changedAt;
@@ -15,23 +15,23 @@ public class SettingsChangeLog {
     @Column(name = "Settings_Changed", nullable = false, length = 2000)
     private String settingsChanged;
 
-    public SettingsChangeLog() {}
-    public SettingsChangeLog(SettingsChangeLogID id, LocalDateTime changedAt, String settingsChanged) {
+    public SettingsChangeAudit() {}
+    public SettingsChangeAudit(SettingsChangeAuditID id, LocalDateTime changedAt, String settingsChanged) {
         this.id = id;
         this.changedAt = changedAt;
         this.settingsChanged = settingsChanged;
     }
 
-    public SettingsChangeLog(String settingsChanged, SettingsChangeLogID id) {
+    public SettingsChangeAudit(String settingsChanged, SettingsChangeAuditID id) {
         this.settingsChanged = settingsChanged;
         this.changedAt = LocalDateTime.now();
         this.id = id;
     }
 
-    public SettingsChangeLogID getId() { return id; }
+    public SettingsChangeAuditID getId() { return id; }
     public LocalDateTime getChangedAt() { return changedAt; }
     public String getSettingsChanged() { return settingsChanged; }
 
-    public void setId(SettingsChangeLogID id) { this.id = id; }
+    public void setId(SettingsChangeAuditID id) { this.id = id; }
     public void settingsChanged(String settingsChanged) { this.settingsChanged = settingsChanged; }
 }
