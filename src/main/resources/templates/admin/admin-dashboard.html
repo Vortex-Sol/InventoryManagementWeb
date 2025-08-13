@@ -15,6 +15,11 @@
         <a th:href="@{/admin/user-management}" class="btn btn-outline-primary">Manage Users</a>
         <a th:href="@{/admin/register}" class="btn btn-outline-success">Register New User</a>
         <a th:href="@{/admin/activity-log}" class="btn btn-outline-secondary">View Activity Logs</a>
+        <a th:href="@{settings}" class="btn btn-outline-danger">Edit Settings</a>
+        <form th:action="@{/api/settings}" method="get">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <a class="btn btn-outline-danger" type="submit">Edit Settings</a>
+        </form>
       </div>
     </div>
   </div>

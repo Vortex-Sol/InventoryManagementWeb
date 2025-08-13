@@ -18,7 +18,7 @@ import java.beans.PropertyEditorSupport;
 import java.sql.Time;
 
 @Controller
-@RequestMapping("/settings")
+@RequestMapping("/api/settings")
 public class SettingsController {
 
     private final SettingsService settingsService;
@@ -44,7 +44,7 @@ public class SettingsController {
                 SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
 
                 model.addAttribute("settingsDto", settingsDto);
-                return "settings";
+                return "/admin/settings";
             }
 
             return "redirect:/api/home";
@@ -70,7 +70,7 @@ public class SettingsController {
 
             if (bindingResult.hasErrors()) {
                 // при ошибках валидации вернём форму (модель уже содержит settingsDto и ошибки)
-                return "settings";
+                return "/admin/settings";
             }
             System.out.println(settingsDto);
             settingsService.updateSettings(settingsDto, authentication);
