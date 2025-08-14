@@ -84,10 +84,10 @@ VALUES
     (3, 5, 2);
 
 INSERT INTO
-    Settings (Manager_ID, Alert_When_Stock_Is_Low, Auto_Generate_Report, Auto_Generate_Report_Time, Notify_Minimum_Cash_Discrepancy, Destroy_Refund_Data_After_N_Days, Cash_Count_Start_Time, Cash_Count_End_Time)
+    Settings (Manager_ID, Alert_When_Stock_Is_Low, Auto_Generate_Report, Auto_Generate_Report_Time, Notify_Minimum_Cash_Discrepancy, Destroy_Refund_Data_After_N_Days, Cash_Count_Start_Time, Cash_Count_End_Time, Auto_Generate_Inventory_Report_Time)
 VALUES
-    (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00'),
-    (4, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00');
+    (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00'),
+    (4, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00');
 
 INSERT INTO
     Settings_Change_Log (Setting_ID, Warehouse_ID, Admin_ID, Changed_At, Settings_Changed)

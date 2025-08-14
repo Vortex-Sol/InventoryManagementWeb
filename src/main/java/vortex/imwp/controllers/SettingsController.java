@@ -68,7 +68,6 @@ public class SettingsController {
                 manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
 
             if (bindingResult.hasErrors()) {
-                // при ошибках валидации вернём форму (модель уже содержит settingsDto и ошибки)
                 return "/admin/settings";
             }
             System.out.println(settingsDto);
