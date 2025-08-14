@@ -223,11 +223,13 @@ Core Functionalities are tied to a user's warehouse. That is, user can only over
 | GET    | `/api/warehouse` | Retrieves stocker's warehouse information on items, quantity with filters |
 
 ### Sales - [SaleController](src/main/java/vortex/imwp/controllers/SaleController.java)
-| Method | Endpoint             | Description             |
-|--------|----------------------|-------------------------|
-| GET    | `/api/sales`         | List sales (filterable) |
-| GET    | `/api/sales/{id}`    | Sale details            |
-| POST   | `/api/sales`         | Record a new sale       |
+| Method | Endpoint            | Description             |
+|--------|---------------------|-------------------------|
+| GET    | `/api/sales`        | List sales (filterable) |
+| POST   | `/api/sales`        | Record a new sale       |
+| GET    | `/api/sales/{id}`   | Sale details            |
+| POST   | `/api/sales/{id}`   | Updated entity          |
+| DELETE | `/api/sales/{id}`   | Deleted sale            |                 
 
 ### Employees - [EmployeeController](src/main/java/vortex/imwp/controllers/EmployeeController.java)
 | Method | Endpoint              | Description               |
@@ -295,33 +297,101 @@ Core Functionalities are tied to a user's warehouse. That is, user can only over
 
 Audits should be created for the following entities, data and their respective situations:
 
-| Entity             | Situation                                          | Data                                                |
-|--------------------|----------------------------------------------------|-----------------------------------------------------|
-| LoginAudit         | Whenever a user logins                             | Username, IP Address, Login Time, Success/Failure   |
-| SettingChangeAudit | When an ADMIN has changed his Warehouse's settings | Time, Settings Changed                              |
-|
+| Entity               | Situation                                          | Data                                              |
+|----------------------|----------------------------------------------------|---------------------------------------------------|
+| LoginAudit           | Whenever a user attempts to login to a username    | Username, IP Address, Login Time, Success/Failure |
+| SettingChangeAudit   | When an ADMIN has changed his Warehouse's settings | Time, Settings Changed                            |
+| ItemChangeAudit      | Any time a STOCKER changed an item                 | Time , Fields/information changed                 |
+| WarehouseChangeAudit | Activates when STOCKER changed                     | Time, Fields changed                              |                              
 
-### Notification System (Future)
+> When ever "changed" is mentioned - this means: ```edited/added/removed/created```
 
+### Notification System
 
+#### Types
+| Receiver | Situation                                           | Urgency |
+|----------|-----------------------------------------------------|---------|
+| ADMIN    | # Failed login attempts > 3 **@** [USERNAME]        | High    |
+| MANAGER  | Cash Discrepancy                                    | High    |
+| SALESMAN | Cancelled Transaction                               | High    |
+| STOCKER  | Low Stock of Item [SKU]                             | Medium  |
+| STOCKER  | New Stock came of Item [SKU]                        | Medium  |
+| STOCKER  | Stock Transfer Request (Warehouse A --> Warehouse B | Low     |
+
+#### Architecture
+> Work in progress
 
 ### Report System
-We can a few report types:
-- salesman
-- inventory
-- receipts
-- general (all 3)
 
-Report can be either generated based on period, e.g. from 15th to 20th FEB, or based on Today.
-For employees, it should provide employee login audits and logouts as well as sales an employee was responsible for.
-Receipts should present data of transactions, items bought, receipt id, total cost, and other Receipt data. It should also contain information on refunds (we don't have refund entity yet, ignore this) and canceled/failed transactions.
-Inventory should present data about new stock/quantity of products that came (inventory audits), and current stock.
+#### Report Types
+- Salesman
+- Inventory
+- Receipts
+- General (all 3)
+
+#### Reports Time-wise
+- Period, e.g. from 15th to 20th FEB
+- Today
+
+#### Employee Report
+- Login audits
+- Logout audits
+- Receipts an employee (SALESMAN) was responsible for
+
+#### Inventory Report
+- New quantity of products (from shipment)
+- Quantity old vs new
+- Item name, sku, id
+
+#### Receipt Report
+- Items bought
+- Receipt ID
+- Total cost
+- Cancelled true/false
+- [INVOICE] Company name, nip, address
+- Refund true/false
+
+> Important to note that these reports are to include data not on just 1 instance, i.e. it can include information on multiple products/employees/receipts
 
 ### Receipt System
 
-### Setting System
-The setting system should enable to toggle on/off or set the following settings:
+Receipt system handles checkout, receipt generation, and cancellation. 
+Key Components:
+- ReceiptController: Manages add-items, checkout, confirm, cancel.
+- ReceiptService: Creates receipts, validates payments, generates printer JSON, cancels receipts.
+- ReceiptDTO: Data transfer for UI/API.
+- Models: Receipt, Sale, SaleItem.
 
+#### Main Flow
+
+![Main Flows](docs/rs-flow-map.png)
+````
+1. Start Checkout → Create Sale → Add Items.
+2. Add Items → By barcode or selection.
+3. Checkout → Validate payment, create Receipt.
+4. Confirm → Show receipt & printer JSON.
+5. Cancel → Mark receipt cancelled.
+````
+
+#### Validation Rules
+- Cash: amountReceived >= total.
+- Cannot cancel twice.
+- Barcode lookup preferred.
+
+#### Printer JSON
+- header, items, payments, optional cancellation, footer.
+
+#### Next Steps
+- VAT mapping.
+- Refund integration.
+- Inventory sync.
+- Reporting integration.
+
+### Request System (FUTURE)
+
+### Setting System
+
+#### Settings Fields
 1. Alert When a Stock is Low (True / False) >> if true the notification system (we need to build a notification system but this is for the future) sends email
 2. Auto Generate a Report: (True / False)
 3. Set Auto Generate a Report Time (if 2. is set to True)
