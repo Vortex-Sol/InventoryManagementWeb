@@ -3,6 +3,7 @@ package vortex.imwp.controllers;
 import org.json.simple.JSONObject;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,7 @@ public class ReportController {
     }
     //TODO: GET inventory
     @GetMapping("/inventory")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getInventoryReport(Authentication authentication){
 
         Response resp = new vortex.imwp.models.Response();
@@ -98,6 +100,7 @@ public class ReportController {
     }
 
     @GetMapping("/sales/period")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getPeriodSalesReport(
             Authentication authentication,
 
@@ -128,6 +131,7 @@ public class ReportController {
     }
 
     @GetMapping("/sales/today")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getTodaySalesReport(Authentication authentication){
         Response resp = new vortex.imwp.models.Response();
 
@@ -149,6 +153,7 @@ public class ReportController {
     }
 
     @GetMapping("/inventory/today")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getTodayInventoryReport(Authentication authentication){
         Response resp = new vortex.imwp.models.Response();
 
@@ -171,6 +176,7 @@ public class ReportController {
 
 
     @GetMapping("/employees/today")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getTodayEmployeesReport(Authentication authentication){
         Response resp = new vortex.imwp.models.Response();
 
@@ -193,6 +199,7 @@ public class ReportController {
 
     //http://localhost:8080/api/reports/employees/period?start=2025-07-20T00:00:00&end=2025-08-11T23:59:59
     @GetMapping("/employees/period")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getPeriodEmployeesReport(
             Authentication authentication,
 
@@ -227,6 +234,7 @@ public class ReportController {
 
     //GET /api/reports/sales?start=2025-01-01T00:00:00&end=2025-01-31T23:59:59
     @GetMapping("/sales")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getSalesReport(
             @RequestParam(value = "start", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

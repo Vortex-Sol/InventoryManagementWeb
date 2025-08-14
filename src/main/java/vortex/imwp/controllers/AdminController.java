@@ -1,5 +1,6 @@
 package vortex.imwp.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,17 +23,20 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
     public String admin() {
         return "/admin/admin-dashboard";
     }
 
     @GetMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public String register(Model model) {
         model.addAttribute("user", new EmployeeDTO());
         return "admin/register";
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public String registerEmployee(@ModelAttribute("user") EmployeeDTO employee, Model model) {
         if(!employee.getPassword().equals(employee.getConfirmPassword())) {
             model.addAttribute("error", "Passwords do not match");

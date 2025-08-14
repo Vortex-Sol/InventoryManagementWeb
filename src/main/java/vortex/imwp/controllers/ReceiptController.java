@@ -1,5 +1,6 @@
 package vortex.imwp.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,7 @@ public class ReceiptController {
 	}
 
 	@GetMapping("/checkout/{saleId}")
+	@PreAuthorize("hasRole('SALESMAN')")
 	public String checkoutForm(@PathVariable Long saleId, Model model) {
 		Sale sale = saleService.getSaleById(saleId);
 
@@ -59,6 +61,7 @@ public class ReceiptController {
 
 
 	@GetMapping("/confirm/{receiptId}")
+	@PreAuthorize("hasRole('SALESMAN')")
 	public String viewReceipt(@PathVariable Long receiptId, Model model) {
 		Receipt receipt = receiptService.getReceipt(receiptId);
 		String receiptJson = receiptService.generateReceiptJson(receipt);
@@ -70,6 +73,7 @@ public class ReceiptController {
 	}
 
 	@GetMapping("/{saleId}/add-items")
+	@PreAuthorize("hasRole('SALESMAN')")
 	public String showAddItemsPage(@PathVariable Long saleId, Model model) {
 		Sale sale = saleService.getSaleById(saleId);
 		List<ItemDTO> items = itemService.getAll();
@@ -83,11 +87,13 @@ public class ReceiptController {
 	}
 
 	@GetMapping("/start-checkout")
+	@PreAuthorize("hasRole('SALESMAN')")
 	public String startCheckout(@AuthenticationPrincipal UserDetails userDetails) {
 		Sale sale = saleService.createSale(userDetails.getUsername());
 		return "redirect:/api/receipt/" + sale.getId() + "/add-items";
 	}
 	@PostMapping("/checkout")
+	@PreAuthorize("hasRole('SALESMAN')")
 	public String checkout(@RequestParam Long saleId,
 						   @RequestParam String paymentMethod,
 						   @RequestParam(required = false) BigDecimal amountReceived,
@@ -105,6 +111,7 @@ public class ReceiptController {
 	}
 
 	@PostMapping("/addItem-form")
+	@PreAuthorize("hasRole('SALESMAN')")
 	public String addItemToSaleForm(@RequestParam Long saleId,
 									@RequestParam Long warehouseId,
 									@RequestParam(required = false) Long itemId,
@@ -141,6 +148,7 @@ public class ReceiptController {
 
 
 	@PostMapping("/cancel/{receiptId}")
+	@PreAuthorize("hasRole('SALESMAN')")
 	public String cancelReceipt(@PathVariable Long receiptId,
 								@AuthenticationPrincipal UserDetails userDetails,
 								RedirectAttributes redirectAttributes) {
