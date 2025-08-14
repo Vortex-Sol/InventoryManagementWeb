@@ -14,7 +14,7 @@ public class LogoutAudit {
     private String username;
     @Column(name = "IP_Address", nullable = false)
     private String ipAddress;
-    @Column(name = "Login_Time", nullable = false)
+    @Column(name = "Logout_Time", nullable = false)
     private Timestamp logoutTime;
     @Column(name = "Logout_Reason", nullable = false)
     private String logoutReason;
