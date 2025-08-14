@@ -444,6 +444,10 @@ Key Components:
 | **Spain**        | 21%          | 10%, 4%               | 
 | **Sweden**       | 25%          | 12%, 6%               | 
 
+
+#### Architecture
+
+1. TaxService has function _public Double getBrutto(ItemDTO itemDTO)_ that is fed
 ---
 
 ## Future Features
