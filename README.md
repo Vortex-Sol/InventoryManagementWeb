@@ -401,6 +401,49 @@ Key Components:
 7. At what time does counting cash (at the end of day) must start
 8. At what time should the system generate an inventory report
 
+### Tax System
+
+#### Polish VAT Table
+| VAT Rate         | Products / Services                                                        | Enum |
+|------------------|----------------------------------------------------------------------------|------|
+| 23% Standard     | Electronics, Clothing, Furniture, etc.                                     | A    |
+| 8% Reduced       | Some: food products, medical devices                                       | B    |
+| 5% Super Reduced | Basic foodstuffs (bread, milk, eggs, fruits, vegetables), books, newspaper | C    |
+| 0%               | Exports to EU/abroad, intra-community supplies, certain medical products   | D    |
+
+> **Info:** Alcohol, tobacco (and other similar products) may require excise duties in addition to VAT
+
+#### Generalized EU VAT Table
+| Country          | Standard VAT | Reduced VAT Rates (%) | 
+|------------------|--------------|-----------------------|
+| **Austria**      | 20%          | 13%, 10%              |
+| **Belgium**      | 21%          | 12%, 6%               |
+| **Bulgaria**     | 20%          | 9%                    |
+| **Croatia**      | 25%          | 13%, 5%               |
+| **Cyprus**       | 19%          | 9%, 5%                |
+| **Czechia**      | 21%          | 15%, 10%              |
+| **Denmark**      | 25%          | N/A                   | 
+| **Estonia**      | 20%          | 9%                    | 
+| **Finland**      | 24%          | 14%, 10%              | 
+| **France**       | 20%          | 10%, 5.5%, 2.1%       | 
+| **Germany**      | 19%          | 7%                    | 
+| **Greece**       | 24%          | 13%, 6%               | 
+| **Hungary**      | 27%          | 18%, 5%               | 
+| **Ireland**      | 23%          | 13.5%, 9%, 4.8%       | 
+| **Italy**        | 22%          | 10%, 5%, 4%           | 
+| **Latvia**       | 21%          | 12%, 5%               | 
+| **Lithuania**    | 21%          | 9%, 5%                | 
+| **Luxembourg**   | 17%          | 8%, 3%                | 
+| **Malta**        | 18%          | 7%, 5%                | 
+| **Netherlands**  | 21%          | 9%                    | 
+| **Poland**       | 23%          | 8%, 5%                | 
+| **Portugal**     | 23%          | 13%, 6%               | 
+| **Romania**      | 19%          | 9%, 5%                | 
+| **Slovakia**     | 20%          | 10%                   | 
+| **Slovenia**     | 22%          | 9.5%, 5%              | 
+| **Spain**        | 21%          | 10%, 4%               | 
+| **Sweden**       | 25%          | 12%, 6%               | 
+
 ---
 
 ## Future Features
