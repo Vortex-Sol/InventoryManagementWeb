@@ -1,6 +1,7 @@
 package vortex.imwp.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,10 @@ public class AuthenticationSuccessListener
 
         System.out.println("[" + timestamp + "] Success: username: " + username + " ip: " + ip);
 
-        auditSvc.recordLogin(username, ip, timestamp, true);
+        Long loginAuditId = auditSvc.recordLogin(username, ip, timestamp, true);
+
+//        HttpSession session = request.getSession(true);
+//        session.setAttribute("LOGIN_AUDIT_ID", loginAuditId);
+//        session.setAttribute("EMPLOYEE_USERNAME", username);
     }
 }
