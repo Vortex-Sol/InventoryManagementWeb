@@ -93,6 +93,10 @@
         <input class="form-control me-2" type="search" name="keyword" placeholder="Search..." aria-label="Search">
         <button class="btn btn-outline-secondary" type="submit">Search</button>
       </form>
+
+      <form class="d-flex ms-4" th:action="@{/auth/logout}" method="post">
+        <button type="submit" class="btn btn-danger">Logout</button>
+      </form>
     </div>
   </div>
 </nav>

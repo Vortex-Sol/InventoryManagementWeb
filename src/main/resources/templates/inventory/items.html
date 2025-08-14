@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:fragment="title">Inventory Home</title>
+</head>
+
+<section th:fragment="section">
+    <div class="card shadow" th:object="${user}">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Item Inventory</h4>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">+ Add Item</button>
+        </div>
+        <div class="card-body p-0">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <label class="form-label">Filter by Price</label>
+                    <input type="number" class="form-control" id="filterPrice" placeholder="Max Price">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Filter by Quantity</label>
+                    <input type="number" class="form-control" id="filterQuantity" placeholder="Min Quantity">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Filter by Warehouse</label>
+                    <select id="filterWarehouse" class="form-select">
+                        <option value="">-- All Warehouses --</option>
+                        <option th:each="wh : ${warehouses}" th:value="${wh.address}" th:text="${wh.address}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Filter by Category</label>
+                    <input type="text" class="form-control" id="filterCategory" placeholder="Category name">
+                </div>
+                <div class="col-md-3 mt-2">
+                    <label class="form-label">Filter by Barcode</label>
+                    <input type="text" class="form-control" id="filterBarcode" placeholder="Barcode">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered mb-0">
+                    <thead class="table-secondary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Barcode</th>
+                        <th>Category</th>
+                        <th>Warehouses</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${items}">
+                        <td th:text="${item.id}"></td>
+                        <td th:text="${item.name}"></td>
+                        <td th:text="${item.description}"></td>
+                        <td th:text="${item.price}"></td>
+                        <td th:text="${quantities[item.id] != null ? quantities[item.id] : 0}">0</td>
+                        <td th:text="${item.barcode}">---</td>
+                        <td th:text="${item.category != null ? item.category.name : 'N/A'}">N/A</td>
+                        <td>
+                            <span th:each="addr, stat : ${itemWarehouses[item.id]}">
+                                <span th:text="${addr}"></span>
+                                <span th:if="${!stat.last}">, </span>
+                            </span>
+                        </td>
+
+                        <td>
+                            <form th:action="@{/api/items/delete}" method="post" style="display:inline;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <input type="hidden" name="item_id" th:value="${item.id}" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                            <a th:href="@{/edit/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary ms-2">Edit</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addItemModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form th:action="@{/api/items/add}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="modal-content">
+                    <div class="modal-header bg-light border-bottom">
+                        <h5 class="modal-title">Add New Item</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body row g-3">
+                        <div class="col-md-6">
+                            <label for="itemName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="itemName" name="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="categorySelect" class="form-label">Category</label>
+                            <select class="form-select" id="categorySelect" name="categoryId">
+                                <option value="">-- Select Category --</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="newCategory" class="form-label">Or Create New Category</label>
+                            <input type="text" class="form-control" id="newCategory" name="newCategoryName" placeholder="Enter new category">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="itemDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="itemDescription" name="description" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="itemPrice" class="form-label">Price ($)</label>
+                            <input type="number" step="0.01" class="form-control" id="itemPrice" name="price" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="itemBarcode" class="form-label">Barcode</label>
+                            <input type="number" class="form-control" id="itemBarcode" name="barcode" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Select Warehouses</label>
+                            <div class="mb-2" th:each="wh : ${warehouses}">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" th:id="${'wh_' + wh.id}" name="warehouseIds"
+                                           th:value="${wh.id}">
+                                    <label class="form-check-label me-2" th:for="${'wh_' + wh.id}" th:text="${wh.address}">Warehouse</label>
+
+                                    <input type="number" class="form-control d-inline-block w-25 ms-2" name="warehouseQtys"
+                                           placeholder="Qty" min="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Add Item</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</html>
