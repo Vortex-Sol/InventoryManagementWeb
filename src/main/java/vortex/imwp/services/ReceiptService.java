@@ -4,14 +4,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vortex.imwp.dtos.SaleDTO;
+import vortex.imwp.mappers.SaleDTOMapper;
 import vortex.imwp.models.*;
 import vortex.imwp.repositories.EmployeeRepository;
 import vortex.imwp.repositories.ReceiptRepository;
 import vortex.imwp.repositories.SaleRepository;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -119,6 +125,30 @@ public class ReceiptService {
 
 	public Receipt getReceipt(Long receiptId) {
 		return receiptRepository.getById(receiptId);
+	}
+
+	public List<Receipt> getByEmployeeAndDate(Employee employee, LocalDate date) {
+		LocalDateTime start = date.atStartOfDay();
+		LocalDateTime end = date.plusDays(1).atStartOfDay();
+		return receiptRepository.findReceiptsBySale_SalesmanAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+				employee, start, end);
+	}
+
+	public List<Receipt> getByEmployeeAndPeriod(Employee employee, LocalDateTime start, LocalDateTime end) {
+		return receiptRepository.findReceiptsBySale_SalesmanAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+				employee, start, end);
+	}
+
+	public List<Receipt> getByWarehouseIdAndDate(Long warehouseID, LocalDate date) {
+		LocalDateTime start = date.atStartOfDay();
+		LocalDateTime end = date.plusDays(1).atStartOfDay();
+		return receiptRepository.findReceiptsBySale_Salesman_WarehouseIDAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+				warehouseID, start, end);
+	}
+
+	public List<Receipt> getByWarehouseIdAndPeriod(Long warehouseID, LocalDateTime start, LocalDateTime end) {
+		return receiptRepository.findReceiptsBySale_Salesman_WarehouseIDAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+				warehouseID, start, end);
 	}
 
 }
