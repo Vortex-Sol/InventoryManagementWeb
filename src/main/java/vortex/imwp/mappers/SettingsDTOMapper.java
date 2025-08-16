@@ -14,7 +14,8 @@ public class SettingsDTOMapper {
                 settings.getNotifyMinimumCashDiscrepancy(),
                 settings.getDestroyRefundDataAfterNDays(),
                 settings.getCashCountStartTime(),
-                settings.getCashCountEndTime()
+                settings.getCashCountEndTime(),
+                settings.getAutoGenerateInventoryReportTime()
         );
     }
 
@@ -27,7 +28,8 @@ public class SettingsDTOMapper {
                 dto.getNotifyMinimumCashDiscrepancy(),
                 dto.getDestroyRefundDataAfterNDays(),
                 dto.getCashCountStartTime(),
-                dto.getCashCountEndTime()
+                dto.getCashCountEndTime(),
+                dto.getAutoGenerateInventoryReportTime()
         );
     }
 }

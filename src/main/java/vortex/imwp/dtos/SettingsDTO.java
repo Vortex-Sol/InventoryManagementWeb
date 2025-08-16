@@ -12,9 +12,10 @@ public class SettingsDTO {
     private Integer destroyRefundDataAfterNDays;
     private Time cashCountStartTime;
     private Time cashCountEndTime;
+    private Time autoGenerateInventoryReportTime;
 
     public SettingsDTO() {}
-    public SettingsDTO(Long id, EmployeeDTO managerId, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime) {
+    public SettingsDTO(Long id, EmployeeDTO managerId, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime, Time autoGenerateInventoryReportTime) {
         this.id = id;
         this.managerId = managerId;
         this.alertWhenStockIsLow = alertWhenStockIsLow;
@@ -24,6 +25,7 @@ public class SettingsDTO {
         this.destroyRefundDataAfterNDays = destroyRefundDataAfterNDays;
         this.cashCountStartTime = cashCountStartTime;
         this.cashCountEndTime = cashCountEndTime;
+        this.autoGenerateInventoryReportTime = autoGenerateInventoryReportTime;
     }
 
     public Long getId() { return id; }
@@ -35,6 +37,7 @@ public class SettingsDTO {
     public Integer getDestroyRefundDataAfterNDays() { return destroyRefundDataAfterNDays; }
     public Time getCashCountStartTime() { return cashCountStartTime; }
     public Time getCashCountEndTime() { return cashCountEndTime; }
+    public Time getAutoGenerateInventoryReportTime() { return autoGenerateInventoryReportTime; }
 
     public void setId(Long id) { this.id = id; }
     public void setManagerId(EmployeeDTO managerId) { this.managerId = managerId; }
@@ -45,6 +48,7 @@ public class SettingsDTO {
     public void setDestroyRefundDataAfterNDays(Integer destroyRefundDataAfterNDays) { this.destroyRefundDataAfterNDays = destroyRefundDataAfterNDays; }
     public void setCashCountStartTime(Time cashCountStartTime) { this.cashCountStartTime = cashCountStartTime; }
     public void setCashCountEndTime(Time cashCountEndTime) { this.cashCountEndTime = cashCountEndTime; }
+    public void setAutoGenerateInventoryReportTime(Time autoGenerateInventoryReportTime) { this.autoGenerateInventoryReportTime = autoGenerateInventoryReportTime; }
 
     @Override
     public String toString() {
@@ -58,6 +62,7 @@ public class SettingsDTO {
                 ", destroyRefundDataAfterNDays=" + destroyRefundDataAfterNDays +
                 ", cashCountStartTime=" + cashCountStartTime +
                 ", cashCountEndTime=" + cashCountEndTime +
+                ", autoGenerateInventoryReportTime=" + autoGenerateInventoryReportTime +
                 '}';
     }
 }

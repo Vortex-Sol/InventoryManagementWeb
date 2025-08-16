@@ -121,6 +121,17 @@ public class SettingsService {
                         .append("; ");
                 settings.setCashCountEndTime(settingsDto.getCashCountEndTime());
             }
+
+            // --- AutoGenerateInventoryReportTime (Time) ---
+            if (!Objects.equals(settings.getAutoGenerateInventoryReportTime(), settingsDto.getAutoGenerateInventoryReportTime())) {
+                sb.append("AutoGenerateInventoryReportTime: ")
+                        .append(settings.getAutoGenerateInventoryReportTime() == null ? "null" : settings.getAutoGenerateInventoryReportTime().toString())
+                        .append(" -> ")
+                        .append(settingsDto.getAutoGenerateInventoryReportTime() == null ? "null" : settingsDto.getAutoGenerateInventoryReportTime().toString())
+                        .append("; ");
+                settings.setAutoGenerateInventoryReportTime(settingsDto.getAutoGenerateInventoryReportTime());
+            }
+
             Employee admin = employeeService.getEmployeeByAuthentication(authentication);
             SettingsChangeAuditID settingsChangeAuditID = new SettingsChangeAuditID(settings.getId(), settings.getManagerId().getWarehouseID(), admin.getId());
             SettingsChangeAudit changeLog = new SettingsChangeAudit(sb.toString(), settingsChangeAuditID);

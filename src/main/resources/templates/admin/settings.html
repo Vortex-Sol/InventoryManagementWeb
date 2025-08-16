@@ -77,6 +77,12 @@
             <div class="text-danger" th:if="${#fields.hasErrors('cashCountEndTime')}" th:errors="*{cashCountEndTime}"></div>
         </div>
 
+        <div class="col-md-6">
+            <label class="form-label">Auto generate inventory report time</label>
+            <input class="form-control" type="time" step="1" th:field="*{autoGenerateInventoryReportTime}"/>
+            <div class="text-danger" th:if="${#fields.hasErrors('autoGenerateInventoryReportTime')}" th:errors="*{autoGenerateInventoryReportTime}"></div>
+        </div>
+
         <div class="col-12 mt-3">
             <button type="submit" class="btn btn-primary">Save</button>
             <a th:href="@{/api/admin}" class="btn btn-secondary">Cancel</a>
