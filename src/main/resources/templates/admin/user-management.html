@@ -4,34 +4,65 @@
 <head>
   <title>User Management</title>
 </head>
-<section>
+<section th:fragment="section">
   <div class="card shadow mt-4">
     <div class="card-header">
       <h4>User Management</h4>
     </div>
     <div class="card-body">
-      <table class="table table-bordered table-hover">
+      <table class="table table-bordered table-hover align-middle">
         <thead class="table-light">
         <tr>
+          <th>ID</th>
           <th>Username</th>
-          <th>Role</th>
-          <th>Actions</th>
+          <th>Name</th>
+          <th>Surname</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Warehouse ID</th>
+          <th>Boss ID</th>
+          <th>DOB</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Roles</th>
+          <th style="width: 280px;">Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="user : ${users}">
+          <td th:text="${user.id}"></td>
           <td th:text="${user.username}"></td>
-          <td th:text="${user.role}"></td>
+          <td th:text="${user.name}"></td>
+          <td th:text="${user.surname}"></td>
+          <td th:text="${user.email}"></td>
+          <td th:text="${user.phone}"></td>
+          <td th:text="${user.warehouseID}"></td>
+          <td th:text="${user.bossID}"></td>
+          <td th:text="${#dates.format(user.dob, 'yyyy-MM-dd')}">-</td>
+          <td th:text="${#dates.format(user.startDate, 'yyyy-MM-dd')}">-</td>
+          <td th:text="${#dates.format(user.endDate, 'yyyy-MM-dd')}">-</td>
           <td>
-            <form th:action="@{/admin/users/promote}" method="post" class="d-inline">
+            <span th:each="r, itStat : ${user.jobs}">
+              <span class="badge bg-secondary" th:text="${r}"></span>
+              <span th:if="${!itStat.last}">&nbsp;</span>
+            </span>
+          </td>
+          <td>
+            <form th:action="@{/api/admin/users/promote}" method="post" class="d-inline">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
               <input type="hidden" name="id" th:value="${user.id}" />
-              <button class="btn btn-sm btn-outline-success">Promote</button>
+              <select name="role" class="form-select form-select-sm d-inline w-auto me-2">
+                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+              </select>
+              <button class="btn btn-sm btn-outline-success">Add role</button>
             </form>
-            <form th:action="@{/admin/users/demote}" method="post" class="d-inline">
+            <form th:action="@{/api/admin/users/demote}" method="post" class="d-inline ms-2">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
               <input type="hidden" name="id" th:value="${user.id}" />
-              <button class="btn btn-sm btn-outline-warning">Demote</button>
+              <select name="role" class="form-select form-select-sm d-inline w-auto me-2">
+                <option th:each="r : ${user.jobs}" th:value="${r}" th:text="${r}"></option>
+              </select>
+              <button class="btn btn-sm btn-outline-warning">Remove role</button>
             </form>
           </td>
         </tr>
