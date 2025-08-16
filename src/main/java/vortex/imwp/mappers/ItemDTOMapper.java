@@ -16,12 +16,17 @@ public class ItemDTOMapper {
     }
 
     public static Item map(ItemDTO dto) {
-        return new Item(
+        Item entity = new Item(
                 dto.getId(),
                 dto.getName(),
                 dto.getDescription(),
                 dto.getPrice(),
                 dto.getBarcode()
         );
+        if (dto.getCategory() != null) {
+            entity.setCategory(CategoryDTOMapper.map(dto.getCategory()));
+        }
+        return entity;
+
     }
 }
