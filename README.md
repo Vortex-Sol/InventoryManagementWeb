@@ -459,7 +459,12 @@ TaxService
 - **public void addVATRate(Category category, String country)**
 - **public void removeVATRate(Category category, String country)**
 
-
+Category Types
+- _A_ Standard
+- _B_ Reduced
+- _C_ Super Reduced
+- _D_ None
+- _E_ Other
 
 > **[NOTE]** This architecture is missing a few things to work:
 1. _ENUM country_ field in **Warehouse**
