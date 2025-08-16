@@ -6,22 +6,49 @@
 </head>
 <section>
   <div class="card shadow">
-    <div class="card-header">
-      <h4>System Activity Logs</h4>
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">System Activity Logs</h4>
+      <a class="btn btn-sm btn-secondary" th:href="@{/api/admin}">Back to Admin</a>
     </div>
     <div class="card-body">
       <table class="table table-striped table-bordered">
         <thead class="table-light">
-        <tr><th>User</th><th>Action</th><th>Timestamp</th></tr>
+        <tr>
+          <th>ID</th>
+          <th>Setting ID</th>
+          <th>Warehouse ID</th>
+          <th>Admin ID</th>
+          <th>Change</th>
+          <th>Timestamp</th>
+        </tr>
         </thead>
         <tbody>
         <tr th:each="log : ${logs}">
-          <td th:text="${log.username}"></td>
-          <td th:text="${log.action}"></td>
-          <td th:text="${#dates.format(log.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></td>
+          <td th:text="${log.id}"></td>
+          <td th:text="${log.settingId}"></td>
+          <td th:text="${log.warehouseId}"></td>
+          <td th:text="${log.adminId}"></td>
+          <td th:text="${log.settingsChanged}"></td>
+          <td th:text="${#temporals.format(log.changedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>
       </table>
+
+      <div th:if="${logsPage != null}" class="d-flex gap-2">
+        <a class="btn btn-outline-primary btn-sm"
+           th:classappend="${logsPage.first} ? ' disabled'"
+           th:href="@{/api/logs/paged(page=${logsPage.number - 1}, size=${logsPage.size})}">
+          Prev
+        </a>
+        <span class="align-self-center">
+          Page <span th:text="${logsPage.number + 1}"></span> / <span th:text="${logsPage.totalPages}"></span>
+        </span>
+        <a class="btn btn-outline-primary btn-sm"
+           th:classappend="${logsPage.last} ? ' disabled'"
+           th:href="@{/api/logs/paged(page=${logsPage.number + 1}, size=${logsPage.size})}">
+          Next
+        </a>
+      </div>
     </div>
   </div>
 </section>
