@@ -1,6 +1,7 @@
 package vortex.imwp.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.dtos.CategoryDTO;
@@ -12,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import vortex.imwp.models.Item;
 import vortex.imwp.models.Response;
 import vortex.imwp.models.WarehouseItem;
-import vortex.imwp.services.CategoryService;
-import vortex.imwp.services.ItemService;
-import vortex.imwp.services.WarehouseItemService;
-import vortex.imwp.services.WarehouseService;
+import vortex.imwp.services.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,12 +26,14 @@ public class InventoryController {
 	ItemService itemService;
 	WarehouseItemService warehouseItemService;
 	CategoryService categoryService;
+	private final EmployeeService employeeService;
 	public InventoryController(WarehouseService warehouseService, ItemService itemService,
-							   WarehouseItemService warehouseItemService, CategoryService categoryService) {
+							   WarehouseItemService warehouseItemService, CategoryService categoryService, EmployeeService employeeService) {
 		this.warehouseService = warehouseService;
 		this.itemService = itemService;
 		this.warehouseItemService = warehouseItemService;
 		this.categoryService = categoryService;
+		this.employeeService = employeeService;
 	}
 
 
@@ -44,10 +44,9 @@ public class InventoryController {
 						  @RequestParam Long barcode,
 						  @RequestParam(required = false) Long categoryId,
 						  @RequestParam(required = false) String newCategoryName,
-						  @RequestParam(required = false) List<Long> warehouseIds,
-						  @RequestParam(required = false) List<Integer> warehouseQtys) {
+						  @RequestParam int quantity,
+						  Authentication authentication) {
 		CategoryDTO categoryDTO;
-
 		if (newCategoryName != null && !newCategoryName.trim().isEmpty()) {
 			categoryDTO = categoryService.createCategoryIfNotExists(new CategoryDTO(null, newCategoryName.trim()));
 		} else if (categoryId != null) {
@@ -60,31 +59,27 @@ public class InventoryController {
 		ItemDTO itemDTO = new ItemDTO(name, description, price, barcode, categoryDTO);
 		Item savedItem = itemService.addItem(itemDTO);
 
-		if (warehouseIds != null && warehouseQtys != null && warehouseIds.size() == warehouseQtys.size()) {
-			for (int i = 0; i < warehouseIds.size(); i++) {
-				Long wid = warehouseIds.get(i);
-				Integer qty = warehouseQtys.get(i);
+		Long userWarehouseId = employeeService.getEmployeeByAuthentication(authentication).getWarehouseID();
+		var warehouse = warehouseService.getWarehouseById(userWarehouseId)
+				.orElseThrow(() -> new IllegalStateException("User's warehouse not found: " + userWarehouseId));
 
-				if (qty == null || qty <= 0) continue;
-
-				warehouseService.getWarehouseById(wid).ifPresent(warehouse -> {
-					WarehouseItem wi = new WarehouseItem();
-					wi.setItem(savedItem);
-					wi.setWarehouse(warehouse);
-					wi.setQuantityInStock(qty);
-					warehouseItemService.saveWarehouseItem(wi);
-				});
-			}
+		if (quantity > 0) {
+			WarehouseItem wi = new WarehouseItem();
+			wi.setItem(savedItem);
+			wi.setWarehouse(warehouse);
+			wi.setQuantityInStock(quantity);
+			warehouseItemService.saveWarehouseItem(wi);
 		}
 
-		return "redirect:/inventory/items";
+		return "redirect:/api/home";
+
 	}
 
 
 	@PostMapping("/delete")
 	public String deleteItem(@RequestParam("item_id") Long itemId) {
 		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
-		return "redirect:/inventory/items";
+		return "redirect:/api/home";
 	}
 
 	@GetMapping()
