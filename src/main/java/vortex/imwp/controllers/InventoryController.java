@@ -2,8 +2,8 @@ package vortex.imwp.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import vortex.imwp.dtos.CategoryDTO;
 import vortex.imwp.dtos.ItemDTO;
+import vortex.imwp.dtos.CategoryDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,14 +77,14 @@ public class InventoryController {
 			}
 		}
 
-		return "redirect:/inventory/home";
+		return "redirect:/inventory/items";
 	}
 
 
 	@PostMapping("/delete")
 	public String deleteItem(@RequestParam("item_id") Long itemId) {
 		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
-		return "redirect:/inventory/home";
+		return "redirect:/inventory/items";
 	}
 
 	@GetMapping()

@@ -11,7 +11,7 @@ import vortex.imwp.services.PasswordValidatorService;
 import vortex.imwp.dtos.EmployeeDTO;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class AdminController {
     private final PasswordValidatorService passwordValidatorService;
     private final EmployeeService employeeService;
@@ -21,9 +21,19 @@ public class AdminController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/admin")
+    @GetMapping()
     public String admin() {
         return "/admin/admin-dashboard";
+    }
+
+    @GetMapping("/user-management")
+    public String userManagement() {
+        return "/admin/user-management";
+    }
+
+    @GetMapping("/activity-log")
+    public String activityLog() {
+        return "/admin/activity-log";
     }
 
     @GetMapping("/register")
