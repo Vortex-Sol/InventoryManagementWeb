@@ -87,8 +87,7 @@
           <a class="nav-link" th:href="@{/api/receipt/start-checkout}">Checkout</a>
         </li>
       </ul>
-
-      <form class="d-flex ms-auto" th:action="@{/search}" method="get">
+      <form class="d-flex ms-auto" th:action="@{/api/items/search}" method="get">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <input class="form-control me-2" type="search" name="keyword" placeholder="Search..." aria-label="Search">
         <button class="btn btn-outline-secondary" type="submit">Search</button>
