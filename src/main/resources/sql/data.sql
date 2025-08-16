@@ -40,8 +40,11 @@ VALUES
 INSERT INTO
     Category (Name)
 VALUES
-    ('Tech'),
-    ('Tech Accessories');
+    ('A'),
+    ('B'),
+    ('C'),
+    ('D'),
+    ('E');
 
 -- Items
 INSERT INTO
