@@ -444,6 +444,27 @@ Key Components:
 | **Spain**        | 21%          | 10%, 4%               | 
 | **Sweden**       | 25%          | 12%, 6%               | 
 
+#### Functionality
+
+Brutto Generation
+- _TaxService_ has function **public Double getBrutto(Item item, Warehouse warehouse)**
+- this function gets the **category**,  Netto **price** from _item_ (**getPrice()**) and **country** from _warehouse_
+- _TaxService_ then searches up the VAT rate in a map based on the **country and category**
+- it uses the rate to apply to the netto price and returns it (now as **brutto**)
+
+TaxService
+- **public Double getBrutto(Item item, Warehouse warehouse)**
+  - Retrieves the Brutto price of a product
+- **public void editVATRate(Category category, String country)**
+- **public void addVATRate(Category category, String country)**
+- **public void removeVATRate(Category category, String country)**
+
+
+
+> **[NOTE]** This architecture is missing a few things to work:
+1. _ENUM country_ field in **Warehouse**
+2. _TaxService_ and functions
+3. VAT rate mapping
 ---
 
 ## Future Features
