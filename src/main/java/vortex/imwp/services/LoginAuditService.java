@@ -23,16 +23,17 @@ public class LoginAuditService {
         this.employeeRepository = employeeRepository;
     }
 
-    public void recordLogin(String username, String ipAddress, Timestamp timestamp, boolean success) {
+    public Long recordLogin(String username, String ipAddress, Timestamp timestamp, boolean success) {
 
         Optional<Employee> employee_check = employeeRepository.findByUsername(username);
         if (employee_check.isEmpty()) {
             System.out.println("Employee with username: " + username + " not found");
-            return;
+            return null;
         }
         Employee employee = employee_check.get();
         LoginAudit loginAudit = new LoginAudit(employee.getUsername(), ipAddress, timestamp, success, employee);
-        loginAuditRepository.save(loginAudit);
+        loginAudit = loginAuditRepository.save(loginAudit);
+        return loginAudit.getId();
     }
 
     public List<LoginAudit> getLoginAuditsByEmployee(Employee employee) {
