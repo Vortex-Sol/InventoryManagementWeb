@@ -5,8 +5,7 @@ import org.springframework.stereotype.Service;
 import vortex.imwp.dtos.SettingsDTO;
 import vortex.imwp.models.Employee;
 import vortex.imwp.models.Settings;
-import vortex.imwp.models.SettingsChangeAudit;
-import vortex.imwp.models.SettingsChangeAuditID;
+import vortex.imwp.models.SettingsChangeLog;
 import vortex.imwp.repositories.SettingsChangeLogRepository;
 import vortex.imwp.repositories.SettingsRepository;
 
@@ -122,8 +121,8 @@ public class SettingsService {
                 settings.setCashCountEndTime(settingsDto.getCashCountEndTime());
             }
             Employee admin = employeeService.getEmployeeByAuthentication(authentication);
-            SettingsChangeAuditID settingsChangeAuditID = new SettingsChangeAuditID(settings.getId(), settings.getManagerId().getWarehouseID(), admin.getId());
-            SettingsChangeAudit changeLog = new SettingsChangeAudit(sb.toString(), settingsChangeAuditID);
+
+            SettingsChangeLog changeLog = new SettingsChangeLog(settings.getId(), settings.getManagerId().getWarehouseID(), admin.getId(),sb.toString());
 
             settingsRepository.save(settings);
             settingsChangeLogRepository.save(changeLog);
