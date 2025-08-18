@@ -54,10 +54,6 @@ public class AdminController {
     }
 
 
-    @GetMapping("/activity-log")
-    public String activityLog() {
-        return "/admin/activity-log";
-    }
 
     @GetMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
