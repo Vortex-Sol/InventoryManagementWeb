@@ -30,6 +30,7 @@ public class AdminController {
     }
 
     @GetMapping("/user-management")
+    @PreAuthorize("hasRole('ADMIN')")
     public String userManagement(Model model) {
         var users = employeeService.getAllEmployees().orElseGet(List::of);
         model.addAttribute("users", users);
@@ -37,16 +38,18 @@ public class AdminController {
         return "/admin/user-management";
     }
 
-    @PostMapping("/users/promote")
     @Transactional
+    @PostMapping("/users/promote")
+    @PreAuthorize("hasRole('ADMIN')")
     public String promoteUser(@RequestParam("id") Long userId,
                               @RequestParam("role") String roleName) {
         employeeService.assignRole(userId, roleName);
         return "redirect:/api/admin/user-management";
     }
 
-    @PostMapping("/users/demote")
     @Transactional
+    @PostMapping("/users/demote")
+    @PreAuthorize("hasRole('ADMIN')")
     public String demoteUser(@RequestParam("id") Long userId,
                              @RequestParam("role") String roleName) {
         employeeService.removeRole(userId, roleName);

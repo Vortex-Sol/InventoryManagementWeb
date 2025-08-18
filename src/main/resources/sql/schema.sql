@@ -61,6 +61,8 @@ CREATE TABLE Employee_Login_Audit (
 
 CREATE TABLE Warehouse (
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    Phone VARCHAR(20) NOT NULL,
+    Email Varchar(50) NOT NULL,
     Address VARCHAR(250) NOT NULL
 );
 

@@ -7,11 +7,15 @@ public class WarehouseDTOMapper {
     public static WarehouseDTO map(Warehouse warehouse) {
         return new WarehouseDTO(
                 warehouse.getId(),
+                warehouse.getPhone(),
+                warehouse.getEmail(),
                 warehouse.getAddress()
         );
     }
     public static Warehouse map(WarehouseDTO dto) {
         return new Warehouse(
+                dto.getPhone(),
+                dto.getEmail(),
                 dto.getAddress()
         );
     }

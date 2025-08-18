@@ -25,8 +25,9 @@
       <pre th:text="${receiptJson}"></pre>
     </div>
     <div th:if="${!receipt.cancelled}">
-      <form th:action="@{/api/receipt/cancel/{id}(id=${receipt.id})}" method="post">
+      <form th:action="@{/api/salesman/cancel/{id}(id=${receipt.id})}" method="post">
         <button type="submit" class="btn btn-danger">Cancel Receipt</button>
+        <a th:href="@{/api/salesman}" class="btn btn-success">Start new</a>
       </form>
     </div>
 
@@ -35,7 +36,6 @@
       <p><strong>Cancelled By:</strong> <span th:text="${receipt.cancelledBy.name}"></span></p>
       <p><strong>Cancelled At:</strong> <span th:text="${#temporals.format(receipt.cancelledAt, 'yyyy-MM-dd HH:mm')}"></span></p>
     </div>
-
   </div>
 </section>
 </html>

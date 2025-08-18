@@ -11,25 +11,20 @@
       <h4>Add Items to Sale</h4>
     </div>
     <div class="card-body">
-      <form th:action="@{/api/receipt/addItem-form}" method="post">
+      <form th:action="@{/api/salesman/addItem-form}" method="post">
         <input type="hidden" name="saleId" th:value="${sale.id}" />
 
         <div class="mb-3">
-          <label class="form-label">Select Warehouse</label>
-          <select class="form-select" name="warehouseId" required>
-            <option value="">-- Select a warehouse --</option>
-            <option th:each="warehouse : ${warehouses}"
-                    th:value="${warehouse.id}"
-                    th:text="${warehouse.address}">
-            </option>
-          </select>
+          <label class="form-label">Warehouse</label>
+          <input type="text" class="form-control" th:value="${currentWarehouse.address}" disabled />
+          <input type="hidden" name="warehouseId" th:value="${currentWarehouse.id}" />
         </div>
 
         <div class="mb-3">
           <label class="form-label">Select Product (by name)</label>
           <select class="form-select" name="itemId">
             <option value="">-- Select a product --</option>
-            <option th:each="item : ${items}"
+            <option th:each="item : ${itemsFromUserWarehouse}"
                     th:value="${item.id}"
                     th:text="${item.name + ' | Barcode: ' + item.barcode + ' | Price: ' + item.price + ' | Stock: ' + stockMap[item.id]}">
             </option>
@@ -42,7 +37,6 @@
           <input type="text" class="form-control" name="barcode" placeholder="Enter barcode" />
         </div>
 
-        <!-- Quantity -->
         <div class="mb-3">
           <label class="form-label">Quantity</label>
           <input type="number" class="form-control" name="quantity" min="1" required />
@@ -53,7 +47,6 @@
 
       <hr class="my-4"/>
 
-      <!-- Sale Items -->
       <div th:if="${sale.saleItems.size() > 0}">
         <h5>Current Items in Sale</h5>
         <ul class="list-group">
@@ -71,7 +64,7 @@
         </div>
 
         <div class="mt-4">
-          <a class="btn btn-success" th:href="@{/api/receipt/checkout/{id}(id=${sale.id})}">Proceed to Checkout</a>
+          <a class="btn btn-success" th:href="@{/api/salesman/checkout/{id}(id=${sale.id})}">Proceed to Checkout</a>
         </div>
       </div>
     </div>
