@@ -2,6 +2,7 @@ package vortex.imwp.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.dtos.CategoryDTO;
@@ -38,6 +39,7 @@ public class InventoryController {
 
 
 	@PostMapping("/add")
+	@PreAuthorize("hasRole('STOCKER')")
 	public String addItem(@RequestParam String name,
 						  @RequestParam String description,
 						  @RequestParam double price,
@@ -77,12 +79,14 @@ public class InventoryController {
 
 
 	@PostMapping("/delete")
+	@PreAuthorize("hasRole('STOCKER')")
 	public String deleteItem(@RequestParam("item_id") Long itemId) {
 		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
 		return "redirect:/api/home";
 	}
 
 	@GetMapping()
+	@PreAuthorize("hasRole('STOCKER')")
 	public ResponseEntity<Response> getItems() {
 		Response resp = new Response();
 
@@ -99,6 +103,7 @@ public class InventoryController {
 		return ResponseEntity.ok(resp);
 	}
 	@GetMapping("/search")
+	@PreAuthorize("hasRole('STOCKER')")
 	public String searchItems(@RequestParam("keyword") String keyword, Model model) {
 		List<ItemDTO> results = itemService.searchAndMap(keyword);
 		Map<Long, Integer> quantities = itemService.getQuantitiesForAllItems();
@@ -113,6 +118,7 @@ public class InventoryController {
 	}
 
 	@GetMapping("/checkout")
+	@PreAuthorize("hasRole('STOCKER')")
 	public String inventoryHome() {
 		return "inventory/receipt/checkout";
 	}

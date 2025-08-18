@@ -1,5 +1,6 @@
 package vortex.imwp.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,7 @@ public class SettingsController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public String getSettings(
             Authentication authentication,
             Model model,
@@ -58,6 +60,7 @@ public class SettingsController {
 
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public String changeSettings(@ModelAttribute("settingsDto") SettingsDTO settingsDto,
                                  Authentication authentication,
                                  BindingResult bindingResult,
@@ -68,7 +71,6 @@ public class SettingsController {
                 manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
 
             if (bindingResult.hasErrors()) {
-                // при ошибках валидации вернём форму (модель уже содержит settingsDto и ошибки)
                 return "/admin/settings";
             }
             System.out.println(settingsDto);

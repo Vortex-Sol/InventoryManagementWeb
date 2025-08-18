@@ -1,5 +1,8 @@
 package vortex.imwp.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import vortex.imwp.mappers.ReportDTOMapper;
 import vortex.imwp.models.*;
 import vortex.imwp.repositories.ReportRepository;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,16 +24,16 @@ public class ReportService {
     private final EmployeeService employeeService;
     private final LoginAuditService loginAuditService;
     private final SaleService saleService;
-    private final WarehouseService warehouseService;
     private final WarehouseItemService warehouseItemService;
+    private final ReceiptService receiptService;
 
-    public ReportService(ReportRepository reportRepository, EmployeeService employeeService, LoginAuditService loginAuditService, SaleService saleService, WarehouseService warehouseService, WarehouseItemService warehouseItemService) {
+    public ReportService(ReportRepository reportRepository, EmployeeService employeeService, LoginAuditService loginAuditService, SaleService saleService, WarehouseItemService warehouseItemService, ReceiptService receiptService) {
         this.reportRepository = reportRepository;
         this.employeeService = employeeService;
         this.loginAuditService = loginAuditService;
         this.saleService = saleService;
-        this.warehouseService = warehouseService;
         this.warehouseItemService = warehouseItemService;
+        this.receiptService = receiptService;
     }
 
     public Optional<List<ReportDTO>> getAll() {
@@ -52,7 +56,7 @@ public class ReportService {
 
     public JSONObject generateTodayGeneralReport() { return new JSONObject(); }
 
-    public JSONObject generateTodayEmployeeReport(Authentication auth) {
+    public JSONObject generateTodayEmployeeReport(Authentication auth) throws JsonProcessingException {
 
         Employee manager = employeeService.getEmployeeByAuthentication(auth);
 
@@ -78,18 +82,15 @@ public class ReportService {
                     )).toList();
             employeeData.put("loginAudits", loginAudits);
 
-            List<Object> salesData = new ArrayList<>();
-            List<Sale> sales = saleService.getByEmployeeAndDate(employee, LocalDate.now());
-            for (Sale sale : sales) {
-                Map<String, Object> saleData = new HashMap<>();
-                saleData.put("saleId", sale.getId());
-                saleData.put("saleTime", sale.getSaleTime());
-
-                Map<ItemDTO, Integer> saleItems = saleService.getItemsWithQuantity(sale.getId());
-                saleData.put("saleItems", saleItems);
-                salesData.add(saleData);
+            List<Object> receiptsData = new ArrayList<>();
+            List<Receipt> receipts = receiptService.getByEmployeeAndDate(employee, LocalDate.now());
+            ObjectMapper mapper = new ObjectMapper();
+            for (Receipt receipt : receipts) {
+                String receiptString = receiptService.generateReceiptJson(receipt);
+                Map<String, Object> parsed = mapper.readValue(receiptString, new TypeReference<Map<String,Object>>() {});
+                receiptsData.add(parsed);
             }
-            employeeData.put("salesData", salesData);
+            employeeData.put("receiptsData", receiptsData);
 
             employeesData.add(employeeData);
         }
@@ -147,7 +148,7 @@ public class ReportService {
         return reportData;
     }
 
-    public JSONObject generateTodaySaleReport(Authentication auth) {
+    public JSONObject generateTodayReceiptsReport(Authentication auth) throws JsonProcessingException {
 
         Employee manager = employeeService.getEmployeeByAuthentication(auth);
 
@@ -158,44 +159,19 @@ public class ReportService {
         body.put("createdAtWarehouseID", manager.getWarehouseID());
         body.put("timestamp", timestamp);
 
-        List<Object> salesData = new ArrayList<>();
-        List<Sale> sales = saleService.getByWarehouseIdAndDate(manager.getWarehouseID(), LocalDate.now());
-        double totalPriceSales = 0.0;
-        for (Sale sale : sales) {
-            Map<String, Object> saleData = new HashMap<>();
-            saleData.put("saleId", sale.getId());
-            saleData.put("saleTime", sale.getSaleTime());
-            Map<ItemDTO, Integer> saleItems = saleService.getItemsWithQuantity(sale.getId());
+        List<Object> receiptsData = new ArrayList<>();
+        List<Receipt> receipts = receiptService.getByWarehouseIdAndDate(manager.getWarehouseID(), LocalDate.now());
+        BigDecimal totalPriceReceipts = BigDecimal.ZERO;
+        ObjectMapper mapper = new ObjectMapper();
+        for (Receipt receipt : receipts) {
 
-            List<Map<String, Object>> itemsList = new ArrayList<>();
-            double totalPriceSale = 0.0;
-
-            for (Map.Entry<ItemDTO, Integer> entry : saleItems.entrySet()) {
-                ItemDTO itemDTO = entry.getKey();
-                Integer quantity = entry.getValue();
-
-                double totalPriceItem = quantity * itemDTO.getPrice();
-                totalPriceSale += totalPriceItem;
-
-                Map<String, Object> itemData = new LinkedHashMap<>();
-                itemData.put("itemID", itemDTO.getId());
-                itemData.put("itemName", itemDTO.getName());
-                itemData.put("itemPrice", itemDTO.getPrice());
-                itemData.put("itemBarcode", itemDTO.getBarcode());
-                itemData.put("itemCategory", itemDTO.getCategory().getName());
-
-                itemData.put("quantity", quantity);
-                itemData.put("totalPrice", totalPriceItem);
-
-                itemsList.add(itemData);
-            }
-            saleData.put("itemsList", itemsList);
-            saleData.put("totalPriceSale", totalPriceSale);
-            totalPriceSales += totalPriceSale;
-            salesData.add(saleData);
+            totalPriceReceipts = totalPriceReceipts.add(receipt.getTotalAmount());
+            String receiptString = receiptService.generateReceiptJson(receipt);
+            Map<String, Object> parsed = mapper.readValue(receiptString, new TypeReference<Map<String,Object>>() {});
+            receiptsData.add(parsed);
         }
-        body.put("salesData", salesData);
-        body.put("totalPriceSales", totalPriceSales);
+        body.put("receiptsData", receiptsData);
+        body.put("totalPriceReceipts", totalPriceReceipts);
 
         JSONObject reportData = new JSONObject(body);
 
@@ -210,7 +186,7 @@ public class ReportService {
     }
 
     public JSONObject generatePeriodGeneralReport() { return new JSONObject(); }
-    public JSONObject generatePeriodSaleReport(Authentication auth, Timestamp start, Timestamp end) {
+    public JSONObject generatePeriodReceiptsReport(Authentication auth, LocalDateTime start, LocalDateTime end) throws JsonProcessingException {
 
         Employee manager = employeeService.getEmployeeByAuthentication(auth);
 
@@ -221,44 +197,19 @@ public class ReportService {
         body.put("createdAtWarehouseID", manager.getWarehouseID());
         body.put("timestamp", timestamp);
 
-        List<Object> salesData = new ArrayList<>();
-        List<Sale> sales = saleService.getByWarehouseIdAndPeriod(manager.getWarehouseID(), start, end);
-        double totalPriceSales = 0.0;
-        for (Sale sale : sales) {
-            Map<String, Object> saleData = new HashMap<>();
-            saleData.put("saleId", sale.getId());
-            saleData.put("saleTime", sale.getSaleTime());
-            Map<ItemDTO, Integer> saleItems = saleService.getItemsWithQuantity(sale.getId());
+        List<Object> receiptsData = new ArrayList<>();
+        List<Receipt> receipts = receiptService.getByWarehouseIdAndPeriod(manager.getWarehouseID(), start, end);
+        BigDecimal totalPriceReceipts = BigDecimal.ZERO;
+        ObjectMapper mapper = new ObjectMapper();
+        for (Receipt receipt : receipts) {
 
-            List<Map<String, Object>> itemsList = new ArrayList<>();
-            double totalPriceSale = 0.0;
-
-            for (Map.Entry<ItemDTO, Integer> entry : saleItems.entrySet()) {
-                ItemDTO itemDTO = entry.getKey();
-                Integer quantity = entry.getValue();
-
-                double totalPriceItem = quantity * itemDTO.getPrice();
-                totalPriceSale += totalPriceItem;
-
-                Map<String, Object> itemData = new LinkedHashMap<>();
-                itemData.put("itemID", itemDTO.getId());
-                itemData.put("itemName", itemDTO.getName());
-                itemData.put("itemPrice", itemDTO.getPrice());
-                itemData.put("itemBarcode", itemDTO.getBarcode());
-                itemData.put("itemCategory", itemDTO.getCategory().getName());
-
-                itemData.put("quantity", quantity);
-                itemData.put("totalPrice", totalPriceItem);
-
-                itemsList.add(itemData);
-            }
-            saleData.put("itemsList", itemsList);
-            saleData.put("totalPriceSale", totalPriceSale);
-            totalPriceSales += totalPriceSale;
-            salesData.add(saleData);
+            totalPriceReceipts = totalPriceReceipts.add(receipt.getTotalAmount());
+            String receiptString = receiptService.generateReceiptJson(receipt);
+            Map<String, Object> parsed = mapper.readValue(receiptString, new TypeReference<Map<String,Object>>() {});
+            receiptsData.add(parsed);
         }
-        body.put("salesData", salesData);
-        body.put("totalPriceSales", totalPriceSales);
+        body.put("receiptsData", receiptsData);
+        body.put("totalPriceReceipts", totalPriceReceipts);
 
         JSONObject reportData = new JSONObject(body);
 
@@ -272,7 +223,7 @@ public class ReportService {
         return reportData;
     }
     public JSONObject generatePeriodInventoryReport() { return new JSONObject(); }
-    public JSONObject generatePeriodEmployeeReport(Authentication auth, Timestamp start, Timestamp end) {
+    public JSONObject generatePeriodEmployeeReport(Authentication auth, LocalDateTime start, LocalDateTime end) throws JsonProcessingException {
 
         Employee manager = employeeService.getEmployeeByAuthentication(auth);
 
@@ -290,7 +241,7 @@ public class ReportService {
             employeeData.put("employeeId", employee.getId());
             employeeData.put("username", employee.getUsername());
 
-            List<Map<String, Object>> loginAudits = loginAuditService.getLoginAuditsByEmployeeAndPeriod(employee, start, end)
+            List<Map<String, Object>> loginAudits = loginAuditService.getLoginAuditsByEmployeeAndPeriod(employee, Timestamp.valueOf(start), Timestamp.valueOf(end))
                     .stream().map(audit -> Map.<String, Object>of(
                             "loginDate", audit.getLoginTime(),
                             "ipAddress", audit.getIpAddress(),
@@ -298,18 +249,15 @@ public class ReportService {
                     )).toList();
             employeeData.put("loginAudits", loginAudits);
 
-            List<Object> salesData = new ArrayList<>();
-            List<Sale> sales = saleService.getByEmployeeAndPeriod(employee, start, end);
-            for (Sale sale : sales) {
-                Map<String, Object> saleData = new HashMap<>();
-                saleData.put("saleId", sale.getId());
-                saleData.put("saleTime", sale.getSaleTime());
-
-                Map<ItemDTO, Integer> saleItems = saleService.getItemsWithQuantity(sale.getId());
-                saleData.put("saleItems", saleItems);
-                salesData.add(saleData);
+            List<Object> receiptsData = new ArrayList<>();
+            List<Receipt> receipts = receiptService.getByEmployeeAndPeriod(employee, start, end);
+            ObjectMapper mapper = new ObjectMapper();
+            for (Receipt receipt : receipts) {
+                String receiptString = receiptService.generateReceiptJson(receipt);
+                Map<String, Object> parsed = mapper.readValue(receiptString, new TypeReference<Map<String,Object>>() {});
+                receiptsData.add(parsed);
             }
-            employeeData.put("salesData", salesData);
+            employeeData.put("receiptsData", receiptsData);
 
             employeesData.add(employeeData);
         }
