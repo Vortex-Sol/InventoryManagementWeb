@@ -57,6 +57,8 @@ INSERT INTO
     Warehouse_Items (Warehouse_ID, Item_ID, Quantity_in_Stock, SKU)
 VALUES
     (1, 1, 5, '001-001-AF32XA'),
+    (2, 1, 5, '001-001-AF32XA'),
+    (0, 1, 5, '001-001-AF32XA'),
     (1, 2, 20, '001-002-KFAM8M'),
     (2, 3, 10, '002-002-AAA12G'),
     (2, 4, 7, '002-001-DD00C4');
