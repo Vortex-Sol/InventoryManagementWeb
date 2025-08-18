@@ -1,6 +1,7 @@
 package vortex.imwp.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -9,11 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.models.Receipt;
 import vortex.imwp.models.Sale;
-import vortex.imwp.services.ItemService;
-import vortex.imwp.services.ReceiptService;
-import vortex.imwp.services.SaleService;
+import vortex.imwp.services.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vortex.imwp.services.WarehouseService;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -23,19 +21,46 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
-@RequestMapping("/api/receipt")
+@RequestMapping("/api/salesman")
 public class ReceiptController {
 	private final ReceiptService receiptService;
 	private final SaleService saleService;
 	private final ItemService itemService;
 	private final WarehouseService warehouseService;
+	private final EmployeeService employeeService;
 
 	public ReceiptController(ReceiptService receiptService, SaleService saleService,
-							 ItemService itemService,WarehouseService warehouseService) {
+							 ItemService itemService,WarehouseService warehouseService
+							, EmployeeService employeeService) {
 		this.receiptService = receiptService;
 		this.saleService = saleService;
 		this.itemService = itemService;
 		this.warehouseService = warehouseService;
+		this.employeeService = employeeService;
+	}
+	@GetMapping()
+	@PreAuthorize("hasRole('SALESMAN')")
+	public String startCheckout(@AuthenticationPrincipal UserDetails userDetails) {
+		Sale sale = saleService.createSale(userDetails.getUsername());
+		return "redirect:/api/salesman/" + sale.getId() + "/add-items";
+	}
+
+	@PostMapping("/checkout")
+	@PreAuthorize("hasRole('SALESMAN')")
+	public String checkout(@RequestParam Long saleId,
+						   @RequestParam String paymentMethod,
+						   @RequestParam(required = false) BigDecimal amountReceived,
+						   Model model) {
+		Sale sale = saleService.getSaleById(saleId);
+
+		try {
+			Receipt receipt = receiptService.createReceipt(sale, paymentMethod, amountReceived);
+			return "redirect:/api/salesman/confirm/" + receipt.getId();
+		} catch (IllegalArgumentException e) {
+			model.addAttribute("sale", sale);
+			model.addAttribute("error", e.getMessage());
+			return "inventory/receipt/checkout";
+		}
 	}
 
 	@GetMapping("/checkout/{saleId}")
@@ -74,65 +99,51 @@ public class ReceiptController {
 
 	@GetMapping("/{saleId}/add-items")
 	@PreAuthorize("hasRole('SALESMAN')")
-	public String showAddItemsPage(@PathVariable Long saleId, Model model) {
-		Sale sale = saleService.getSaleById(saleId);
-		List<ItemDTO> items = itemService.getAll();
-		Map<Long, Integer> stockMap = itemService.getQuantitiesForAllItems();
+	public String showAddItemsPage(@PathVariable Long saleId,
+								   Authentication authentication,
+								   Model model) {
+		var sale = saleService.getSaleById(saleId);
+		var employee = employeeService.getEmployeeByAuthentication(authentication);
+		Long warehouseId = employee.getWarehouseID();
+
+		var warehouse = warehouseService.getWarehouseById(warehouseId)
+				.orElseThrow(() -> new IllegalStateException("Warehouse not found: " + warehouseId));
 
 		model.addAttribute("sale", sale);
-		model.addAttribute("items", items);
-		model.addAttribute("stockMap", stockMap);
-		model.addAttribute("warehouses", warehouseService.getAllWarehouses());
+		model.addAttribute("currentWarehouse", warehouse);
+		model.addAttribute("itemsFromUserWarehouse", itemService.getItemsByWarehouse(warehouseId));
+		model.addAttribute("stockMap", itemService.getQuantitiesForWarehouse(warehouseId));
 		return "inventory/receipt/add-items";
 	}
 
-	@GetMapping("/start-checkout")
-	@PreAuthorize("hasRole('SALESMAN')")
-	public String startCheckout(@AuthenticationPrincipal UserDetails userDetails) {
-		Sale sale = saleService.createSale(userDetails.getUsername());
-		return "redirect:/api/receipt/" + sale.getId() + "/add-items";
-	}
-	@PostMapping("/checkout")
-	@PreAuthorize("hasRole('SALESMAN')")
-	public String checkout(@RequestParam Long saleId,
-						   @RequestParam String paymentMethod,
-						   @RequestParam(required = false) BigDecimal amountReceived,
-						   Model model) {
-		Sale sale = saleService.getSaleById(saleId);
 
-		try {
-			Receipt receipt = receiptService.createReceipt(sale, paymentMethod, amountReceived);
-			return "redirect:/api/receipt/confirm/" + receipt.getId();
-		} catch (IllegalArgumentException e) {
-			model.addAttribute("sale", sale);
-			model.addAttribute("error", e.getMessage());
-			return "inventory/receipt/checkout";
-		}
-	}
 
 	@PostMapping("/addItem-form")
 	@PreAuthorize("hasRole('SALESMAN')")
 	public String addItemToSaleForm(@RequestParam Long saleId,
-									@RequestParam Long warehouseId,
+									@RequestParam(required = false) Long warehouseId,
 									@RequestParam(required = false) Long itemId,
 									@RequestParam(required = false) String barcode,
 									@RequestParam int quantity,
+									Authentication authentication,
 									RedirectAttributes redirectAttributes) {
+		if (warehouseId == null) {
+			warehouseId = employeeService.getEmployeeByAuthentication(authentication).getWarehouseID();
+		}
 
 		Long resolvedItemId = null;
-
 		if (barcode != null && !barcode.isBlank()) {
-			Optional<ItemDTO> item = itemService.getItemByBarcode(Long.parseLong(barcode));
+			var item = itemService.getItemByBarcode(Long.parseLong(barcode));
 			if (item.isEmpty()) {
 				redirectAttributes.addAttribute("error", "Item not found for barcode: " + barcode);
-				return "redirect:/api/receipt/" + saleId + "/add-items";
+				return "redirect:/api/salesman/" + saleId + "/add-items";
 			}
 			resolvedItemId = item.get().getId();
 		} else if (itemId != null) {
 			resolvedItemId = itemId;
 		} else {
 			redirectAttributes.addAttribute("error", "Please select a product or enter a barcode.");
-			return "redirect:/api/receipt/" + saleId + "/add-items";
+			return "redirect:/api/salesman/" + saleId + "/add-items";
 		}
 
 		try {
@@ -140,10 +151,8 @@ public class ReceiptController {
 		} catch (IllegalArgumentException e) {
 			redirectAttributes.addAttribute("error", e.getMessage());
 		}
-
-		return "redirect:/api/receipt/" + saleId + "/add-items";
+		return "redirect:/api/salesman/" + saleId + "/add-items";
 	}
-
 
 
 
@@ -158,7 +167,7 @@ public class ReceiptController {
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("error", "Cancellation failed: " + e.getMessage());
 		}
-		return "redirect:/api/receipt/confirm/" + receiptId;
+		return "redirect:/api/salesman/confirm/" + receiptId;
 	}
 
 

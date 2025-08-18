@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import vortex.imwp.repositories.WarehouseItemRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
@@ -105,7 +106,36 @@ public class ItemService {
 
         return itemRepository.save(item);
     }
+    public List<ItemDTO> getItemsByWarehouse(Long warehouseId) {
+        var rows = warehouseItemRepository.findAllByWarehouseId(warehouseId);
+        return rows.stream()
+                .map(WarehouseItem::getItem)
+                .distinct()
+                .map(ItemDTOMapper::map)
+                .toList();
+    }
 
+    public Map<Long, Integer> getQuantitiesForWarehouse(Long warehouseId) {
+        var rows = warehouseItemRepository.findAllByWarehouseId(warehouseId);
+        Map<Long, Integer> map = new HashMap<>();
+        for (WarehouseItem wi : rows) {
+            map.put(wi.getItem().getId(), wi.getQuantityInStock());
+        }
+        return map;
+    }
+
+    public List<ItemDTO> searchAndMapInWarehouse(String keyword, Long warehouseId) {
+        if (keyword == null || keyword.isBlank()) return Collections.emptyList();
+
+        var allowedItemIds = warehouseItemRepository.findAllByWarehouseId(warehouseId)
+                .stream().map(wi -> wi.getItem().getId()).collect(Collectors.toSet());
+
+        return itemRepository.findByNameContainingIgnoreCase(keyword.trim())
+                .stream()
+                .filter(i -> allowedItemIds.contains(i.getId()))
+                .map(ItemDTOMapper::map)
+                .toList();
+    }
 
     public Optional<Item> getItemById(Long id) {
         return itemRepository.findById(id);
