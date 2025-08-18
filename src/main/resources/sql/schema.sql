@@ -67,7 +67,8 @@ CREATE TABLE Settings(
     Notify_Minimum_Cash_Discrepancy DECIMAL(10, 2) NOT NULL,
     Destroy_Refund_Data_After_N_Days SMALLINT NOT NULL,
     Cash_Count_Start_Time TIME NOT NULL,
-    Cash_Count_End_Time TIME NOT NULL
+    Cash_Count_End_Time TIME NOT NULL,
+    Auto_Generate_Inventory_Report_Time TIME NOT NULL
 );
 
 CREATE TABLE Settings_Change_Log(
