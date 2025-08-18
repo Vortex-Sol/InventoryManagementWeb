@@ -93,3 +93,13 @@ INSERT INTO
     Settings_Change_Log (Setting_ID, Warehouse_ID, Admin_ID, Changed_At, Settings_Changed)
 VALUES
     (1, 1, 1, DEFAULT,'ALL');
+
+INSERT INTO
+    Receipt (Sale_ID, Total_Amount, Payment_Method, Amount_Received, Change_Given, Is_Cancelled, Cancelled_At, Cancelled_By)
+VALUES
+    (1, 25.500, 'Cash', 30.000, 4.500, FALSE, NULL, NULL),
+    (2, 99.990, 'Card', 99.990, 0.000, FALSE, NULL, NULL),
+    (3, 15.750, 'Cash', 20.000, 4.250, TRUE, '2025-08-10 14:32:00', 2),
+    (4, 45.000, 'Mobile Payment', 50.000, 5.000, FALSE, NULL, NULL),
+    (5, 120.300, 'Card', 120.300, 0.000, TRUE, '2025-08-12 09:15:00', 1);
+
