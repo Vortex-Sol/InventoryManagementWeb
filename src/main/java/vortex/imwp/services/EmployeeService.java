@@ -118,4 +118,28 @@ public class EmployeeService {
     public void deleteEmployee(long id) {
         employeeRepository.deleteById(id);
     }
+
+    @Transactional
+    public void assignRole(Long userId, String roleName) {
+        var employee = employeeRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + userId));
+        var job = jobRepository.findByName(roleName)
+                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleName));
+
+        boolean hasRole = employee.getJobs().stream()
+                .anyMatch(j -> roleName.equals(j.getName()));
+        if (!hasRole) {
+            employee.getJobs().add(job);
+            employeeRepository.save(employee);
+        }
+    }
+
+    @Transactional
+    public void removeRole(Long userId, String roleName) {
+        var employee = employeeRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + userId));
+
+        employee.getJobs().removeIf(j -> roleName.equals(j.getName()));
+        employeeRepository.save(employee);
+    }
 }

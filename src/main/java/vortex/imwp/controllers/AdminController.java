@@ -1,18 +1,19 @@
 package vortex.imwp.controllers;
 
+
+import jakarta.transaction.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import vortex.imwp.services.EmployeeService;
 import vortex.imwp.services.PasswordValidatorService;
 import vortex.imwp.dtos.EmployeeDTO;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class AdminController {
     private final PasswordValidatorService passwordValidatorService;
     private final EmployeeService employeeService;
@@ -22,10 +23,40 @@ public class AdminController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/admin")
+    @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public String admin() {
         return "/admin/admin-dashboard";
+    }
+
+    @GetMapping("/user-management")
+    public String userManagement(Model model) {
+        var users = employeeService.getAllEmployees().orElseGet(List::of);
+        model.addAttribute("users", users);
+        model.addAttribute("roles", List.of("ADMIN","MANAGER","STOCKER","SALESMAN"));
+        return "/admin/user-management";
+    }
+
+    @PostMapping("/users/promote")
+    @Transactional
+    public String promoteUser(@RequestParam("id") Long userId,
+                              @RequestParam("role") String roleName) {
+        employeeService.assignRole(userId, roleName);
+        return "redirect:/api/admin/user-management";
+    }
+
+    @PostMapping("/users/demote")
+    @Transactional
+    public String demoteUser(@RequestParam("id") Long userId,
+                             @RequestParam("role") String roleName) {
+        employeeService.removeRole(userId, roleName);
+        return "redirect:/api/admin/user-management";
+    }
+
+
+    @GetMapping("/activity-log")
+    public String activityLog() {
+        return "/admin/activity-log";
     }
 
     @GetMapping("/register")
