@@ -86,12 +86,12 @@ CREATE TABLE Settings(
 );
 
 CREATE TABLE Settings_Change_Log(
+    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Setting_ID BIGINT NOT NULL,
     Warehouse_ID BIGINT NOT NULL,
     Admin_ID BIGINT NOT NULL,
     Changed_At TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    Settings_Changed VARCHAR(2000) NOT NULL,
-    PRIMARY KEY (Setting_ID, Warehouse_ID, Admin_ID)
+    Settings_Changed VARCHAR(2000) NOT NULL
 );
 
 CREATE TABLE Item (

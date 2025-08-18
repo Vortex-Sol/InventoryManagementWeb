@@ -37,23 +37,15 @@ public class ItemService {
     }
 
     public List<ItemDTO> searchAndMap(String keyword) {
-        List<Item> items = itemRepository.findByNameContainingIgnoreCase(keyword);
-        List<ItemDTO> dtos = new ArrayList<>();
+        if (keyword == null || keyword.isBlank()) {
+            return Collections.emptyList();
+        }
+        List<Item> items = itemRepository.findByNameContainingIgnoreCase(keyword.trim());
 
-        //TODO: Fix based on new ItemDTO (DO NOT CHANGE MODEL & DTO CLASSES)
-        /*for (Item item : items) {
-            ItemDTO dto = ItemDTOMapper.map(item);
-            List<WarehouseItem> warehouseItems = warehouseItemRepository.findByItem(item);
-
-            int totalQty = warehouseItems.stream()
-                    .mapToInt(WarehouseItem::getQuantityInStock)
-                    .sum();
-
-            dto.setQuantity(totalQty);
-            warehouseItems.forEach(wi -> dto.addWarehouse(wi.getWarehouse()));
-
-            dtos.add(dto);
-        }*/
+        List<ItemDTO> dtos = new ArrayList<>(items.size());
+        for (Item item : items) {
+            dtos.add(ItemDTOMapper.map(item));
+        }
 
         return dtos;
     }

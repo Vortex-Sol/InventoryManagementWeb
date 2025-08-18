@@ -114,7 +114,7 @@ public class InventoryController {
 		model.addAttribute("itemWarehouses", itemWarehouses);
 		model.addAttribute("warehouses", warehouseService.getAllWarehouses());
 		model.addAttribute("keyword", keyword);
-		return "inventory/search-results";
+		return "inventory/search-results.html";
 	}
 
 	@GetMapping("/checkout")
