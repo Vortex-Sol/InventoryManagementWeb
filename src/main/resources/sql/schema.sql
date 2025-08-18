@@ -34,10 +34,24 @@ CREATE TABLE Login_Audit (
     Login_Time TIMESTAMP NOT NULL,
     Success_Failure BOOLEAN NOT NULL,
     employee_id BIGINT NOT NULL,
-    CONSTRAINT fk_audit_employee
+    CONSTRAINT fk_login_audit_employee
         FOREIGN KEY (employee_id)
             REFERENCES Employee(ID)
 );
+
+CREATE TABLE Logout_Audit (
+    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL,
+    IP_Address VARCHAR(100) NOT NULL,
+    Logout_Time TIMESTAMP NOT NULL,
+    Logout_Reason VARCHAR(50) NOT NULL,
+    employee_id BIGINT NOT NULL,
+    CONSTRAINT fk_logout_audit_employee
+        FOREIGN KEY (employee_id)
+            REFERENCES Employee(ID)
+);
+
+
 
 CREATE TABLE Employee_Login_Audit (
     Login_Audit_ID BIGINT NOT NULL,
@@ -67,7 +81,8 @@ CREATE TABLE Settings(
     Notify_Minimum_Cash_Discrepancy DECIMAL(10, 2) NOT NULL,
     Destroy_Refund_Data_After_N_Days SMALLINT NOT NULL,
     Cash_Count_Start_Time TIME NOT NULL,
-    Cash_Count_End_Time TIME NOT NULL
+    Cash_Count_End_Time TIME NOT NULL,
+    Auto_Generate_Inventory_Report_Time TIME NOT NULL
 );
 
 CREATE TABLE Settings_Change_Log(

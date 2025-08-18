@@ -1,6 +1,7 @@
 package vortex.imwp.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vortex.imwp.dtos.EmployeeDTO;
@@ -22,6 +23,7 @@ public class EmployeeController {
 
     //TODO: GET All Users
     @GetMapping
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getEmployees() {
 
         Response resp = new vortex.imwp.models.Response();
@@ -36,6 +38,7 @@ public class EmployeeController {
 
     //TODO: GET User {id}
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> getEmployeeById(@PathVariable Long id) {
 
         Response resp = new vortex.imwp.models.Response();
@@ -50,6 +53,7 @@ public class EmployeeController {
 
     //TODO: PUT User {id}
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> updateEmployee(
             @PathVariable Long id,
             @RequestBody EmployeeDTO employeeDto
@@ -80,6 +84,7 @@ public class EmployeeController {
 
     //TODO: DELETE User {id}
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Response> deleteEmployee(@PathVariable Long id) {
         Response resp = new vortex.imwp.models.Response();
 
