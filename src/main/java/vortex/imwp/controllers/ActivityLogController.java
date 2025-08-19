@@ -1,6 +1,7 @@
 package vortex.imwp.controllers;
 
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +21,14 @@ public class ActivityLogController {
 	}
 
 	@GetMapping("/logs")
+	@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 	public String logs(Model model) {
 		model.addAttribute("logs", logService.getAllLogs());
 		return "admin/activity-log"; 
 	}
 
 	@GetMapping("/logs/paged")
+	@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
 	public String logsPaged(@RequestParam(defaultValue = "0") int page,
 							@RequestParam(defaultValue = "20") int size,
 							Model model) {

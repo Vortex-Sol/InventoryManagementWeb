@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import vortex.imwp.models.Employee;
 import vortex.imwp.services.EmployeeService;
 import vortex.imwp.services.PasswordValidatorService;
 import vortex.imwp.dtos.EmployeeDTO;
@@ -30,7 +31,7 @@ public class AdminController {
     }
 
     @GetMapping("/user-management")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String userManagement(Model model) {
         var users = employeeService.getAllEmployees().orElseGet(List::of);
         model.addAttribute("users", users);
@@ -40,7 +41,7 @@ public class AdminController {
 
     @Transactional
     @PostMapping("/users/promote")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String promoteUser(@RequestParam("id") Long userId,
                               @RequestParam("role") String roleName) {
         employeeService.assignRole(userId, roleName);
@@ -49,7 +50,7 @@ public class AdminController {
 
     @Transactional
     @PostMapping("/users/demote")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String demoteUser(@RequestParam("id") Long userId,
                              @RequestParam("role") String roleName) {
         employeeService.removeRole(userId, roleName);
@@ -59,26 +60,30 @@ public class AdminController {
 
 
     @GetMapping("/register")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String register(Model model) {
         model.addAttribute("user", new EmployeeDTO());
         return "admin/register";
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String registerEmployee(@ModelAttribute("user") EmployeeDTO employee, Model model) {
-        if(!employee.getPassword().equals(employee.getConfirmPassword())) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
+    public String registerEmployee(@ModelAttribute("user") EmployeeDTO employeeDTO, Model model) {
+        if(!employeeDTO.getPassword().equals(employeeDTO.getConfirmPassword())) {
             model.addAttribute("error", "Passwords do not match");
             return "admin/register";
         }
 
-        if(!passwordValidatorService.validatePassword(employee.getPassword())) {
+        if(!passwordValidatorService.validatePassword(employeeDTO.getPassword())) {
             model.addAttribute("error", "Password must be: 8 Characters, has a digit, at least 1 capital letter and 1 lower letter");
             return "admin/register";
         }
 
-        employeeService.registerEmployee(employee);
+        if(employeeService.getEmployeeByUsername(employeeDTO.getUsername()).isEmpty()) {
+            model.addAttribute("error", "Employee by username \"" + employeeDTO.getUsername() + "\" already exists");
+        }
+
+        employeeService.registerEmployee(employeeDTO);
         return "redirect:/inventory/home";
     }
 }
