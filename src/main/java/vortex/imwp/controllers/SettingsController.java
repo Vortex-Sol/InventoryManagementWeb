@@ -44,11 +44,8 @@ public class SettingsController {
             if (manager != null && manager.getJobs() != null &&
                     manager.getJobs().stream().anyMatch(job -> allowed.contains(job.getName()))) {
                 Settings settings = settingsService.getSettingsByMangerId(manager);
-                System.out.println("Works here 1" + settings);
                 SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
-                System.out.println("Works here 2");
                 model.addAttribute("settingsDto", settingsDto);
-                System.out.println("Works here 3");
                 return "/admin/settings";
             }
 
@@ -58,10 +55,7 @@ public class SettingsController {
             redirectAttributes.addFlashAttribute("message", "Settings not found");
             return "redirect:/api/home";
         }
-
-
     }
-
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
@@ -83,7 +77,6 @@ public class SettingsController {
             redirectAttributes.addFlashAttribute("message", "Saved");
             return "redirect:/api/settings";
         }
-
         return "redirect:/api/home";
     }
 
