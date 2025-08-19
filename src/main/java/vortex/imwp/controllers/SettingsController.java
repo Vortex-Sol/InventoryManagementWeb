@@ -17,6 +17,7 @@ import vortex.imwp.services.SettingsService;
 
 import java.beans.PropertyEditorSupport;
 import java.sql.Time;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/api/settings")
@@ -31,20 +32,23 @@ public class SettingsController {
     }
 
     @GetMapping()
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String getSettings(
             Authentication authentication,
             Model model,
             RedirectAttributes redirectAttributes) {
         try{
             Employee manager = employeeService.getEmployeeByAuthentication(authentication);
+            Set<String> allowed = Set.of("ADMIN", "SUPERADMIN");
+
             if (manager != null && manager.getJobs() != null &&
-                    manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
+                    manager.getJobs().stream().anyMatch(job -> allowed.contains(job.getName()))) {
                 Settings settings = settingsService.getSettingsByMangerId(manager);
-
+                System.out.println("Works here 1" + settings);
                 SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
-
+                System.out.println("Works here 2");
                 model.addAttribute("settingsDto", settingsDto);
+                System.out.println("Works here 3");
                 return "/admin/settings";
             }
 
@@ -60,15 +64,16 @@ public class SettingsController {
 
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String changeSettings(@ModelAttribute("settingsDto") SettingsDTO settingsDto,
                                  Authentication authentication,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
 
         Employee manager = employeeService.getEmployeeByAuthentication(authentication);
+        Set<String> allowed = Set.of("ADMIN", "SUPERADMIN");
         if (manager != null && manager.getJobs() != null &&
-                manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
+                manager.getJobs().stream().anyMatch(job -> allowed.contains(job.getName()))){
 
             if (bindingResult.hasErrors()) {
                 return "/admin/settings";

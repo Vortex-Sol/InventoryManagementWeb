@@ -30,7 +30,7 @@ public class AdminController {
     }
 
     @GetMapping("/user-management")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String userManagement(Model model) {
         var users = employeeService.getAllEmployees().orElseGet(List::of);
         model.addAttribute("users", users);
@@ -40,7 +40,7 @@ public class AdminController {
 
     @Transactional
     @PostMapping("/users/promote")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String promoteUser(@RequestParam("id") Long userId,
                               @RequestParam("role") String roleName) {
         employeeService.assignRole(userId, roleName);
@@ -49,7 +49,7 @@ public class AdminController {
 
     @Transactional
     @PostMapping("/users/demote")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String demoteUser(@RequestParam("id") Long userId,
                              @RequestParam("role") String roleName) {
         employeeService.removeRole(userId, roleName);
@@ -59,14 +59,14 @@ public class AdminController {
 
 
     @GetMapping("/register")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String register(Model model) {
         model.addAttribute("user", new EmployeeDTO());
         return "admin/register";
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String registerEmployee(@ModelAttribute("user") EmployeeDTO employee, Model model) {
         if(!employee.getPassword().equals(employee.getConfirmPassword())) {
             model.addAttribute("error", "Passwords do not match");
