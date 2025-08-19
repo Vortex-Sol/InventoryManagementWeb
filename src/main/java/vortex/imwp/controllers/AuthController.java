@@ -49,12 +49,12 @@ public class AuthController {
         auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth); // инвалидирует сессию
+            new SecurityContextLogoutHandler().logout(request, response, auth);
         } else if (session != null) {
             session.invalidate();
         }
 
-        return "redirect:/login?logout"; // единственный редирект
+        return "redirect:/login?logout";
     }
 
 }

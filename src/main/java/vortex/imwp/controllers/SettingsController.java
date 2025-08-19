@@ -73,7 +73,6 @@ public class SettingsController {
             if (bindingResult.hasErrors()) {
                 return "/admin/settings";
             }
-            System.out.println(settingsDto);
             settingsService.updateSettings(settingsDto, authentication);
             redirectAttributes.addFlashAttribute("message", "Saved");
             return "redirect:/api/settings";

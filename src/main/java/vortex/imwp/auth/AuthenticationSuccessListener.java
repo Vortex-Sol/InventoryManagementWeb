@@ -28,12 +28,8 @@ public class AuthenticationSuccessListener
         String ip       = request.getRemoteAddr();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        System.out.println("[" + timestamp + "] Success: username: " + username + " ip: " + ip);
+        System.out.println("[" + timestamp + "] Success login: username: " + username + " ip: " + ip);
 
-        Long loginAuditId = auditSvc.recordLogin(username, ip, timestamp, true);
-
-//        HttpSession session = request.getSession(true);
-//        session.setAttribute("LOGIN_AUDIT_ID", loginAuditId);
-//        session.setAttribute("EMPLOYEE_USERNAME", username);
+        auditSvc.recordLogin(username, ip, timestamp, true);
     }
 }

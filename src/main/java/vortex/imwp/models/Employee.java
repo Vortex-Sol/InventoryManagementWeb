@@ -1,6 +1,8 @@
 package vortex.imwp.models;
 
 import jakarta.persistence.*;
+import vortex.imwp.services.LogoutAuditService;
+
 import java.util.*;
 
 @Entity
@@ -45,6 +47,9 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private List<LoginAudit> loginAudits = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee")
+    private List<LogoutAudit> logoutAudits = new ArrayList<>();
 
     @OneToMany(mappedBy = "managerId")
     private List<Settings> settings = new ArrayList<>();
@@ -97,6 +102,7 @@ public class Employee {
     public List<Job> getJobs() { return jobs; }
     public List<Sale> getSales() { return sales; }
     public List<LoginAudit> getLoginAudits() { return loginAudits; }
+    public List<LogoutAudit> getLogoutAudits() { return logoutAudits; }
     public List<Settings> getSettings() { return settings; }
 
     public void setUsername(String username) { this.username = username; }
@@ -113,10 +119,14 @@ public class Employee {
     public void setJobs(List<Job> jobs) { this.jobs = jobs; }
     public void setSales(List<Sale> sales) { this.sales = sales; }
     public void setLoginAudits(List<LoginAudit> loginAudits) { this.loginAudits = loginAudits; }
+    public void setLogoutAudits(List<LogoutAudit> logoutAudits) { this.logoutAudits = logoutAudits; }
     public void setSettings(List<Settings> settings) { this.settings = settings; }
 
     public void addLoginAudit(LoginAudit loginAudit) { this.loginAudits.add(loginAudit); }
     public void removeLoginAudit(LoginAudit loginAudit) { this.loginAudits.remove(loginAudit); }
+
+    public void addLogoutAudit(LogoutAudit logoutAudit) { this.logoutAudits.add(logoutAudit); }
+    public void removeLogoutAudit(LogoutAudit logoutAudit) { this.logoutAudits.remove(logoutAudit); }
 
     public void addSale(Sale sale) { this.sales.add(sale); }
     public void removeSale(Sale sale) { this.sales.remove(sale); }
@@ -142,6 +152,7 @@ public class Employee {
                 ", jobs=" + jobs +
                 ", sales=" + sales +
                 ", loginAudits=" + loginAudits +
+                ", logoutAudits=" + logoutAudits +
                 ", settings=" + settings +
                 '}';
     }
