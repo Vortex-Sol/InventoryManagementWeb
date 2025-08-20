@@ -57,30 +57,21 @@ public class ReceiptController {
 			Receipt receipt = receiptService.createReceipt(sale, paymentMethod, amountReceived);
 			return "redirect:/api/salesman/confirm/" + receipt.getId();
 		} catch (IllegalArgumentException e) {
-			model.addAttribute("sale", sale);
-			model.addAttribute("error", e.getMessage());
+			populateCheckoutModel(sale, model);
+			String msg = (e.getMessage() != null && !e.getMessage().isBlank())
+					? e.getMessage()
+					: "Amount received must be greater than or equal to the total.";
+			model.addAttribute("error", msg);
+			model.addAttribute("paymentMethod", paymentMethod);
+			model.addAttribute("amountReceived", amountReceived);
 			return "inventory/receipt/checkout";
 		}
 	}
-
 	@GetMapping("/checkout/{saleId}")
 	@PreAuthorize("hasRole('SALESMAN')")
 	public String checkoutForm(@PathVariable Long saleId, Model model) {
 		Sale sale = saleService.getSaleById(saleId);
-
-		Map<Long, BigDecimal> itemTotals = new HashMap<>();
-		AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
-
-		sale.getSaleItems().forEach(saleItem -> {
-			BigDecimal price = BigDecimal.valueOf(saleItem.getItem().getPrice());
-			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(saleItem.getQuantity()));
-			itemTotals.put(saleItem.getItem().getId(), itemTotal);
-			total.set(total.get().add(itemTotal)); //
-		});
-
-		model.addAttribute("sale", sale);
-		model.addAttribute("totalAmount", total.get());
-		model.addAttribute("itemTotals", itemTotals);
+		populateCheckoutModel(sale, model);
 		return "inventory/receipt/checkout";
 	}
 
@@ -115,7 +106,6 @@ public class ReceiptController {
 		model.addAttribute("stockMap", itemService.getQuantitiesForWarehouse(warehouseId));
 		return "inventory/receipt/add-items";
 	}
-
 
 
 	@PostMapping("/addItem-form")
@@ -168,6 +158,26 @@ public class ReceiptController {
 			redirectAttributes.addFlashAttribute("error", "Cancellation failed: " + e.getMessage());
 		}
 		return "redirect:/api/salesman/confirm/" + receiptId;
+	}
+
+
+	private void populateCheckoutModel(Sale sale, Model model) {
+		Map<Long, BigDecimal> itemTotals = new HashMap<>();
+		BigDecimal total = BigDecimal.ZERO;
+
+		sale.getSaleItems().forEach(si -> {
+			BigDecimal price = BigDecimal.valueOf(si.getItem().getPrice());
+			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(si.getQuantity()));
+			itemTotals.put(si.getItem().getId(), itemTotal);
+		});
+
+		for (BigDecimal it : itemTotals.values()) {
+			total = total.add(it);
+		}
+
+		model.addAttribute("sale", sale);
+		model.addAttribute("itemTotals", itemTotals);
+		model.addAttribute("totalAmount", total);
 	}
 
 

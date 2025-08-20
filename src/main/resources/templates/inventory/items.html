@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+      th:replace="~{fragments/layout ::
+        layout(title=~{::title}, content=~{::section}, navText='Inventory Home')}">
 <head>
-    <title th:fragment="title">Inventory Home</title>
+    <title>Inventory Home</title>
 </head>
 
 <section th:fragment="section">

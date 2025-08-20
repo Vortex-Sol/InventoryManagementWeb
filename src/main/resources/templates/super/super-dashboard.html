@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout-noSearch :: layout(title=~{::title}, content=~{::section})}">
+      th:replace="~{fragments/layout-noSearch ::
+      layout(title=~{::title}, content=~{::section}, navText='Super Admin Dashboard')}">
 <head>
     <title>Super Admin Dashboard</title>
 </head>
@@ -18,9 +19,6 @@
                 <a th:href="@{/api/settings}" class="btn btn-outline-warning">Edit Settings</a>
                 <a th:href="@{/api/super/warehouses}" class="btn btn-outline-info">Edit Warehouses</a>
                 <a th:href="@{/api/super/taxes}" class="btn btn-outline-dark">Edit Tax Rates</a>
-                <form class="d-flex ms-4" th:action="@{/auth/logout}" method="post">
-                    <button type="submit" class="btn btn-danger">Logout</button>
-                </form>
             </div>
         </div>
     </div>

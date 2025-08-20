@@ -137,11 +137,11 @@ CREATE TABLE Report (
 CREATE TABLE Receipt (
      ID BIGINT AUTO_INCREMENT PRIMARY KEY,
      Sale_ID BIGINT NOT NULL,
-     Total_Amount DECIMAL(10, 3) NOT NULL,
+     Total_Amount DECIMAL(10, 2) NOT NULL,
      Created_At TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
      Payment_Method VARCHAR(50) NOT NULL,
-     Amount_Received DECIMAL(10, 3),
-     Change_Given DECIMAL(10, 3),
+     Amount_Received DECIMAL(10, 2),
+     Change_Given DECIMAL(10, 2),
      Is_Cancelled BOOLEAN NOT NULL DEFAULT FALSE,
      Cancelled_At TIMESTAMP,
      Cancelled_By BIGINT
