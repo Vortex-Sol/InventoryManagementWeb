@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout ::
+        layout(title=~{::title}, content=~{::section}, navText='Manager Dashboard')}">
+
+<head>
+    <title>Manager Dashboard</title>
+    <style>
+        .spinner { display: none; width: 2rem; height: 2rem; border: .25em solid #e9ecef;
+            border-top-color: #0d6efd; border-radius: 50%; animation: spin .8s linear infinite; margin: 8px 0; }
+        @keyframes spin { to { transform: rotate(360deg);} }
+        .empty-state { color: #6c757d; font-style: italic; padding: .5rem 0; }
+        .table-responsive { max-height: 420px; overflow: auto; }
+        .pill { display:inline-block;padding:.25rem .5rem;border-radius:9999px;background:#f1f3f5;font-size:.85rem }
+        .toolbar { display:flex; gap:.5rem; align-items:center; flex-wrap: wrap;}
+        .pagination-sm .page-link { padding: .15rem .5rem; }
+        .truncate { max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .badge-job { background:#eef2ff; color:#3949ab; border:1px solid #c5cae9; }
+        details summary { cursor: pointer; user-select: none; }
+        .mini-card { border:1px solid #e9ecef; border-radius:.5rem; padding:.75rem; }
+    </style>
+</head>
+
+<section th:fragment="section">
+    <div class="container">
+        <h2 class="mb-4">Reports Dashboard</h2>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Receipts</h5>
+                <div class="toolbar">
+                    <div class="input-group input-group-sm" style="width: 540px;">
+                        <span class="input-group-text">From</span>
+                        <input type="datetime-local" class="form-control" id="receiptsStart">
+                        <span class="input-group-text">To</span>
+                        <input type="datetime-local" class="form-control" id="receiptsEnd">
+                        <button class="btn btn-outline-primary" id="btnReceiptsPeriod">Load</button>
+                    </div>
+                    <hr>
+                    <button id="btnReceiptsToday" class="btn btn-primary btn-sm">Today’s Receipts</button>
+                    <button class="btn btn-outline-secondary btn-sm" id="exportReceipts">Export CSV</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="spinner" id="spinReceipts"></div>
+                <div id="receiptsAlert"></div>
+
+                <div id="receiptsSummary" class="mb-3 d-none"></div>
+                <div id="receiptsPaymentBreakdown" class="mb-3 d-none"></div>
+
+                <div id="receiptsCards" class="d-grid gap-3"></div>
+
+                <nav>
+                    <ul class="pagination pagination-sm mt-3" id="receiptsPager"></ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Inventory (Today)</h5>
+                <hr>
+                <div class="toolbar" style="width: 540px;">
+                    <button id="btnInventoryToday" class="btn btn-primary btn-sm">Refresh</button>
+                    <button class="btn btn-outline-secondary btn-sm" id="exportInventory">Export CSV</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="spinner" id="spinInventory"></div>
+                <div id="inventoryAlert"></div>
+                <div id="inventorySummary" class="mb-3 d-none"></div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped align-middle d-none" id="inventoryTable">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mt-2" id="inventoryPager"></ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Employee Reports</h5>
+                <div class="toolbar">
+                    <div class="input-group input-group-sm" style="width: 540px;">
+                        <span class="input-group-text">From</span>
+                        <input type="datetime-local" class="form-control" id="employeesStart">
+                        <span class="input-group-text">To</span>
+                        <input type="datetime-local" class="form-control" id="employeesEnd">
+                        <button class="btn btn-outline-primary" id="btnEmployeesPeriod">Load</button>
+                    </div>
+                    <hr>
+                    <button id="btnEmployeesToday" class="btn btn-primary btn-sm">Today's report</button>
+                    <button class="btn btn-outline-secondary btn-sm" id="exportEmployees">Export CSV</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="spinner" id="spinEmployees"></div>
+                <div id="employeesAlert"></div>
+                <div id="employeesSummary" class="mb-3 d-none"></div>
+                <div id="employeesCards" class="d-grid gap-3"></div>
+                <nav>
+                    <ul class="pagination pagination-sm mt-2" id="employeesPager"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/fetchReportDataJSON.js}"></script>
+</section>
+</html>

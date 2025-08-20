@@ -77,6 +77,8 @@ public class ReportService {
             Map<String, Object> employeeData = new LinkedHashMap<>();
             employeeData.put("employeeId", employee.getId());
             employeeData.put("username", employee.getUsername());
+            employeeData.put("Name", employee.getName());
+            employeeData.put("Surname", employee.getSurname());
             List<String> jobNames = employee.getJobs().stream().map(Job::getName).toList();
             employeeData.put("jobs", jobNames);
 
