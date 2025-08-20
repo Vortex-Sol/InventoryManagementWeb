@@ -25,7 +25,7 @@ public class AdminController {
     }
 
     @GetMapping()
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String admin() {
         return "/admin/admin-dashboard";
     }

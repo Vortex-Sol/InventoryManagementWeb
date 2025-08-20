@@ -39,14 +39,14 @@ public class ReceiptController {
 		this.employeeService = employeeService;
 	}
 	@GetMapping()
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String startCheckout(@AuthenticationPrincipal UserDetails userDetails) {
 		Sale sale = saleService.createSale(userDetails.getUsername());
 		return "redirect:/api/salesman/" + sale.getId() + "/add-items";
 	}
 
 	@PostMapping("/checkout")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String checkout(@RequestParam Long saleId,
 						   @RequestParam String paymentMethod,
 						   @RequestParam(required = false) BigDecimal amountReceived,
@@ -68,7 +68,7 @@ public class ReceiptController {
 		}
 	}
 	@GetMapping("/checkout/{saleId}")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String checkoutForm(@PathVariable Long saleId, Model model) {
 		Sale sale = saleService.getSaleById(saleId);
 		populateCheckoutModel(sale, model);
@@ -77,7 +77,7 @@ public class ReceiptController {
 
 
 	@GetMapping("/confirm/{receiptId}")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String viewReceipt(@PathVariable Long receiptId, Model model) {
 		Receipt receipt = receiptService.getReceipt(receiptId);
 		String receiptJson = receiptService.generateReceiptJson(receipt);
@@ -89,7 +89,7 @@ public class ReceiptController {
 	}
 
 	@GetMapping("/{saleId}/add-items")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String showAddItemsPage(@PathVariable Long saleId,
 								   Authentication authentication,
 								   Model model) {
@@ -109,7 +109,7 @@ public class ReceiptController {
 
 
 	@PostMapping("/addItem-form")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String addItemToSaleForm(@RequestParam Long saleId,
 									@RequestParam(required = false) Long warehouseId,
 									@RequestParam(required = false) Long itemId,
@@ -147,7 +147,7 @@ public class ReceiptController {
 
 
 	@PostMapping("/cancel/{receiptId}")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String cancelReceipt(@PathVariable Long receiptId,
 								@AuthenticationPrincipal UserDetails userDetails,
 								RedirectAttributes redirectAttributes) {
