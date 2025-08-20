@@ -113,6 +113,12 @@ VALUES
     (1, 1, 1, DEFAULT,'ALL');
 
 INSERT INTO
+    Item_Change_Log (Item_ID, Stocker_ID, Warehouse_ID, Changed_At, Data_Changed)
+VALUES
+    (1, 5, 1, DEFAULT, 'ALL'),
+    (4, 5, 1, DEFAULT, 'ALL');
+
+INSERT INTO
     Receipt (Sale_ID, Total_Amount, Payment_Method, Amount_Received, Change_Given, Is_Cancelled, Cancelled_At, Cancelled_By)
 VALUES
     (1, 25.500, 'Cash', 30.000, 4.500, FALSE, NULL, NULL),
