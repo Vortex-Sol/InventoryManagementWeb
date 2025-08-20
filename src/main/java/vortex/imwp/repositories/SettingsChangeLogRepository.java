@@ -13,10 +13,18 @@ public interface SettingsChangeLogRepository extends JpaRepository<SettingsChang
 	List<SettingsChangeLog> findAllByOrderByChangedAtDesc();
 	Page<SettingsChangeLog> findAllByOrderByChangedAtDesc(Pageable pageable);
 
+	List<SettingsChangeLog> findByAdminIdAndChangedAtBetweenOrderByChangedAtDesc(
+			Long adminId, LocalDateTime from, LocalDateTime to);
 	Page<SettingsChangeLog> findByAdminIdAndChangedAtBetweenOrderByChangedAtDesc(
 			Long adminId, LocalDateTime from, LocalDateTime to, Pageable pageable);
+
+	List<SettingsChangeLog> findByAdminId(Long adminId);
+	Page<SettingsChangeLog> findByAdminId(Long adminId, Pageable pageable);
+
 
 	Page<SettingsChangeLog> findByWarehouseIdOrderByChangedAtDesc(Long warehouseId, Pageable pageable);
 
 	Page<SettingsChangeLog> findBySettingIdOrderByChangedAtDesc(Long settingId, Pageable pageable);
+
+
 }

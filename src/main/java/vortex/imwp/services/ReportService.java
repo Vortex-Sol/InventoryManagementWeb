@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -26,14 +27,18 @@ public class ReportService {
     private final SaleService saleService;
     private final WarehouseItemService warehouseItemService;
     private final ReceiptService receiptService;
+    private final LogoutAuditService logoutAuditService;
+    private final SettingsChangeLogService settingsChangeLogService;
 
-    public ReportService(ReportRepository reportRepository, EmployeeService employeeService, LoginAuditService loginAuditService, SaleService saleService, WarehouseItemService warehouseItemService, ReceiptService receiptService) {
+    public ReportService(ReportRepository reportRepository, EmployeeService employeeService, LoginAuditService loginAuditService, SaleService saleService, WarehouseItemService warehouseItemService, ReceiptService receiptService, LogoutAuditService logoutAuditService, SettingsChangeLogService settingsChangeLogService) {
         this.reportRepository = reportRepository;
         this.employeeService = employeeService;
         this.loginAuditService = loginAuditService;
         this.saleService = saleService;
         this.warehouseItemService = warehouseItemService;
         this.receiptService = receiptService;
+        this.logoutAuditService = logoutAuditService;
+        this.settingsChangeLogService = settingsChangeLogService;
     }
 
     public Optional<List<ReportDTO>> getAll() {
@@ -61,6 +66,7 @@ public class ReportService {
         Employee manager = employeeService.getEmployeeByAuthentication(auth);
 
         String timestamp = LocalDateTime.now().toString();
+        LocalDate today = LocalDate.now();
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("employeeIdCreated", manager.getId());;
@@ -68,29 +74,63 @@ public class ReportService {
         body.put("timestamp", timestamp);
 
         List<Object> employeesData = new ArrayList<>();
-        List<Employee> employees = employeeService.getAllEmployeesFromWarehouseWithJob(manager.getWarehouseID(), "SALESMAN");
+        List<Employee> employees = employeeService.getAllActiveTodayEmployeesFromWarehouse(manager.getWarehouseID(), today);
         for (Employee employee : employees) {
             Map<String, Object> employeeData = new LinkedHashMap<>();
             employeeData.put("employeeId", employee.getId());
             employeeData.put("username", employee.getUsername());
+            List<String> jobNames = employee.getJobs().stream().map(Job::getName).toList();
+            employeeData.put("jobs", jobNames);
 
-            List<Map<String, Object>> loginAudits = loginAuditService.getLoginAuditsByEmployeeAndDate(employee, LocalDate.now())
+            List<Map<String, Object>> loginAudits = loginAuditService.getLoginAuditsByEmployeeAndDate(employee, today)
                     .stream().map(audit -> Map.<String, Object>of(
-                            "loginDate", audit.getLoginTime(),
+                            "loginTime", audit.getLoginTime(),
                             "ipAddress", audit.getIpAddress(),
                             "successFailure", audit.getSuccessFailure()
                     )).toList();
             employeeData.put("loginAudits", loginAudits);
 
-            List<Object> receiptsData = new ArrayList<>();
-            List<Receipt> receipts = receiptService.getByEmployeeAndDate(employee, LocalDate.now());
-            ObjectMapper mapper = new ObjectMapper();
-            for (Receipt receipt : receipts) {
-                String receiptString = receiptService.generateReceiptJson(receipt);
-                Map<String, Object> parsed = mapper.readValue(receiptString, new TypeReference<Map<String,Object>>() {});
-                receiptsData.add(parsed);
+            List<Map<String, Object>> logoutAudits = logoutAuditService.getLogoutAuditsByEmployeeAndDate(employee, today)
+                    .stream().map(audit -> Map.<String, Object>of(
+                            "logoutTime", audit.getLogoutTime(),
+                            "ipAddress", audit.getIpAddress(),
+                            "reason", audit.getLogoutReason()
+                    )).toList();
+            employeeData.put("logoutAudits", logoutAudits);
+
+            if (jobNames.contains("ADMIN")){
+                List<Object> settingsChangedData = new ArrayList<>();
+                List<SettingsChangeLog> settingsChangeLogs = settingsChangeLogService.getSettingsChangeLogsByEmployeeAndDate(employee, today);
+                for (SettingsChangeLog settingsChangeLog : settingsChangeLogs) {
+                    Map<String, Object> settingChangeData = new LinkedHashMap<>();
+                    settingChangeData.put("settingsChangeLogId", settingsChangeLog.getId());
+                    settingChangeData.put("changedAt", settingsChangeLog.getChangedAt());
+                    settingChangeData.put("settingId", settingsChangeLog.getSettingId());
+                    settingChangeData.put("settingsChanged", settingsChangeLog.getSettingsChanged());
+
+                    settingsChangedData.add(settingChangeData);
+                }
+                if (!settingsChangedData.isEmpty()) {
+                    employeeData.put("settingsChangeLogs", settingsChangeLogs);
+                }
+
             }
-            employeeData.put("receiptsData", receiptsData);
+
+            if (jobNames.contains("SALESMAN")){
+                List<Object> receiptsData = new ArrayList<>();
+                List<Receipt> receipts = receiptService.getByEmployeeAndDate(employee, today);
+                ObjectMapper mapper = new ObjectMapper();
+                for (Receipt receipt : receipts) {
+                    String receiptString = receiptService.generateReceiptJson(receipt);
+                    Map<String, Object> parsed = mapper.readValue(receiptString, new TypeReference<Map<String,Object>>() {});
+                    receiptsData.add(parsed);
+                }
+                if (!receipts.isEmpty()) {
+                    employeeData.put("receiptsData", receiptsData);
+                }
+            }
+
+
 
             employeesData.add(employeeData);
         }
@@ -235,29 +275,63 @@ public class ReportService {
         body.put("timestamp", timestamp);
 
         List<Object> employeesData = new ArrayList<>();
-        List<Employee> employees = employeeService.getAllEmployeesFromWarehouseWithJob(manager.getWarehouseID(), "SALESMAN");
+        List<Employee> employees = employeeService.getAllActivePeriodEmployeesFromWarehouse(manager.getWarehouseID(), Timestamp.valueOf(start), Timestamp.valueOf(end));
         for (Employee employee : employees) {
             Map<String, Object> employeeData = new LinkedHashMap<>();
             employeeData.put("employeeId", employee.getId());
             employeeData.put("username", employee.getUsername());
+            List<String> jobNames = employee.getJobs().stream().map(Job::getName).toList();
+            employeeData.put("jobs", jobNames);
 
             List<Map<String, Object>> loginAudits = loginAuditService.getLoginAuditsByEmployeeAndPeriod(employee, Timestamp.valueOf(start), Timestamp.valueOf(end))
                     .stream().map(audit -> Map.<String, Object>of(
-                            "loginDate", audit.getLoginTime(),
+                            "loginTime", audit.getLoginTime(),
                             "ipAddress", audit.getIpAddress(),
                             "successFailure", audit.getSuccessFailure()
                     )).toList();
             employeeData.put("loginAudits", loginAudits);
 
-            List<Object> receiptsData = new ArrayList<>();
-            List<Receipt> receipts = receiptService.getByEmployeeAndPeriod(employee, start, end);
-            ObjectMapper mapper = new ObjectMapper();
-            for (Receipt receipt : receipts) {
-                String receiptString = receiptService.generateReceiptJson(receipt);
-                Map<String, Object> parsed = mapper.readValue(receiptString, new TypeReference<Map<String,Object>>() {});
-                receiptsData.add(parsed);
+            List<Map<String, Object>> logoutAudits = logoutAuditService.getLogoutAuditsByEmployeeAndPeriod(employee, Timestamp.valueOf(start), Timestamp.valueOf(end))
+                    .stream().map(audit -> Map.<String, Object>of(
+                            "logoutTime", audit.getLogoutTime(),
+                            "ipAddress", audit.getIpAddress(),
+                            "reason", audit.getLogoutReason()
+                    )).toList();
+            employeeData.put("logoutAudits", logoutAudits);
+
+            if (jobNames.contains("ADMIN")){
+                List<Object> settingsChangedData = new ArrayList<>();
+                List<SettingsChangeLog> settingsChangeLogs = settingsChangeLogService.getSettingsChangeLogsByEmployeeAndPeriod(employee, start, end);
+                for (SettingsChangeLog settingsChangeLog : settingsChangeLogs) {
+                    Map<String, Object> settingChangeData = new LinkedHashMap<>();
+                    settingChangeData.put("settingsChangeLogId", settingsChangeLog.getId());
+                    settingChangeData.put("changedAt", settingsChangeLog.getChangedAt());
+                    settingChangeData.put("settingId", settingsChangeLog.getSettingId());
+                    settingChangeData.put("settingsChanged", settingsChangeLog.getSettingsChanged());
+
+                    settingsChangedData.add(settingChangeData);
+                }
+                if (!settingsChangedData.isEmpty()) {
+                    employeeData.put("settingsChangeLogs", settingsChangeLogs);
+                }
+
             }
-            employeeData.put("receiptsData", receiptsData);
+
+            if (jobNames.contains("SALESMAN")){
+                List<Object> receiptsData = new ArrayList<>();
+                List<Receipt> receipts = receiptService.getByEmployeeAndPeriod(employee, start, end);
+                ObjectMapper mapper = new ObjectMapper();
+                for (Receipt receipt : receipts) {
+                    String receiptString = receiptService.generateReceiptJson(receipt);
+                    Map<String, Object> parsed = mapper.readValue(receiptString, new TypeReference<Map<String,Object>>() {});
+                    receiptsData.add(parsed);
+                }
+                if (!receipts.isEmpty()) {
+                    employeeData.put("receiptsData", receiptsData);
+                }
+            }
+
+
 
             employeesData.add(employeeData);
         }

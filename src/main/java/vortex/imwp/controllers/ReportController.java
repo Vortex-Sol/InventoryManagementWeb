@@ -5,34 +5,21 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import vortex.imwp.dtos.SaleDTO;
-import vortex.imwp.models.Employee;
+import org.springframework.web.bind.annotation.RestController;
 import vortex.imwp.models.Response;
-import vortex.imwp.services.EmployeeService;
-import vortex.imwp.services.LoginAuditService;
 import vortex.imwp.services.ReportService;
-import vortex.imwp.services.SaleService;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
 
-@Controller
+@RestController
 @RequestMapping("/api/reports")
 public class ReportController {
-    private final SaleService saleService;
-    private final EmployeeService employeeService;
-    private final LoginAuditService loginAuditService;
     private final ReportService reportService;
 
-    public ReportController(SaleService saleService, EmployeeService employeeService, LoginAuditService loginAuditService, ReportService reportService) {
-        this.saleService = saleService;
-        this.employeeService = employeeService;
-        this.loginAuditService = loginAuditService;
+    public ReportController(ReportService reportService) {
         this.reportService = reportService;
     }
 

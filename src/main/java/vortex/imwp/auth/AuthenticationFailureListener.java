@@ -27,7 +27,7 @@ public class AuthenticationFailureListener
         String ip       = request.getRemoteAddr();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        System.out.println("[" + timestamp + "] Failure: username: " + username + " ip: " + ip);
+        System.out.println("[" + timestamp + "] Failure login: username: " + username + " ip: " + ip);
 
         auditSvc.recordLogin(username, ip, timestamp, true);
     }

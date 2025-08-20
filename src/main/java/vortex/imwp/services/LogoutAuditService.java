@@ -36,7 +36,7 @@ public class LogoutAuditService {
         Employee employee = employee_check.get();
         LogoutAudit logoutAudit = new LogoutAudit(employee.getUsername(), ipAddress, timestamp, reason, employee);
         logoutAudit = logoutAuditRepository.save(logoutAudit);
-        System.out.println("Logout audit record: " + logoutAudit);
+        System.out.println("[" + timestamp + "] Success logout: username: " + username + " ip: " + logoutAudit.getIpAddress());
     }
 
     public List<LogoutAudit> getLogoutAuditsByEmployee(Employee employee) {

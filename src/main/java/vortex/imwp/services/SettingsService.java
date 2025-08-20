@@ -10,6 +10,7 @@ import vortex.imwp.repositories.SettingsChangeLogRepository;
 import vortex.imwp.repositories.SettingsRepository;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public class SettingsService {
             if (!Objects.equals(settings.getAlertWhenStockIsLow(), settingsDto.getAlertWhenStockIsLow())) {
                 sb.append("AlertWhenStockIsLow: ")
                         .append(String.valueOf(settings.getAlertWhenStockIsLow()))
-                        .append(" -> ")
+                        .append(" - ")
                         .append(String.valueOf(settingsDto.getAlertWhenStockIsLow()))
                         .append("; ");
                 settings.setAlertWhenStockIsLow(settingsDto.getAlertWhenStockIsLow());
@@ -61,7 +62,7 @@ public class SettingsService {
             if (!Objects.equals(settings.getAutoGenerateReport(), settingsDto.getAutoGenerateReport())) {
                 sb.append("AutoGenerateReport: ")
                         .append(String.valueOf(settings.getAutoGenerateReport()))
-                        .append(" -> ")
+                        .append(" - ")
                         .append(String.valueOf(settingsDto.getAutoGenerateReport()))
                         .append("; ");
                 settings.setAutoGenerateReport(settingsDto.getAutoGenerateReport());
@@ -75,7 +76,7 @@ public class SettingsService {
             if (!Objects.equals(settings.getAutoGenerateReportTime(), newAutoTime)) {
                 sb.append("AutoGenerateReportTime: ")
                         .append(settings.getAutoGenerateReportTime() == null ? "null" : settings.getAutoGenerateReportTime().toString())
-                        .append(" -> ")
+                        .append(" - ")
                         .append(newAutoTime == null ? "null" : newAutoTime.toString())
                         .append("; ");
                 settings.setAutoGenerateReportTime(newAutoTime);
@@ -85,7 +86,7 @@ public class SettingsService {
             if (!Objects.equals(settings.getNotifyMinimumCashDiscrepancy(), settingsDto.getNotifyMinimumCashDiscrepancy())) {
                 sb.append("NotifyMinimumCashDiscrepancy: ")
                         .append(String.valueOf(settings.getNotifyMinimumCashDiscrepancy()))
-                        .append(" -> ")
+                        .append(" - ")
                         .append(String.valueOf(settingsDto.getNotifyMinimumCashDiscrepancy()))
                         .append("; ");
                 settings.setNotifyMinimumCashDiscrepancy(settingsDto.getNotifyMinimumCashDiscrepancy());
@@ -95,7 +96,7 @@ public class SettingsService {
             if (!Objects.equals(settings.getDestroyRefundDataAfterNDays(), settingsDto.getDestroyRefundDataAfterNDays())) {
                 sb.append("DestroyRefundDataAfterNDays: ")
                         .append(String.valueOf(settings.getDestroyRefundDataAfterNDays()))
-                        .append(" -> ")
+                        .append(" - ")
                         .append(String.valueOf(settingsDto.getDestroyRefundDataAfterNDays()))
                         .append("; ");
                 settings.setDestroyRefundDataAfterNDays(settingsDto.getDestroyRefundDataAfterNDays());
@@ -105,7 +106,7 @@ public class SettingsService {
             if (!Objects.equals(settings.getCashCountStartTime(), settingsDto.getCashCountStartTime())) {
                 sb.append("CashCountStartTime: ")
                         .append(settings.getCashCountStartTime() == null ? "null" : settings.getCashCountStartTime().toString())
-                        .append(" -> ")
+                        .append(" - ")
                         .append(settingsDto.getCashCountStartTime() == null ? "null" : settingsDto.getCashCountStartTime().toString())
                         .append("; ");
                 settings.setCashCountStartTime(settingsDto.getCashCountStartTime());
@@ -115,7 +116,7 @@ public class SettingsService {
             if (!Objects.equals(settings.getCashCountEndTime(), settingsDto.getCashCountEndTime())) {
                 sb.append("CashCountEndTime: ")
                         .append(settings.getCashCountEndTime() == null ? "null" : settings.getCashCountEndTime().toString())
-                        .append(" -> ")
+                        .append(" - ")
                         .append(settingsDto.getCashCountEndTime() == null ? "null" : settingsDto.getCashCountEndTime().toString())
                         .append("; ");
                 settings.setCashCountEndTime(settingsDto.getCashCountEndTime());
@@ -125,7 +126,7 @@ public class SettingsService {
             if (!Objects.equals(settings.getAutoGenerateInventoryReportTime(), settingsDto.getAutoGenerateInventoryReportTime())) {
                 sb.append("AutoGenerateInventoryReportTime: ")
                         .append(settings.getAutoGenerateInventoryReportTime() == null ? "null" : settings.getAutoGenerateInventoryReportTime().toString())
-                        .append(" -> ")
+                        .append(" - ")
                         .append(settingsDto.getAutoGenerateInventoryReportTime() == null ? "null" : settingsDto.getAutoGenerateInventoryReportTime().toString())
                         .append("; ");
                 settings.setAutoGenerateInventoryReportTime(settingsDto.getAutoGenerateInventoryReportTime());
@@ -133,11 +134,11 @@ public class SettingsService {
 
             Employee admin = employeeService.getEmployeeByAuthentication(authentication);
 
-            SettingsChangeLog changeLog = new SettingsChangeLog(settings.getId(), settings.getManagerId().getWarehouseID(), admin.getId(),sb.toString());
+            SettingsChangeLog changeLog = new SettingsChangeLog(settings.getId(), settings.getManagerId().getWarehouseID(), admin.getId(), sb.toString());
 
             settingsRepository.save(settings);
             settingsChangeLogRepository.save(changeLog);
-            System.out.println(settings);
+            System.out.println("[ " + LocalDateTime.now() + " ]  username " + admin.getUsername() + " Settings Changed: " + sb.toString());
         }
 
     }

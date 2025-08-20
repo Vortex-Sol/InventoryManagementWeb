@@ -7,10 +7,14 @@ import org.springframework.stereotype.Service;
 import vortex.imwp.dtos.EmployeeDTO;
 import vortex.imwp.mappers.EmployeeDTOMapper;
 import vortex.imwp.models.Employee;
+import vortex.imwp.models.LoginAudit;
+import vortex.imwp.models.LogoutAudit;
 import vortex.imwp.models.Job;
 import vortex.imwp.repositories.EmployeeRepository;
 import vortex.imwp.repositories.JobRepository;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,11 +25,15 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JobRepository jobRepository;
+    private final LoginAuditService loginAuditService;
+    private final LogoutAuditService logoutAuditService;
 
-    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, JobRepository jobRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, JobRepository jobRepository, LoginAuditService loginAuditService, LogoutAuditService logoutAuditService) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
         this.jobRepository = jobRepository;
+        this.loginAuditService = loginAuditService;
+        this.logoutAuditService = logoutAuditService;
     }
 
     public Optional<EmployeeDTO> getEmployeeByUsername(String username){
@@ -54,6 +62,32 @@ public class EmployeeService {
         for (Employee employee : employeesAll) {
             if (employee.getWarehouseID().equals(warehouseID) &&
             employee.getJobs().stream().anyMatch(job -> jobName.equals(job.getName()))) {
+                employees.add(employee);
+            }
+        }
+        return employees;
+    }
+
+    public List<Employee> getAllActiveTodayEmployeesFromWarehouse(Long warehouseID, LocalDate date){
+        List<Employee> employeesAll = getAllEmployeesFromWarehouse(warehouseID);
+        List<Employee> employees = new ArrayList<>();
+        for (Employee employee : employeesAll) {
+            List<LoginAudit> loginAudits = loginAuditService.getLoginAuditsByEmployeeAndDate(employee, date);
+            List<LogoutAudit> logoutAudits = logoutAuditService.getLogoutAuditsByEmployeeAndDate(employee, date);
+            if(!loginAudits.isEmpty() || !logoutAudits.isEmpty()) {
+                employees.add(employee);
+            }
+        }
+        return employees;
+    }
+
+    public List<Employee> getAllActivePeriodEmployeesFromWarehouse(Long warehouseID, Timestamp start, Timestamp end){
+        List<Employee> employeesAll = getAllEmployeesFromWarehouse(warehouseID);
+        List<Employee> employees = new ArrayList<>();
+        for (Employee employee : employeesAll) {
+            List<LoginAudit> loginAudits = loginAuditService.getLoginAuditsByEmployeeAndPeriod(employee, start, end);
+            List<LogoutAudit> logoutAudits = logoutAuditService.getLogoutAuditsByEmployeeAndPeriod(employee, start, end);
+            if(!loginAudits.isEmpty() || !logoutAudits.isEmpty()) {
                 employees.add(employee);
             }
         }
