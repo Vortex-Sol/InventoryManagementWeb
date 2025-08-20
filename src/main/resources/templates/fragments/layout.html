@@ -93,11 +93,6 @@
             sec:authorize="hasAnyRole('MANAGER','ADMIN','SUPERADMIN')">
           <a class="nav-link" th:href="@{/api/manager}">Manager</a>
         </li>
-        <!-- Visible to MANAGER, ADMIN, SUPERADMIN -->
-        <li class="nav-item"
-            sec:authorize="hasAnyRole('MANAGER','ADMIN','SUPERADMIN')">
-          <a class="nav-link" th:href="@{/api/report}">Reports</a>
-        </li>
         <!-- Visible to STOCKER, MANAGER, ADMIN, SUPERADMIN -->
         <li class="nav-item"
             sec:authorize="hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')">
