@@ -459,6 +459,19 @@ TaxService
 - **public void addVATRate(Category category, String country)**
 - **public void removeVATRate(Category category, String country)**
 
+TaxRate
+- Model entity (class) with the following fields: 
+  - @Id _Long_ id
+  - nullable = false _enum_ country
+  - nullable = false _Double_ standardRate
+  - _Double_ reducedRate
+  - _Double_ superReducedRate
+  - _Double_ noneRate
+  - _Double_ otherRate
+- It is @ManyToOne with Settings, i.e. 
+  - TaxRate can be used by many Settings 
+  - but a Setting can only use 1 TaxRate
+
 Category Types
 - _A_ Standard
 - _B_ Reduced
