@@ -24,7 +24,7 @@ public class ReportController {
     }
 
     @GetMapping("/receipts/period")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasanyRole('MANAGER','SUPERADMIN')")
     public ResponseEntity<Response> getPeriodReceiptsReport(
             Authentication authentication,
 
@@ -56,7 +56,7 @@ public class ReportController {
 
 
     @GetMapping("/receipts/today")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasanyRole('MANAGER','SUPERADMIN')")
     public ResponseEntity<Response> getTodaySalesReport(Authentication authentication){
         Response resp = new vortex.imwp.models.Response();
 
@@ -78,7 +78,7 @@ public class ReportController {
     }
 
     @GetMapping("/inventory/today")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasanyRole('MANAGER','SUPERADMIN')")
     public ResponseEntity<Response> getTodayInventoryReport(Authentication authentication){
         Response resp = new vortex.imwp.models.Response();
 
@@ -101,7 +101,7 @@ public class ReportController {
 
 
     @GetMapping("/employees/today")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasanyRole('MANAGER','SUPERADMIN')")
     public ResponseEntity<Response> getTodayEmployeesReport(Authentication authentication){
         Response resp = new vortex.imwp.models.Response();
 
@@ -124,7 +124,7 @@ public class ReportController {
 
     //http://localhost:8080/api/reports/employees/period?start=2025-07-20T00:00:00&end=2025-08-11T23:59:59
     @GetMapping("/employees/period")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasanyRole('MANAGER','SUPERADMIN')")
     public ResponseEntity<Response> getPeriodEmployeesReport(
             Authentication authentication,
 
