@@ -86,4 +86,19 @@ public class AdminController {
         employeeService.registerEmployee(employeeDTO);
         return "redirect:/inventory/admin";
     }
+
+    @GetMapping("/contact")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
+    public String contact(Model model) {
+        model.addAttribute("phone", "");
+        model.addAttribute("email", "");
+        model.addAttribute("address", "");
+        return "/admin/edit-contact-information";
+    }
+
+    @PostMapping("/contact")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
+    public String editContact(@ModelAttribute("phone") String phone, @ModelAttribute("email") String email, @ModelAttribute("address") String address, Model model) {
+        return "redirect:/api/home";
+    }
 }
