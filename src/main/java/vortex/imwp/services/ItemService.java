@@ -1,15 +1,14 @@
 package vortex.imwp.services;
 
+import jakarta.transaction.Transactional;
 import vortex.imwp.dtos.CategoryDTO;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.mappers.ItemDTOMapper;
 import vortex.imwp.models.Category;
 import vortex.imwp.models.Item;
 import vortex.imwp.models.WarehouseItem;
-import vortex.imwp.repositories.CategoryRepository;
-import vortex.imwp.repositories.ItemRepository;
+import vortex.imwp.repositories.*;
 import org.springframework.stereotype.Service;
-import vortex.imwp.repositories.WarehouseItemRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,11 +18,14 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final WarehouseItemRepository warehouseItemRepository;
     private final CategoryRepository categoryRepository;
+    private final SaleItemRepository saleItemRepository;
 
-    public ItemService(ItemRepository itemRepository, WarehouseItemRepository warehouseItemRepository, CategoryRepository categoryRepository) {
+    public ItemService(ItemRepository itemRepository, WarehouseItemRepository warehouseItemRepository,
+                       CategoryRepository categoryRepository, SaleItemRepository saleItemRepository) {
         this.itemRepository = itemRepository;
         this.warehouseItemRepository = warehouseItemRepository;
         this.categoryRepository = categoryRepository;
+        this.saleItemRepository = saleItemRepository;
     }
     public List<ItemDTO> getAll() {
         Iterable<Item> list = itemRepository.findAll();
@@ -148,8 +150,13 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
+    @Transactional
     public void deleteItem(Long id) {
-        itemRepository.deleteById(id);
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found: " + id));
+        warehouseItemRepository.deleteByItem(item);
+        saleItemRepository.deleteSaleItemByItemId(item.getId());
+        itemRepository.delete(item);
     }
 
     public List<Item> searchItems(String keyword) {

@@ -3,14 +3,12 @@ package vortex.imwp.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.dtos.CategoryDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import vortex.imwp.models.Item;
 import vortex.imwp.models.Response;
 import vortex.imwp.models.WarehouseItem;
@@ -73,16 +71,15 @@ public class InventoryController {
 			warehouseItemService.saveWarehouseItem(wi);
 		}
 
-		return "redirect:/api/home";
+		return "redirect:/api/items";
 
 	}
-
 
 	@PostMapping("/delete")
 	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String deleteItem(@RequestParam("item_id") Long itemId) {
 		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
-		return "redirect:/api/home";
+		return "redirect:/api/items";
 	}
 
 	@GetMapping()
@@ -114,13 +111,47 @@ public class InventoryController {
 		model.addAttribute("itemWarehouses", itemWarehouses);
 		model.addAttribute("warehouses", warehouseService.getAllWarehouses());
 		model.addAttribute("keyword", keyword);
-		return "inventory/search-results.html";
+		return "inventory/search-results";
 	}
 
 	@GetMapping("/checkout")
 	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String inventoryHome() {
 		return "inventory/receipt/checkout";
+	}
+
+	@GetMapping("/edit/{id}")
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')")
+	public String editItemForm(@PathVariable Long id, Model model) {
+		Item item = itemService.getItemById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Item not found"));
+		model.addAttribute("item", item);
+		model.addAttribute("categories", categoryService.getAllCategories());
+		return "inventory/edit-item";
+	}
+
+	@PostMapping("/edit/{id}")
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')")
+	public String updateItem(@PathVariable Long id,
+							 @RequestParam String name,
+							 @RequestParam String description,
+							 @RequestParam double price,
+							 @RequestParam Long barcode,
+							 @RequestParam Long categoryId,
+							 RedirectAttributes ra) {
+		Item item = itemService.getItemById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Item not found"));
+
+		item.setName(name);
+		item.setDescription(description);
+		item.setPrice(price);
+		item.setBarcode(barcode);
+		item.setCategory(categoryService.getCategoryById(categoryId)
+				.orElseThrow(() -> new IllegalArgumentException("Category not found")));
+
+		itemService.updateItem(item);
+		ra.addFlashAttribute("toastSuccess", "Item updated");
+		return "redirect:/api/items";
 	}
 
 }

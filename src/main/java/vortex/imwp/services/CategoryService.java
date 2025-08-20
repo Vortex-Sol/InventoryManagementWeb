@@ -25,10 +25,19 @@ public class CategoryService {
 				.collect(Collectors.toList());
 	}
 
+	public List<Category> getAllCategories() {
+		return categoryRepository.findAll();
+	}
+
 	public Optional<CategoryDTO> getCategoryDTOById(Long id) {
 		return categoryRepository.findById(id)
 				.map(CategoryDTOMapper::map);
 	}
+	public Optional<Category> getCategoryById(Long id) {
+		return categoryRepository.findById(id);
+	}
+
+
 	public CategoryDTO createCategoryIfNotExists(CategoryDTO dto) {
 		Optional<Category> existing = categoryRepository.findByNameIgnoreCase(dto.getName().trim());
 		if (existing.isPresent()) {

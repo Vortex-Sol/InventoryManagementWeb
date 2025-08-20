@@ -84,6 +84,6 @@ public class AdminController {
         }
 
         employeeService.registerEmployee(employeeDTO);
-        return "redirect:/inventory/home";
+        return "redirect:/inventory/admin";
     }
 }
