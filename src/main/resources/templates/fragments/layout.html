@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en"
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en"
       th:fragment="layout(title, content, navText)">
 <head>
   <meta charset="UTF-8">
@@ -81,23 +83,47 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-4">
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/api/home}">Home</a>
+        <!-- Visible to ADMIN and SUPERADMIN -->
+        <li class="nav-item"
+            sec:authorize="hasAnyRole('ADMIN','SUPERADMIN')">
+          <a class="nav-link" th:href="@{/api/admin}">Admin</a>
         </li>
-        <li class="nav-item">
+        <!-- Visible to MANAGER, ADMIN, SUPERADMIN -->
+        <li class="nav-item"
+            sec:authorize="hasAnyRole('MANAGER','ADMIN','SUPERADMIN')">
+          <a class="nav-link" th:href="@{/api/manager}">Manager</a>
+        </li>
+        <!-- Visible to STOCKER, MANAGER, ADMIN, SUPERADMIN -->
+        <li class="nav-item"
+            sec:authorize="hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')">
+          <a class="nav-link" th:href="@{/api/stocker}">All Warehouses Items</a>
+        </li>
+        <!-- Visible to SUPERADMIN only -->
+        <li class="nav-item"
+            sec:authorize="hasRole('SUPERADMIN')">
+          <a class="nav-link" th:href="@{/api/super}">Super Admin</a>
+        </li>
+        <!-- Visible to SALESMAN, ADMIN, SUPERADMIN -->
+        <li class="nav-item"
+            sec:authorize="hasAnyRole('SALESMAN','ADMIN','SUPERADMIN')">
           <a class="nav-link" th:href="@{/api/salesman}">Checkout</a>
         </li>
+        <!-- Visible to MANAGER, ADMIN, SUPERADMIN -->
+        <li class="nav-item"
+            sec:authorize="hasAnyRole('MANAGER','ADMIN','SUPERADMIN')">
+          <a class="nav-link" th:href="@{/api/invoice}">Invoice</a>
+        </li>
       </ul>
+
       <form class="d-flex ms-auto" th:action="@{/api/items/search}" method="get">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <input class="form-control me-2" type="search" name="keyword" placeholder="Search..." aria-label="Search">
         <button class="btn btn-outline-secondary" type="submit">Search</button>
       </form>
-
-      <form class="d-flex ms-4" th:action="@{/auth/logout}" method="post">
-        <button type="submit" class="btn btn-danger">Logout</button>
-      </form>
     </div>
+    <form class="d-flex ms-4" th:action="@{/auth/logout}" method="post">
+      <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
   </div>
 </nav>
 
