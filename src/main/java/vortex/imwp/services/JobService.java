@@ -29,6 +29,11 @@ public class JobService {
         return Optional.empty();
     }
 
+    public Job getByName(String name) {
+        Optional<Job> job = jobRepository.findByName(name);
+        return job.orElse(null);
+    }
+
     public Optional<Job> getJobById(Long id) { return jobRepository.findById(id); }
 
     public Job addJob(JobDTO job) { return jobRepository.save(JobDTOMapper.map(job)); }

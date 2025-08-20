@@ -14,16 +14,19 @@ VALUES
     ('SALESMAN', 'Handles customer purchases.'),
     ('MANAGER', 'Oversees operations.'),
     ('STOCKER', 'Manages inventory.'),
-    ('ADMIN', 'Oversees Application');
+    ('ADMIN', 'Oversees Application'),
+    ('SUPERADMIN', 'Superior Admin');
 
 -- Employees
 INSERT INTO
     Employee (Username, Password, Name, Surname, DoB, Email, Phone, Start_Date, End_Date, Boss_ID, Warehouse_ID)
 VALUES
-    ('admin', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'John', 'Doe', '1990-01-15', 'jdoe@example.com', '555-1111', '2020-01-01', NULL, NULL, 1),
-    ('salesman', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Alice', 'Smith', '1985-06-20', 'asmith@example.com', '555-2222', '2021-05-01', NULL, NULL, 2),
-    ('stocker', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Bruce', 'Wayne', '1980-03-30', 'bwayne@example.com', '555-3333', '2019-11-15', NULL, 1, 1),
-    ('manager', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Clark', 'Kent', '1992-07-10', 'ckent@example.com', '555-4444', '2023-02-01', NULL, 2, 1);
+    ('super', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Clark', 'Kent', '1985-05-02', 'super@gmail.com', '555-0000', '2019-12-30', NULL, NULL, 0),
+    ('admin', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'John', 'Doe', '1990-01-15', 'jdoe@example.com', '555-1111', '2020-01-01', NULL, 1, 1),
+    ('manager', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Clark', 'Kent', '1992-07-10', 'ckent@example.com', '555-4444', '2023-02-01', NULL, 1, 0),
+    ('salesman', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Alice', 'Smith', '1985-06-20', 'asmith@example.com', '555-2222', '2021-05-01', NULL, 3, 2),
+    ('stocker', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Bruce', 'Wayne', '1980-03-30', 'bwayne@example.com', '555-3333', '2019-11-15', NULL, 3, 1);
+
 -- Note: Get the auto-generated employee IDs using SELECTs if needed in Java code.
 
 -- Employee Jobs (assumes IDs inserted in order)
@@ -31,10 +34,11 @@ VALUES
 INSERT INTO
     Employee_Job (Employee_ID, Job_ID)
 VALUES
-    (1, 5),
-    (2, 2),
-    (3, 4),
-    (4, 3);
+    (1, 6),
+    (2, 5),
+    (3, 3),
+    (4, 2),
+    (5, 4);
 
 INSERT INTO
     Category (Name)
@@ -91,7 +95,7 @@ INSERT INTO
     Settings (Manager_ID, Alert_When_Stock_Is_Low, Auto_Generate_Report, Auto_Generate_Report_Time, Notify_Minimum_Cash_Discrepancy, Destroy_Refund_Data_After_N_Days, Cash_Count_Start_Time, Cash_Count_End_Time, Auto_Generate_Inventory_Report_Time)
 VALUES
     (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00'),
-    (4, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00');
+    (2, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00');
 
 INSERT INTO
     Settings_Change_Log (Setting_ID, Warehouse_ID, Admin_ID, Changed_At, Settings_Changed)

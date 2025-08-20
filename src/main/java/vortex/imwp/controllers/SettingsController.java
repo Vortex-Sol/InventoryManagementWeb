@@ -17,6 +17,7 @@ import vortex.imwp.services.SettingsService;
 
 import java.beans.PropertyEditorSupport;
 import java.sql.Time;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/api/settings")
@@ -31,19 +32,19 @@ public class SettingsController {
     }
 
     @GetMapping()
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String getSettings(
             Authentication authentication,
             Model model,
             RedirectAttributes redirectAttributes) {
         try{
             Employee manager = employeeService.getEmployeeByAuthentication(authentication);
+            Set<String> allowed = Set.of("ADMIN", "SUPERADMIN");
+
             if (manager != null && manager.getJobs() != null &&
-                    manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
+                    manager.getJobs().stream().anyMatch(job -> allowed.contains(job.getName()))) {
                 Settings settings = settingsService.getSettingsByMangerId(manager);
-
                 SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
-
                 model.addAttribute("settingsDto", settingsDto);
                 return "/admin/settings";
             }
@@ -54,21 +55,19 @@ public class SettingsController {
             redirectAttributes.addFlashAttribute("message", "Settings not found");
             return "redirect:/api/home";
         }
-
-
     }
 
-
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String changeSettings(@ModelAttribute("settingsDto") SettingsDTO settingsDto,
                                  Authentication authentication,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
 
         Employee manager = employeeService.getEmployeeByAuthentication(authentication);
+        Set<String> allowed = Set.of("ADMIN", "SUPERADMIN");
         if (manager != null && manager.getJobs() != null &&
-                manager.getJobs().stream().anyMatch(job -> "ADMIN".equals(job.getName()))){
+                manager.getJobs().stream().anyMatch(job -> allowed.contains(job.getName()))){
 
             if (bindingResult.hasErrors()) {
                 return "/admin/settings";
@@ -77,7 +76,6 @@ public class SettingsController {
             redirectAttributes.addFlashAttribute("message", "Saved");
             return "redirect:/api/settings";
         }
-
         return "redirect:/api/home";
     }
 

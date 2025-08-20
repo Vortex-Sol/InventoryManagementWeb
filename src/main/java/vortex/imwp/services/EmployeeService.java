@@ -9,6 +9,7 @@ import vortex.imwp.mappers.EmployeeDTOMapper;
 import vortex.imwp.models.Employee;
 import vortex.imwp.models.LoginAudit;
 import vortex.imwp.models.LogoutAudit;
+import vortex.imwp.models.Job;
 import vortex.imwp.repositories.EmployeeRepository;
 import vortex.imwp.repositories.JobRepository;
 
@@ -96,16 +97,16 @@ public class EmployeeService {
     public Employee registerEmployee(EmployeeDTO employee) {
         Employee user = new Employee();
         user.setUsername(employee.getUsername());
+        user.setName(employee.getName());
+        user.setSurname(employee.getSurname());
         user.setEmail(employee.getEmail());
-        user.setPassword(passwordEncoder.encode(employee.getPassword()));
-        user.setName("Name");
-        user.setSurname("Surname");
-        user.setDob(new Date());
+        user.setDob(employee.getDob());
         user.setStartDate(new Date());
-        user.setPhone("TBD");
-        user.setBossID(0L);
-        user.setWarehouseID(0L);
-        user.addJob(jobRepository.findById(0L));
+        user.setPhone(employee.getPhone());
+        user.setBossID(employee.getBossID());
+        user.setWarehouseID(getEmployeeById(employee.getBossID()).get().getWarehouseID());
+        for (String job : employee.getJobs()) user.addJob(jobRepository.findByName(job).get());
+        user.setPassword(passwordEncoder.encode(employee.getPassword()));
         employeeRepository.save(user);
         return user;
     }

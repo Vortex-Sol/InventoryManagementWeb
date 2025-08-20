@@ -12,7 +12,7 @@
                     <h4>Register New User</h4>
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/api/register}" method="post" th:object="${user}" onsubmit="return validatePasswords()">
+                    <form th:action="@{/api/register}" method="post" th:object="${user}" onsubmit="return validatePasswords() && validateDob()">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                         <div class="mb-3">
@@ -21,8 +21,34 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email (optional)</label>
-                            <input th:field="*{email}" type="email" class="form-control" id="email" name="email" />
+                            <label for="username" class="form-label">Name</label>
+                            <input th:field="*{name}" type="text" class="form-control" id="name" name="name" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Surname</label>
+                            <input th:field="*{surname}" type="text" class="form-control" id="surname" name="surname" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dob" class="form-label">Date of birth</label>
+                            <input th:field="*{dob}" type="date" class="form-control" id="dob" name="dob" required>
+                            <div class="invalid-feedback">Please choose valid date of birth.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input th:field="*{email}" type="email" class="form-control" id="email" name="email" required/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input th:field="*{phone}" type="text" class="form-control" id="phone" name="phone" required/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="boss" class="form-label">Boss ID</label>
+                            <input th:field="*{bossID}" type="number" class="form-control" id="boss" name="boss" required/>
                         </div>
 
                         <div class="mb-3">
@@ -53,5 +79,6 @@
     </div>
 
     <script src="/js/validate-passwords.js"></script>
+    <script src="/js/validate-dob.js"></script>
 </section>
 </html>

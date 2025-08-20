@@ -24,6 +24,7 @@ public class HomeController {
             else if(employee.getJobs().stream().anyMatch(job -> "MANAGER".equals(job.getName()))) return "redirect:/api/manager";
             else if(employee.getJobs().stream().anyMatch(job -> "SALESMAN".equals(job.getName()))) return "redirect:/api/salesman";
             else if(employee.getJobs().stream().anyMatch(job -> "STOCKER".equals(job.getName()))) return "redirect:/api/warehouse";
+            else if(employee.getJobs().stream().anyMatch(job -> "SUPERADMIN".equals(job.getName()))) return "redirect:/api/super";
         }
         return "/error";
     }
