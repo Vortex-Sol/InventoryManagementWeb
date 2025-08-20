@@ -70,16 +70,14 @@ public class InventoryController {
 			wi.setQuantityInStock(quantity);
 			warehouseItemService.saveWarehouseItem(wi);
 		}
-
-		return "redirect:/api/items";
-
+		return "redirect:/api/home";
 	}
 
 	@PostMapping("/delete")
 	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String deleteItem(@RequestParam("item_id") Long itemId) {
 		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
-		return "redirect:/api/items";
+		return "redirect:/api/home";
 	}
 
 	@GetMapping()
@@ -90,13 +88,11 @@ public class InventoryController {
 		List<ItemDTO> items = itemService.getAll();
 		resp.setSuccess(!items.isEmpty());
 		resp.setData(items);
-
 		if (resp.isSuccess()) {
 			resp.setMessage("Items found");
 		} else {
 			resp.setMessage("Items not found");
 		}
-
 		return ResponseEntity.ok(resp);
 	}
 	@GetMapping("/search")
@@ -151,7 +147,7 @@ public class InventoryController {
 
 		itemService.updateItem(item);
 		ra.addFlashAttribute("toastSuccess", "Item updated");
-		return "redirect:/api/items";
+		return "redirect:/api/home";
 	}
 
 }

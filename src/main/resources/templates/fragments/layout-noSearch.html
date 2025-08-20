@@ -85,32 +85,26 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-4">
-      <!-- Visible to ADMIN and SUPERADMIN -->
         <li class="nav-item"
-            sec:authorize="hasAnyRole('ADMIN','SUPERADMIN')">
+            sec:authorize="hasAnyRole('ADMIN')">
           <a class="nav-link" th:href="@{/api/admin}">Admin</a>
         </li>
-      <!-- Visible to MANAGER, ADMIN, SUPERADMIN -->
         <li class="nav-item"
             sec:authorize="hasAnyRole('MANAGER','ADMIN','SUPERADMIN')">
           <a class="nav-link" th:href="@{/api/manager}">Manager</a>
         </li>
-      <!-- Visible to STOCKER, MANAGER, ADMIN, SUPERADMIN -->
         <li class="nav-item"
             sec:authorize="hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')">
           <a class="nav-link" th:href="@{/api/warehouse}">Warehouse Items</a>
         </li>
-      <!-- Visible to SUPERADMIN only -->
         <li class="nav-item"
             sec:authorize="hasRole('SUPERADMIN')">
           <a class="nav-link" th:href="@{/api/super}">Super Admin</a>
         </li>
-      <!-- Visible to SALESMAN, ADMIN, SUPERADMIN -->
         <li class="nav-item"
-            sec:authorize="hasAnyRole('SALESMAN','ADMIN','SUPERADMIN')">
+            sec:authorize="hasAnyRole('SALESMAN','MANAGER','ADMIN','SUPERADMIN')">
           <a class="nav-link" th:href="@{/api/salesman}">Checkout</a>
         </li>
-      <!-- Visible to MANAGER, ADMIN, SUPERADMIN -->
         <li class="nav-item"
             sec:authorize="hasAnyRole('MANAGER','ADMIN','SUPERADMIN')">
           <a class="nav-link" th:href="@{/api/invoice}">Invoice</a>
