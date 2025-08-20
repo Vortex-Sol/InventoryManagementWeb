@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout-noSearch :: layout(title=~{::title}, content=~{::section})}">
-<head>
-    <title>Edit Contact</title>
-</head>
+      th:replace="~{fragments/layout-noSearch :: layout(title=~{::title}, content=~{::section}, navText='Edit Contact Information')}">
 <section>
     <div class="container mt-4">
         <h3>Edit Contact Information</h3>
