@@ -7,7 +7,7 @@ public class SettingsDTOMapper {
     public static SettingsDTO map(Settings settings) {
         return new SettingsDTO(
                 settings.getId(),
-                EmployeeDTOMapper.map(settings.getManagerId()),
+                WarehouseDTOMapper.map(settings.getWarehouse()),
                 settings.getAlertWhenStockIsLow(),
                 settings.getAutoGenerateReport(),
                 settings.getAutoGenerateReportTime(),
@@ -21,7 +21,7 @@ public class SettingsDTOMapper {
 
     public static Settings map(SettingsDTO dto) {
         return new Settings(
-                EmployeeDTOMapper.map(dto.getManagerId()),
+                WarehouseDTOMapper.map(dto.getWarehouse()),
                 dto.getAlertWhenStockIsLow(),
                 dto.getAutoGenerateReport(),
                 dto.getAutoGenerateReportTime(),

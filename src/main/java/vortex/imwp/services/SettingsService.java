@@ -36,8 +36,8 @@ public class SettingsService {
         return settingsRepository.findById(settingsId);
     }
 
-    public Settings getSettingsByMangerId(Employee managerId){
-        return settingsRepository.findByManagerId(managerId);
+    public Settings getSettingsByWarehouseId(Long warehouseId){
+        return settingsRepository.findByWarehouse_Id(warehouseId);
     }
 
     public void updateSettings(SettingsDTO settingsDto, Authentication authentication) {
@@ -134,7 +134,7 @@ public class SettingsService {
 
             Employee admin = employeeService.getEmployeeByAuthentication(authentication);
 
-            SettingsChangeLog changeLog = new SettingsChangeLog(settings.getId(), settings.getManagerId().getWarehouseID(), admin.getId(), sb.toString());
+            SettingsChangeLog changeLog = new SettingsChangeLog(settings.getId(), settings.getWarehouse().getId(), admin.getId(), sb.toString());
 
             settingsRepository.save(settings);
             settingsChangeLogRepository.save(changeLog);

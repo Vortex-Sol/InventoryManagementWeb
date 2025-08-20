@@ -63,7 +63,8 @@ CREATE TABLE Warehouse (
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Phone VARCHAR(20) NOT NULL,
     Email Varchar(50) NOT NULL,
-    Address VARCHAR(250) NOT NULL
+    Address VARCHAR(250) NOT NULL,
+    Country VARCHAR(250) NOT NULL
 );
 
 CREATE TABLE Category(
@@ -71,9 +72,23 @@ CREATE TABLE Category(
     Name VARCHAR(20) NOT NULL
 );
 
+CREATE TABLE Tax_Rate
+(
+    ID              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    Country         VARCHAR(50) NOT NULL,
+    Standard_Rate DECIMAL(10, 3) NOT NULL,
+    Reduced_Rate DECIMAL(10, 3),
+    Super_Reduced_Rate DECIMAL(10, 3),
+    None_Rate DECIMAL(10, 3),
+    Other_Rate DECIMAL(10, 3)
+);
+
 CREATE TABLE Settings(
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-    Manager_ID BIGINT NOT NULL,
+    Warehouse_id BIGINT NOT NULL,
+    CONSTRAINT fk_settings_warehouse
+        FOREIGN KEY (Warehouse_id)
+            REFERENCES Warehouse(ID),
     Alert_When_Stock_Is_Low BOOLEAN NOT NULL,
     Auto_Generate_Report BOOLEAN NOT NULL,
     Auto_Generate_Report_Time TIME,
@@ -84,7 +99,11 @@ CREATE TABLE Settings(
     Destroy_Refund_Data_After_N_Days SMALLINT NOT NULL,
     Cash_Count_Start_Time TIME NOT NULL,
     Cash_Count_End_Time TIME NOT NULL,
-    Auto_Generate_Inventory_Report_Time TIME NOT NULL
+    Auto_Generate_Inventory_Report_Time TIME NOT NULL,
+    Tax_Rate_id BIGINT NOT NULL,
+    CONSTRAINT fk_settings_tax_rate
+        FOREIGN KEY (Tax_Rate_id)
+            REFERENCES Tax_Rate(ID)
 );
 
 CREATE TABLE Settings_Change_Log(
@@ -147,6 +166,8 @@ CREATE TABLE Receipt (
      Cancelled_By BIGINT
 );
 
+
+
 -- === FOREIGN KEYS ===
 
 ALTER TABLE Employee ADD FOREIGN KEY (Boss_ID) REFERENCES Employee(ID);
@@ -163,7 +184,7 @@ ALTER TABLE Report ADD FOREIGN KEY (Employee_ID_Created) REFERENCES Employee(ID)
 ALTER TABLE Report ADD FOREIGN KEY (Created_At_Warehouse_ID) REFERENCES Warehouse(ID);
 ALTER TABLE Receipt ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID);
 ALTER TABLE Receipt ADD FOREIGN KEY (Cancelled_By) REFERENCES Employee(ID);
-ALTER TABLE Settings ADD FOREIGN KEY (Manager_ID) REFERENCES Employee(ID);
+ALTER TABLE Settings ADD FOREIGN KEY (Warehouse_id) REFERENCES Warehouse(ID);
 ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Setting_ID) REFERENCES Settings(ID);
 ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
 ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Admin_ID) REFERENCES Employee(ID);

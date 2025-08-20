@@ -7,5 +7,5 @@ import vortex.imwp.models.Settings;
 
 @Repository
 public interface SettingsRepository extends JpaRepository<Settings, Long> {
-    Settings findByManagerId(Employee managerId);
+    Settings findByWarehouse_Id(Long warehouseId);
 }

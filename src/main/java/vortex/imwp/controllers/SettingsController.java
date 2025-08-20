@@ -43,7 +43,7 @@ public class SettingsController {
 
             if (manager != null && manager.getJobs() != null &&
                     manager.getJobs().stream().anyMatch(job -> allowed.contains(job.getName()))) {
-                Settings settings = settingsService.getSettingsByMangerId(manager);
+                Settings settings = settingsService.getSettingsByWarehouseId(manager.getWarehouseID());
                 SettingsDTO settingsDto = SettingsDTOMapper.map(settings);
                 model.addAttribute("settingsDto", settingsDto);
                 return "/admin/settings";

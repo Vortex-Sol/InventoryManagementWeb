@@ -4,14 +4,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import vortex.imwp.models.Employee;
+import vortex.imwp.models.*;
 import vortex.imwp.services.EmployeeService;
 
 @Controller
 @RequestMapping("/api/home")
 public class HomeController {
     private final EmployeeService employeeService;
-
     public HomeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
