@@ -7,16 +7,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import vortex.imwp.dtos.SettingsChangeLogDTO;
-import vortex.imwp.services.SettingsChangeLogService;
+import vortex.imwp.dtos.SettingsChangeAuditDTO;
+import vortex.imwp.services.SettingsChangeAuditService;
 
 @Controller
 @RequestMapping("/api")
-public class ActivityLogController {
+public class ActivityAuditController {
 
-	private final SettingsChangeLogService logService;
+	private final SettingsChangeAuditService logService;
 
-	public ActivityLogController(SettingsChangeLogService logService) {
+	public ActivityAuditController(SettingsChangeAuditService logService) {
 		this.logService = logService;
 	}
 
@@ -32,7 +32,7 @@ public class ActivityLogController {
 	public String logsPaged(@RequestParam(defaultValue = "0") int page,
 							@RequestParam(defaultValue = "20") int size,
 							Model model) {
-		Page<SettingsChangeLogDTO> logsPage = logService.getLogsPage(page, size);
+		Page<SettingsChangeAuditDTO> logsPage = logService.getLogsPage(page, size);
 		model.addAttribute("logsPage", logsPage);
 		model.addAttribute("logs", logsPage.getContent());
 		return "admin/activity-log";

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.dtos.ReportDTO;
 import vortex.imwp.mappers.ReportDTOMapper;
 import vortex.imwp.models.*;
@@ -17,7 +16,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -28,9 +26,9 @@ public class ReportService {
     private final WarehouseItemService warehouseItemService;
     private final ReceiptService receiptService;
     private final LogoutAuditService logoutAuditService;
-    private final SettingsChangeLogService settingsChangeLogService;
+    private final SettingsChangeAuditService settingsChangeAuditService;
 
-    public ReportService(ReportRepository reportRepository, EmployeeService employeeService, LoginAuditService loginAuditService, SaleService saleService, WarehouseItemService warehouseItemService, ReceiptService receiptService, LogoutAuditService logoutAuditService, SettingsChangeLogService settingsChangeLogService) {
+    public ReportService(ReportRepository reportRepository, EmployeeService employeeService, LoginAuditService loginAuditService, SaleService saleService, WarehouseItemService warehouseItemService, ReceiptService receiptService, LogoutAuditService logoutAuditService, SettingsChangeAuditService settingsChangeAuditService) {
         this.reportRepository = reportRepository;
         this.employeeService = employeeService;
         this.loginAuditService = loginAuditService;
@@ -38,7 +36,7 @@ public class ReportService {
         this.warehouseItemService = warehouseItemService;
         this.receiptService = receiptService;
         this.logoutAuditService = logoutAuditService;
-        this.settingsChangeLogService = settingsChangeLogService;
+        this.settingsChangeAuditService = settingsChangeAuditService;
     }
 
     public Optional<List<ReportDTO>> getAll() {
@@ -100,18 +98,18 @@ public class ReportService {
 
             if (jobNames.contains("ADMIN")){
                 List<Object> settingsChangedData = new ArrayList<>();
-                List<SettingsChangeLog> settingsChangeLogs = settingsChangeLogService.getSettingsChangeLogsByEmployeeAndDate(employee, today);
-                for (SettingsChangeLog settingsChangeLog : settingsChangeLogs) {
+                List<SettingsChangeAudit> settingsChangeAudits = settingsChangeAuditService.getSettingsChangeLogsByEmployeeAndDate(employee, today);
+                for (SettingsChangeAudit settingsChangeAudit : settingsChangeAudits) {
                     Map<String, Object> settingChangeData = new LinkedHashMap<>();
-                    settingChangeData.put("settingsChangeLogId", settingsChangeLog.getId());
-                    settingChangeData.put("changedAt", settingsChangeLog.getChangedAt());
-                    settingChangeData.put("settingId", settingsChangeLog.getSettingId());
-                    settingChangeData.put("settingsChanged", settingsChangeLog.getSettingsChanged());
+                    settingChangeData.put("settingsChangeLogId", settingsChangeAudit.getId());
+                    settingChangeData.put("changedAt", settingsChangeAudit.getChangedAt());
+                    settingChangeData.put("settingId", settingsChangeAudit.getSettingId());
+                    settingChangeData.put("settingsChanged", settingsChangeAudit.getSettingsChanged());
 
                     settingsChangedData.add(settingChangeData);
                 }
                 if (!settingsChangedData.isEmpty()) {
-                    employeeData.put("settingsChangeLogs", settingsChangeLogs);
+                    employeeData.put("settingsChangeLogs", settingsChangeAudits);
                 }
 
             }
@@ -301,18 +299,18 @@ public class ReportService {
 
             if (jobNames.contains("ADMIN")){
                 List<Object> settingsChangedData = new ArrayList<>();
-                List<SettingsChangeLog> settingsChangeLogs = settingsChangeLogService.getSettingsChangeLogsByEmployeeAndPeriod(employee, start, end);
-                for (SettingsChangeLog settingsChangeLog : settingsChangeLogs) {
+                List<SettingsChangeAudit> settingsChangeAudits = settingsChangeAuditService.getSettingsChangeLogsByEmployeeAndPeriod(employee, start, end);
+                for (SettingsChangeAudit settingsChangeAudit : settingsChangeAudits) {
                     Map<String, Object> settingChangeData = new LinkedHashMap<>();
-                    settingChangeData.put("settingsChangeLogId", settingsChangeLog.getId());
-                    settingChangeData.put("changedAt", settingsChangeLog.getChangedAt());
-                    settingChangeData.put("settingId", settingsChangeLog.getSettingId());
-                    settingChangeData.put("settingsChanged", settingsChangeLog.getSettingsChanged());
+                    settingChangeData.put("settingsChangeLogId", settingsChangeAudit.getId());
+                    settingChangeData.put("changedAt", settingsChangeAudit.getChangedAt());
+                    settingChangeData.put("settingId", settingsChangeAudit.getSettingId());
+                    settingChangeData.put("settingsChanged", settingsChangeAudit.getSettingsChanged());
 
                     settingsChangedData.add(settingChangeData);
                 }
                 if (!settingsChangedData.isEmpty()) {
-                    employeeData.put("settingsChangeLogs", settingsChangeLogs);
+                    employeeData.put("settingsChangeLogs", settingsChangeAudits);
                 }
 
             }
