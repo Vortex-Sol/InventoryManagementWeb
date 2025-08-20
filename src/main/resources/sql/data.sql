@@ -1,10 +1,10 @@
 -- Warehouses
 INSERT INTO
-    Warehouse (ID, Phone, Email, Address)
+    Warehouse (ID, Phone, Email, Address, Country)
 VALUES
-    (0, '+48123456789', 'warehouse0@gmail.com', '123 Main St, Berlin'),
-    (1, '+48234567891', 'warehouse1@gmail.com','456 Market Ave, Munich'),
-    (2, '+48345678901', 'warehouse2@gmail.com', '789 Szczesliwicka, Warsaw');
+    (0, '+48123456789', 'warehouse0@gmail.com', '123 Main St, Berlin', 'GERMANY'),
+    (1, '+48234567891', 'warehouse1@gmail.com','456 Market Ave, Munich', 'GERMANY'),
+    (2, '+48345678901', 'warehouse2@gmail.com', '789 Szczesliwicka, Warsaw', 'POLAND');
 
 -- Jobs
 INSERT INTO
@@ -49,6 +49,15 @@ VALUES
     ('D'),
     ('E');
 
+INSERT INTO
+    Tax_Rate (Country, Standard_Rate, Reduced_Rate, Super_Reduced_Rate, None_Rate, Other_Rate)
+VALUES
+    ('DENMARK', 25, null, null, null,null),
+    ('IRELAND', 23, 13.5, 9, null,4.8),
+    ('POLAND', 23, 8, 5, null,null),
+    ('AUSTRIA', 20, 13, 10, null,null),
+    ('GERMANY', 19, 9, null, null,null);
+
 -- Items
 INSERT INTO
     Item (Name, Description, Price, Barcode, Category_ID)
@@ -92,10 +101,11 @@ VALUES
     (3, 5, 2);
 
 INSERT INTO
-    Settings (Manager_ID, Alert_When_Stock_Is_Low, Auto_Generate_Report, Auto_Generate_Report_Time, Notify_Minimum_Cash_Discrepancy, Destroy_Refund_Data_After_N_Days, Cash_Count_Start_Time, Cash_Count_End_Time, Auto_Generate_Inventory_Report_Time)
+    Settings (Warehouse_ID, Alert_When_Stock_Is_Low, Auto_Generate_Report, Auto_Generate_Report_Time, Notify_Minimum_Cash_Discrepancy, Destroy_Refund_Data_After_N_Days, Cash_Count_Start_Time, Cash_Count_End_Time, Auto_Generate_Inventory_Report_Time, Tax_Rate_id)
 VALUES
-    (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00'),
-    (2, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00');
+    (0, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 1),
+    (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 2),
+    (2, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 3);
 
 INSERT INTO
     Settings_Change_Log (Setting_ID, Warehouse_ID, Admin_ID, Changed_At, Settings_Changed)

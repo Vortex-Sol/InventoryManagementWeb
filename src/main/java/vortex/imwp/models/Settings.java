@@ -1,7 +1,12 @@
 package vortex.imwp.models;
 
 import jakarta.persistence.*;
+import vortex.imwp.dtos.SettingsDTO;
+import vortex.imwp.mappers.SettingsDTOMapper;
+
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Settings")
@@ -10,9 +15,9 @@ public class Settings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Manager_ID", nullable = false)
-    private Employee managerId;
+    @OneToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
     @Column(name = "Alert_When_Stock_Is_Low", nullable = false)
     private Boolean alertWhenStockIsLow;
@@ -38,9 +43,13 @@ public class Settings {
     @Column(name = "Auto_Generate_Inventory_Report_Time", nullable = false)
     private Time autoGenerateInventoryReportTime;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Tax_Rate_id", nullable = false)
+    private TaxRate taxRate;
+
     public Settings() {}
-    public Settings(Employee managerId, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime, Time autoGenerateInventoryReportTime) {
-        this.managerId = managerId;
+    public Settings(Warehouse warehouse, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime, Time autoGenerateInventoryReportTime) {
+        this.warehouse = warehouse;
         this.alertWhenStockIsLow = alertWhenStockIsLow;
         this.autoGenerateReport = autoGenerateReport;
         this.autoGenerateReportTime = autoGenerateReportTime;
@@ -51,8 +60,23 @@ public class Settings {
         this.autoGenerateInventoryReportTime = autoGenerateInventoryReportTime;
     }
 
+    public Settings(Warehouse warehouse, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime, Time autoGenerateInventoryReportTime, TaxRate taxRate) {
+        this.warehouse = warehouse;
+        this.alertWhenStockIsLow = alertWhenStockIsLow;
+        this.autoGenerateReport = autoGenerateReport;
+        this.autoGenerateReportTime = autoGenerateReportTime;
+        this.notifyMinimumCashDiscrepancy = notifyMinimumCashDiscrepancy;
+        this.destroyRefundDataAfterNDays = destroyRefundDataAfterNDays;
+        this.cashCountStartTime = cashCountStartTime;
+        this.cashCountEndTime = cashCountEndTime;
+        this.autoGenerateInventoryReportTime = autoGenerateInventoryReportTime;
+        this.taxRate = taxRate;
+    }
+
+
+
     public Long getId() { return id; }
-    public Employee getManagerId() { return managerId; }
+    public Warehouse getWarehouse() { return warehouse; }
     public Boolean getAlertWhenStockIsLow() { return alertWhenStockIsLow; }
     public Boolean getAutoGenerateReport() { return autoGenerateReport; }
     public Time getAutoGenerateReportTime() { return autoGenerateReportTime; }
@@ -61,9 +85,10 @@ public class Settings {
     public Time getCashCountStartTime() { return cashCountStartTime; }
     public Time getCashCountEndTime() { return cashCountEndTime; }
     public Time getAutoGenerateInventoryReportTime() { return autoGenerateInventoryReportTime; }
+    public TaxRate getTaxRate() { return taxRate; }
 
     public void setId(Long id) { this.id = id; }
-    public void setManagerId(Employee managerId) { this.managerId = managerId; }
+    public void setWarehouse(Warehouse warehouse) { this.warehouse = warehouse; }
     public void setAlertWhenStockIsLow(Boolean alertWhenStockIsLow) { this.alertWhenStockIsLow = alertWhenStockIsLow; }
     public void setAutoGenerateReport(Boolean autoGenerateReport) { this.autoGenerateReport = autoGenerateReport; }
     public void setAutoGenerateReportTime(Time autoGenerateReportTime) { this.autoGenerateReportTime = autoGenerateReportTime; }
@@ -72,26 +97,14 @@ public class Settings {
     public void setCashCountStartTime(Time cashCountStartTime) { this.cashCountStartTime = cashCountStartTime; }
     public void setCashCountEndTime(Time cashCountEndTime) { this.cashCountEndTime = cashCountEndTime; }
     public void setAutoGenerateInventoryReportTime(Time autoGenerateInventoryReportTime) { this.autoGenerateInventoryReportTime = autoGenerateInventoryReportTime; }
+    public void setTaxRate(TaxRate taxRate) { this.taxRate = taxRate; }
+
 
     @Override
     public String toString() {
         return "Settings{" +
                 "id=" + id +
-                ", managerId=" + "{" +
-                "id=" + managerId.getId() +
-                        ", username='" + managerId.getUsername() + '\'' +
-                        ", password='" + managerId.getPassword() + '\'' +
-                        ", name='" + managerId.getName() + '\'' +
-                        ", surname='" + managerId.getSurname() + '\'' +
-                        ", dob=" + managerId.getDob() +
-                        ", phone='" + managerId.getPhone() + '\'' +
-                        ", email='" + managerId.getEmail() + '\'' +
-                        ", startDate=" + managerId.getStartDate() +
-                        ", endDate=" + managerId.getEndDate() +
-                        ", warehouseID=" + managerId.getWarehouseID() +
-                        ", bossID=" + managerId.getBossID() +
-                        ", jobs=" + managerId.getJobs() +
-                        '}' +
+                ", warehouseId=" + warehouse.getId() +
                 ", alertWhenStockIsLow=" + alertWhenStockIsLow +
                 ", autoGenerateReport=" + autoGenerateReport +
                 ", autoGenerateReportTime=" + autoGenerateReportTime +

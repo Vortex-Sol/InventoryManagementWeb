@@ -4,7 +4,7 @@ import java.sql.Time;
 
 public class SettingsDTO {
     private Long id;
-    private EmployeeDTO managerId;
+    private WarehouseDTO warehouse;
     private Boolean alertWhenStockIsLow;
     private Boolean autoGenerateReport;
     private Time autoGenerateReportTime;
@@ -15,9 +15,9 @@ public class SettingsDTO {
     private Time autoGenerateInventoryReportTime;
 
     public SettingsDTO() {}
-    public SettingsDTO(Long id, EmployeeDTO managerId, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime, Time autoGenerateInventoryReportTime) {
+    public SettingsDTO(Long id, WarehouseDTO warehouse, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime, Time autoGenerateInventoryReportTime) {
         this.id = id;
-        this.managerId = managerId;
+        this.warehouse = warehouse;
         this.alertWhenStockIsLow = alertWhenStockIsLow;
         this.autoGenerateReport = autoGenerateReport;
         this.autoGenerateReportTime = autoGenerateReportTime;
@@ -29,7 +29,7 @@ public class SettingsDTO {
     }
 
     public Long getId() { return id; }
-    public EmployeeDTO getManagerId() { return managerId; }
+    public WarehouseDTO getWarehouse() {return warehouse;}
     public Boolean getAlertWhenStockIsLow() { return alertWhenStockIsLow; }
     public Boolean getAutoGenerateReport() { return autoGenerateReport; }
     public Time getAutoGenerateReportTime() { return autoGenerateReportTime; }
@@ -40,7 +40,7 @@ public class SettingsDTO {
     public Time getAutoGenerateInventoryReportTime() { return autoGenerateInventoryReportTime; }
 
     public void setId(Long id) { this.id = id; }
-    public void setManagerId(EmployeeDTO managerId) { this.managerId = managerId; }
+    public void setWarehouse(WarehouseDTO warehouse) { this.warehouse = warehouse; }
     public void setAlertWhenStockIsLow(Boolean alertWhenStockIsLow) { this.alertWhenStockIsLow = alertWhenStockIsLow; }
     public void setAutoGenerateReport(Boolean autoGenerateReport) { this.autoGenerateReport = autoGenerateReport; }
     public void setAutoGenerateReportTime(Time autoGenerateReportTime) { this.autoGenerateReportTime = autoGenerateReportTime; }
@@ -54,7 +54,7 @@ public class SettingsDTO {
     public String toString() {
         return "SettingsDTO{" +
                 "id=" + id +
-                ", managerId=" + managerId +
+                ", warehouseId=" + warehouse.getId() +
                 ", alertWhenStockIsLow=" + alertWhenStockIsLow +
                 ", autoGenerateReport=" + autoGenerateReport +
                 ", autoGenerateReportTime=" + autoGenerateReportTime +
