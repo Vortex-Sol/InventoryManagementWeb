@@ -1,5 +1,6 @@
 package vortex.imwp.services;
 
+import jakarta.transaction.Transactional;
 import vortex.imwp.dtos.CategoryDTO;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.mappers.ItemDTOMapper;
@@ -148,8 +149,14 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
+    @Transactional
     public void deleteItem(Long id) {
-        itemRepository.deleteById(id);
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found: " + id));
+        warehouseItemRepository.deleteByItem(item);
+        categoryRepository.deleteById(item.getCategory().getId());
+
+        itemRepository.delete(item);
     }
 
     public List<Item> searchItems(String keyword) {

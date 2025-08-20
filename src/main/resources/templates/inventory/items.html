@@ -75,7 +75,7 @@
                                 <input type="hidden" name="item_id" th:value="${item.id}" />
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                             </form>
-                            <a th:href="@{/edit/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary ms-2">Edit</a>
+                            <a th:href="@{/api/items/edit/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary ms-2">Edit</a>
                         </td>
                     </tr>
                     </tbody>
