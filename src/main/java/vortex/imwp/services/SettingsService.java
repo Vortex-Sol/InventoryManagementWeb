@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import vortex.imwp.dtos.SettingsDTO;
 import vortex.imwp.models.Employee;
 import vortex.imwp.models.Settings;
-import vortex.imwp.models.SettingsChangeLog;
-import vortex.imwp.repositories.SettingsChangeLogRepository;
+import vortex.imwp.models.SettingsChangeAudit;
+import vortex.imwp.repositories.SettingsChangeAuditRepository;
 import vortex.imwp.repositories.SettingsRepository;
 
 import java.sql.Time;
@@ -19,12 +19,12 @@ public class SettingsService {
 
     private final SettingsRepository settingsRepository;
     private final EmployeeService employeeService;
-    private final SettingsChangeLogRepository settingsChangeLogRepository;
+    private final SettingsChangeAuditRepository settingsChangeAuditRepository;
 
-    public SettingsService(SettingsRepository settingsRepository, EmployeeService employeeService, SettingsChangeLogRepository settingsChangeLogRepository) {
+    public SettingsService(SettingsRepository settingsRepository, EmployeeService employeeService, SettingsChangeAuditRepository settingsChangeAuditRepository) {
         this.settingsRepository = settingsRepository;
         this.employeeService = employeeService;
-        this.settingsChangeLogRepository = settingsChangeLogRepository;
+        this.settingsChangeAuditRepository = settingsChangeAuditRepository;
     }
 
     public boolean checkSettings(Long settingsId) {
@@ -134,10 +134,10 @@ public class SettingsService {
 
             Employee admin = employeeService.getEmployeeByAuthentication(authentication);
 
-            SettingsChangeLog changeLog = new SettingsChangeLog(settings.getId(), settings.getWarehouse().getId(), admin.getId(), sb.toString());
+            SettingsChangeAudit changeLog = new SettingsChangeAudit(settings.getId(), settings.getWarehouse().getId(), admin.getId(), sb.toString());
 
             settingsRepository.save(settings);
-            settingsChangeLogRepository.save(changeLog);
+            settingsChangeAuditRepository.save(changeLog);
             System.out.println("[ " + LocalDateTime.now() + " ]  username " + admin.getUsername() + " Settings Changed: " + sb.toString());
         }
 

@@ -101,7 +101,7 @@
         <!-- Visible to STOCKER, MANAGER, ADMIN, SUPERADMIN -->
         <li class="nav-item"
             sec:authorize="hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')">
-          <a class="nav-link" th:href="@{/api/warehose}">Warehouse Items</a>
+          <a class="nav-link" th:href="@{/api/warehouse}">Warehouse Items</a>
         </li>
         <!-- Visible to SUPERADMIN only -->
         <li class="nav-item"

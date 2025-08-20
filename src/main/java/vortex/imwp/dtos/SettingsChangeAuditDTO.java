@@ -2,7 +2,7 @@ package vortex.imwp.dtos;
 
 import java.time.LocalDateTime;
 
-public class SettingsChangeLogDTO {
+public class SettingsChangeAuditDTO {
     private Long id;
     private Long settingId;
     private Long warehouseId;
@@ -10,9 +10,9 @@ public class SettingsChangeLogDTO {
     private LocalDateTime changedAt;
     private String settingsChanged;
 
-    public SettingsChangeLogDTO() {}
+    public SettingsChangeAuditDTO() {}
 
-    public SettingsChangeLogDTO(Long id, Long settingId, Long warehouseId, Long adminId, LocalDateTime changedAt, String settingsChanged) {
+    public SettingsChangeAuditDTO(Long id, Long settingId, Long warehouseId, Long adminId, LocalDateTime changedAt, String settingsChanged) {
         this.id = id;
         this.settingId = settingId;
         this.warehouseId = warehouseId;

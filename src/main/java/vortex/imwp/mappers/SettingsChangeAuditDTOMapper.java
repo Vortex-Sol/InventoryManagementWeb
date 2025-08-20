@@ -1,11 +1,11 @@
 package vortex.imwp.mappers;
 
-import vortex.imwp.dtos.SettingsChangeLogDTO;
-import vortex.imwp.models.SettingsChangeLog;
+import vortex.imwp.dtos.SettingsChangeAuditDTO;
+import vortex.imwp.models.SettingsChangeAudit;
 
-public class SettingsChangeLogDTOMapper {
-    public static SettingsChangeLogDTO map(SettingsChangeLog settings) {
-        return new SettingsChangeLogDTO(
+public class SettingsChangeAuditDTOMapper {
+    public static SettingsChangeAuditDTO map(SettingsChangeAudit settings) {
+        return new SettingsChangeAuditDTO(
             settings.getId(),
             settings.getSettingId(),
             settings.getWarehouseId(),
@@ -15,8 +15,8 @@ public class SettingsChangeLogDTOMapper {
         );
     }
 
-    public static SettingsChangeLog map(SettingsChangeLogDTO dto) {
-        return new SettingsChangeLog(
+    public static SettingsChangeAudit map(SettingsChangeAuditDTO dto) {
+        return new SettingsChangeAudit(
                 dto.getSettingId(),
                 dto.getWarehouseId(),
                 dto.getAdminId(),

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
                 @Index(name="idx_scl_admin",    columnList="Admin_ID"),
                 @Index(name="idx_scl_changed_at",columnList="Changed_At")
         })
-public class SettingsChangeLog {
+public class SettingsChangeAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -31,9 +31,9 @@ public class SettingsChangeLog {
     @Column(name = "Settings_Changed", nullable = false, length = 2000)
     private String settingsChanged;
 
-    protected SettingsChangeLog() {}
+    protected SettingsChangeAudit() {}
 
-    public SettingsChangeLog(Long settingId, Long warehouseId, Long adminId, LocalDateTime changedAt, String settingsChanged) {
+    public SettingsChangeAudit(Long settingId, Long warehouseId, Long adminId, LocalDateTime changedAt, String settingsChanged) {
         this.settingId = settingId;
         this.warehouseId = warehouseId;
         this.adminId = adminId;
@@ -41,7 +41,7 @@ public class SettingsChangeLog {
         this.settingsChanged = settingsChanged;
     }
 
-    public SettingsChangeLog(Long settingId, Long warehouseId, Long adminId , String settingsChanged) {
+    public SettingsChangeAudit(Long settingId, Long warehouseId, Long adminId , String settingsChanged) {
         this.settingId = settingId;
         this.warehouseId = warehouseId;
         this.adminId = adminId;
