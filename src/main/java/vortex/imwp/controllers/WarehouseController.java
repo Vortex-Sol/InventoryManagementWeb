@@ -23,7 +23,7 @@ public class WarehouseController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('STOCKER')")
+    @PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
     public String inventory(Model model) {
         model.addAttribute("items", itemService.getAll());
         model.addAttribute("quantities", itemService.getQuantitiesForAllItems());

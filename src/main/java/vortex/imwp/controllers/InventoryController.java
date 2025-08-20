@@ -39,7 +39,7 @@ public class InventoryController {
 
 
 	@PostMapping("/add")
-	@PreAuthorize("hasRole('STOCKER')")
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String addItem(@RequestParam String name,
 						  @RequestParam String description,
 						  @RequestParam double price,
@@ -79,14 +79,14 @@ public class InventoryController {
 
 
 	@PostMapping("/delete")
-	@PreAuthorize("hasRole('STOCKER')")
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String deleteItem(@RequestParam("item_id") Long itemId) {
 		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
 		return "redirect:/api/home";
 	}
 
 	@GetMapping()
-	@PreAuthorize("hasRole('STOCKER')")
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public ResponseEntity<Response> getItems() {
 		Response resp = new Response();
 
@@ -103,7 +103,7 @@ public class InventoryController {
 		return ResponseEntity.ok(resp);
 	}
 	@GetMapping("/search")
-	@PreAuthorize("hasRole('STOCKER')")
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String searchItems(@RequestParam("keyword") String keyword, Model model) {
 		List<ItemDTO> results = itemService.searchAndMap(keyword);
 		Map<Long, Integer> quantities = itemService.getQuantitiesForAllItems();
@@ -118,7 +118,7 @@ public class InventoryController {
 	}
 
 	@GetMapping("/checkout")
-	@PreAuthorize("hasRole('STOCKER')")
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String inventoryHome() {
 		return "inventory/receipt/checkout";
 	}

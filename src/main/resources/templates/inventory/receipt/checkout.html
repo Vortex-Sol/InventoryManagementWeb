@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+      th:replace="~{fragments/layout-noSearch ::
+        layout(title=~{::title}, content=~{::section}, navText='Checkout')}">
 
 <head>
-    <title th:fragment="title">Checkout</title>
+    <title>Checkout</title>
 </head>
 
 <section th:fragment="section">
@@ -11,52 +12,63 @@
         <div class="card-header text-center">
             <h4 class="mb-0">Receipt Checkout</h4>
         </div>
+
         <div class="card-body">
+            <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
             <form th:action="@{/api/salesman/checkout}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
                 <input type="hidden" name="saleId" th:value="${sale.id}" />
 
                 <div class="mb-3">
                     <label class="form-label">Payment Method</label>
                     <select class="form-select" name="paymentMethod" id="paymentMethod" required>
-                        <option value="Cash">Cash</option>
-                        <option value="Card">Card</option>
+                        <option value="Cash" th:selected="${paymentMethod == 'Cash'}">Cash</option>
+                        <option value="Card" th:selected="${paymentMethod == 'Card'}">Card</option>
                     </select>
                 </div>
 
-                <div class="mb-3" id="cashFields" style="display: none;">
+                <div class="mb-3" id="cashFields" th:style="${paymentMethod} == 'Cash' ? '' : 'display:none;'">
                     <label class="form-label">Amount Received</label>
-                    <input type="number" class="form-control" name="amountReceived" min="0" step="0.01" th:required="${paymentMethod == 'Cash'}">
+                    <input type="number"
+                           class="form-control"
+                           name="amountReceived"
+                           min="0"
+                           step="0.01"
+                           th:value="${amountReceived}">
                 </div>
 
                 <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const paymentMethod = document.getElementById('paymentMethod');
-                        const cashFields = document.getElementById('cashFields');
-
-                        function toggleCashFields() {
-                            if (paymentMethod.value === 'Cash') {
-                                cashFields.style.display = 'block';
-                            } else {
-                                cashFields.style.display = 'none';
-                            }
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const sel = document.getElementById('paymentMethod');
+                        const cash = document.getElementById('cashFields');
+                        const amt  = document.querySelector('[name="amountReceived"]');
+                        function toggle() {
+                            const isCash = sel.value === 'Cash';
+                            cash.style.display = isCash ? 'block' : 'none';
+                            amt.disabled = !isCash;
+                            amt.required = isCash;
                         }
-
-                        paymentMethod.addEventListener('change', toggleCashFields);
-                        toggleCashFields();
+                        sel.addEventListener('change', toggle);
+                        toggle();
                     });
                 </script>
+
                 <h5 class="mt-4">Items</h5>
                 <ul class="list-group mb-3">
                     <li class="list-group-item d-flex justify-content-between align-items-center"
                         th:each="item : ${sale.saleItems}">
                         <span th:text="${item.item.name} + ' x ' + ${item.quantity}"></span>
-                        <span th:text="${itemTotals[item.item.id]} + ' $'"></span>
+                        <span th:text="${itemTotals != null && itemTotals[item.item.id] != null
+                            ? itemTotals[item.item.id] + ' $' : '0 $'}"></span>
                     </li>
                 </ul>
-                <div class="text-end mt-3">
-                    <strong>Total: </strong><span th:text="${totalAmount} + ' $'"></span>
-                </div>
 
+                <div class="text-end mt-3">
+                    <strong>Total: </strong>
+                    <span th:text="${totalAmount != null ? totalAmount + ' $' : '0 $'}"></span>
+                </div>
 
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">Confirm Checkout</button>

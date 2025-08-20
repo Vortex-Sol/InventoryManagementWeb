@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(title=~{::title}, content=~{::section})}">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout ::
+        layout(title=~{::title}, content=~{::section}, navText='Warehouses')}">
 <head><title>Warehouses</title></head>
 <section>
   <div class="card shadow">

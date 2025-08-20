@@ -14,7 +14,7 @@ public class Receipt {
     @JoinColumn(name = "Sale_ID")
     private Sale sale;
 
-    @Column(name = "Total_Amount", nullable = false, precision = 10, scale = 3)
+    @Column(name = "Total_Amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
     @Column(name = "Created_At", nullable = false)
@@ -23,10 +23,10 @@ public class Receipt {
     @Column(name = "Payment_Method", nullable = false, length = 50)
     private String paymentMethod;
 
-    @Column(name = "Amount_Received", precision = 10, scale = 3)
+    @Column(name = "Amount_Received", precision = 10, scale = 2)
     private BigDecimal amountReceived;
 
-    @Column(name = "Change_Given", precision = 10, scale = 3)
+    @Column(name = "Change_Given", precision = 10, scale = 2)
     private BigDecimal changeGiven;
 
     @Column(name = "Is_Cancelled", nullable = false)

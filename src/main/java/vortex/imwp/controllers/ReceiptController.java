@@ -39,14 +39,14 @@ public class ReceiptController {
 		this.employeeService = employeeService;
 	}
 	@GetMapping()
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String startCheckout(@AuthenticationPrincipal UserDetails userDetails) {
 		Sale sale = saleService.createSale(userDetails.getUsername());
 		return "redirect:/api/salesman/" + sale.getId() + "/add-items";
 	}
 
 	@PostMapping("/checkout")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String checkout(@RequestParam Long saleId,
 						   @RequestParam String paymentMethod,
 						   @RequestParam(required = false) BigDecimal amountReceived,
@@ -57,36 +57,27 @@ public class ReceiptController {
 			Receipt receipt = receiptService.createReceipt(sale, paymentMethod, amountReceived);
 			return "redirect:/api/salesman/confirm/" + receipt.getId();
 		} catch (IllegalArgumentException e) {
-			model.addAttribute("sale", sale);
-			model.addAttribute("error", e.getMessage());
+			populateCheckoutModel(sale, model);
+			String msg = (e.getMessage() != null && !e.getMessage().isBlank())
+					? e.getMessage()
+					: "Amount received must be greater than or equal to the total.";
+			model.addAttribute("error", msg);
+			model.addAttribute("paymentMethod", paymentMethod);
+			model.addAttribute("amountReceived", amountReceived);
 			return "inventory/receipt/checkout";
 		}
 	}
-
 	@GetMapping("/checkout/{saleId}")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String checkoutForm(@PathVariable Long saleId, Model model) {
 		Sale sale = saleService.getSaleById(saleId);
-
-		Map<Long, BigDecimal> itemTotals = new HashMap<>();
-		AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
-
-		sale.getSaleItems().forEach(saleItem -> {
-			BigDecimal price = BigDecimal.valueOf(saleItem.getItem().getPrice());
-			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(saleItem.getQuantity()));
-			itemTotals.put(saleItem.getItem().getId(), itemTotal);
-			total.set(total.get().add(itemTotal)); //
-		});
-
-		model.addAttribute("sale", sale);
-		model.addAttribute("totalAmount", total.get());
-		model.addAttribute("itemTotals", itemTotals);
+		populateCheckoutModel(sale, model);
 		return "inventory/receipt/checkout";
 	}
 
 
 	@GetMapping("/confirm/{receiptId}")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String viewReceipt(@PathVariable Long receiptId, Model model) {
 		Receipt receipt = receiptService.getReceipt(receiptId);
 		String receiptJson = receiptService.generateReceiptJson(receipt);
@@ -98,7 +89,7 @@ public class ReceiptController {
 	}
 
 	@GetMapping("/{saleId}/add-items")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String showAddItemsPage(@PathVariable Long saleId,
 								   Authentication authentication,
 								   Model model) {
@@ -117,9 +108,8 @@ public class ReceiptController {
 	}
 
 
-
 	@PostMapping("/addItem-form")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String addItemToSaleForm(@RequestParam Long saleId,
 									@RequestParam(required = false) Long warehouseId,
 									@RequestParam(required = false) Long itemId,
@@ -157,7 +147,7 @@ public class ReceiptController {
 
 
 	@PostMapping("/cancel/{receiptId}")
-	@PreAuthorize("hasRole('SALESMAN')")
+	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String cancelReceipt(@PathVariable Long receiptId,
 								@AuthenticationPrincipal UserDetails userDetails,
 								RedirectAttributes redirectAttributes) {
@@ -168,6 +158,26 @@ public class ReceiptController {
 			redirectAttributes.addFlashAttribute("error", "Cancellation failed: " + e.getMessage());
 		}
 		return "redirect:/api/salesman/confirm/" + receiptId;
+	}
+
+
+	private void populateCheckoutModel(Sale sale, Model model) {
+		Map<Long, BigDecimal> itemTotals = new HashMap<>();
+		BigDecimal total = BigDecimal.ZERO;
+
+		sale.getSaleItems().forEach(si -> {
+			BigDecimal price = BigDecimal.valueOf(si.getItem().getPrice());
+			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(si.getQuantity()));
+			itemTotals.put(si.getItem().getId(), itemTotal);
+		});
+
+		for (BigDecimal it : itemTotals.values()) {
+			total = total.add(it);
+		}
+
+		model.addAttribute("sale", sale);
+		model.addAttribute("itemTotals", itemTotals);
+		model.addAttribute("totalAmount", total);
 	}
 
 
