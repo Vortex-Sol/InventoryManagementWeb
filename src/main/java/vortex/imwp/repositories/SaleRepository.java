@@ -29,7 +29,6 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             );
 
     List<Sale> findSalesBySalesman(Employee salesman);
-
     List<Sale> findSalesBySalesmanAndSaleTimeGreaterThanEqualAndSaleTimeLessThan(Employee salesman, Timestamp start, Timestamp end);
     List<Sale> findSalesBySalesman_WarehouseIDAndSaleTimeGreaterThanEqualAndSaleTimeLessThan(Long warehouseID, Timestamp start, Timestamp end);
 }

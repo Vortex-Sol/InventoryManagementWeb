@@ -49,11 +49,11 @@ public class SettingsController {
                 return "/admin/settings";
             }
 
-            return "redirect:/api/home";
+            return "redirect:/api/settings";
 
         } catch (Exception e){
             redirectAttributes.addFlashAttribute("message", "Settings not found");
-            return "redirect:/api/home";
+            return "redirect:/api/settings";
         }
     }
 
@@ -76,7 +76,7 @@ public class SettingsController {
             redirectAttributes.addFlashAttribute("message", "Saved");
             return "redirect:/api/settings";
         }
-        return "redirect:/api/home";
+        return "redirect:/api/settings";
     }
 
     @InitBinder
