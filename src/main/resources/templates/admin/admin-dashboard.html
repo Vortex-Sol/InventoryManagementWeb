@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout-noSearch ::
-        layout(title=~{::title}, content=~{::section}, navText='Admin Dashboard')}">
+      th:replace="~{fragments/layout-noSearch :: layout(title=~{::title}, content=~{::section}, navText='Admin Dashboard')}">
 <head>
   <title>Admin Dashboard</title>
 </head>
@@ -17,6 +16,7 @@
         <a th:href="@{/api/admin/register}" class="btn btn-outline-success">Register New User</a>
         <a th:href="@{/api/logs}" class="btn btn-outline-secondary">View Activity Logs</a>
         <a th:href="@{/api/settings}" class="btn btn-outline-warning">Edit Settings</a>
+        <a th:href="@{/api/admin/contact}" class="btn btn-outline-info">Edit Contact</a>
       </div>
     </div>
   </div>

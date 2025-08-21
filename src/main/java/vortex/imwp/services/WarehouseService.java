@@ -1,7 +1,11 @@
 package vortex.imwp.services;
 
+import jakarta.transaction.Transactional;
+import vortex.imwp.dtos.EmployeeDTO;
 import vortex.imwp.dtos.WarehouseDTO;
+import vortex.imwp.mappers.EmployeeDTOMapper;
 import vortex.imwp.mappers.WarehouseDTOMapper;
+import vortex.imwp.models.Employee;
 import vortex.imwp.models.Warehouse;
 import vortex.imwp.repositories.WarehouseRepository;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,20 @@ public class WarehouseService {
 	public Warehouse addWarehouse(Warehouse warehouse) {
 		return warehouseRepository.save(warehouse);
 	}
+
+    @Transactional
+    public void updateWarehouse(Long id, WarehouseDTO dto) {
+        warehouseRepository.findById(id).map(
+                existing -> {
+                    existing.setAddress(dto.getAddress());
+                    existing.setEmail(dto.getEmail());
+                    existing.setPhone(dto.getPhone());
+
+                    Warehouse saved = warehouseRepository.save(existing);
+                    return WarehouseDTOMapper.map(saved);
+                }
+        );
+    }
 
 	public void deleteWarehouse(Long id) {
 		warehouseRepository.deleteById(id);
