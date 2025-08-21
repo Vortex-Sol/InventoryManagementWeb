@@ -31,18 +31,18 @@ public class SettingsChangeAuditService {
 				.map(SettingsChangeAuditDTOMapper::map);
 	}
 
-	public List<SettingsChangeAudit> getSettingsChangeLogsByEmployee(Employee employee) {
+	public List<SettingsChangeAudit> getSettingsChangeAuditsByEmployee(Employee employee) {
 		return settingsChangeAuditRepository.findByAdminId(employee.getId());
 	}
 
-	public List<SettingsChangeAudit> getSettingsChangeLogsByEmployeeAndDate(Employee employee, LocalDate date) {
+	public List<SettingsChangeAudit> getSettingsChangeAuditsByEmployeeAndDate(Employee employee, LocalDate date) {
 		LocalDateTime start = date.atStartOfDay();
 		LocalDateTime end = date.plusDays(1).atStartOfDay(); // exclusive
 		return settingsChangeAuditRepository.findByAdminIdAndChangedAtBetweenOrderByChangedAtDesc(
 				employee.getId(), start, end);
 	}
 
-	public List<SettingsChangeAudit> getSettingsChangeLogsByEmployeeAndPeriod(Employee employee, LocalDateTime start, LocalDateTime end) {
+	public List<SettingsChangeAudit> getSettingsChangeAuditsByEmployeeAndPeriod(Employee employee, LocalDateTime start, LocalDateTime end) {
 		return settingsChangeAuditRepository.findByAdminIdAndChangedAtBetweenOrderByChangedAtDesc(
 				employee.getId(), start, end);
 	}

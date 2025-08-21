@@ -3,11 +3,13 @@ package vortex.imwp.repositories;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import vortex.imwp.models.SettingsChangeAudit;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository
 public interface SettingsChangeAuditRepository extends JpaRepository<SettingsChangeAudit, Long> {
 
 	List<SettingsChangeAudit> findAllByOrderByChangedAtDesc();

@@ -1,31 +1,52 @@
-package vortex.imwp.dtos;
+package vortex.imwp.models;
+
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
-public class ItemChangeLogDTO {
+@Entity
+@Table(name = "Item_Change_Audit",
+        indexes = {
+                @Index(name="idc_ucl_item", columnList = "Item_ID"),
+                @Index(name="idx_ucl_setting", columnList = "Stocker_ID"),
+                @Index(name="idx_ucl_warehouse", columnList = "Warehouse_ID"),
+                @Index(name="idx_ucl_changed_at", columnList = "Changed_At")
+        })
+public class ItemChangeAudit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "Item_ID", nullable = false)
     private Long  itemId;
+
+    @Column(name = "Stocker_ID", nullable = false)
     private Long stockerId;
+
+    @Column(name = "Warehouse_ID", nullable = false)
     private Long warehouseId;
+
+    @Column(name = "Changed_At", nullable = false, updatable = false)
     private LocalDateTime changedAt;
+
+    @Column(name = "Data_Changed", nullable = false, length = 2000)
     private String dataChanged;
 
-    public ItemChangeLogDTO() {}
-    public ItemChangeLogDTO(Long id, Long itemId, Long stockerId, Long warehouseId, LocalDateTime changedAt, String dataChanged) {
-        this.id = id;
+    public ItemChangeAudit() {}
+    public ItemChangeAudit(Long itemId, Long stockerId, Long warehouseId, LocalDateTime changedAt, String dataChanged) {
         this.itemId = itemId;
         this.stockerId = stockerId;
         this.warehouseId = warehouseId;
         this.changedAt = changedAt;
         this.dataChanged = dataChanged;
     }
-    public Long getId() { return id; }
+
     public Long getItemId() { return this.itemId; }
     public Long getStockerId() { return this.stockerId; }
     public Long getWarehouseId() { return this.warehouseId; }
     public LocalDateTime getChangedAt() { return this.changedAt; }
     public String getDataChanged() { return this.dataChanged; }
 
-    public void setId(Long id) { this.id = id; }
     public void setItemId(Long itemId) { this.itemId = itemId; }
     public void setStockerId(Long stockerId) { this.stockerId = stockerId; }
     public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }

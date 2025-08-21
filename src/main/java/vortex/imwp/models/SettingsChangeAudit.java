@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Settings_Change_Log",
+@Table(name = "Settings_Change_Audit",
         indexes = {
                 @Index(name="idx_scl_setting",  columnList="Setting_ID"),
                 @Index(name="idx_scl_warehouse",columnList="Warehouse_ID"),

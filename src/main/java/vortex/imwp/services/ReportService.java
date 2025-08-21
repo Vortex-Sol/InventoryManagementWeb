@@ -100,10 +100,10 @@ public class ReportService {
 
             if (jobNames.contains("ADMIN")){
                 List<Object> settingsChangedData = new ArrayList<>();
-                List<SettingsChangeAudit> settingsChangeAudits = settingsChangeAuditService.getSettingsChangeLogsByEmployeeAndDate(employee, today);
+                List<SettingsChangeAudit> settingsChangeAudits = settingsChangeAuditService.getSettingsChangeAuditsByEmployeeAndDate(employee, today);
                 for (SettingsChangeAudit settingsChangeAudit : settingsChangeAudits) {
                     Map<String, Object> settingChangeData = new LinkedHashMap<>();
-                    settingChangeData.put("settingsChangeLogId", settingsChangeAudit.getId());
+                    settingChangeData.put("settingsChangeAuditId", settingsChangeAudit.getId());
                     settingChangeData.put("changedAt", settingsChangeAudit.getChangedAt());
                     settingChangeData.put("settingId", settingsChangeAudit.getSettingId());
                     settingChangeData.put("settingsChanged", settingsChangeAudit.getSettingsChanged());
@@ -111,7 +111,7 @@ public class ReportService {
                     settingsChangedData.add(settingChangeData);
                 }
                 if (!settingsChangedData.isEmpty()) {
-                    employeeData.put("settingsChangeLogs", settingsChangeAudits);
+                    employeeData.put("settingsChangeAudits", settingsChangeAudits);
                 }
 
             }
@@ -301,10 +301,10 @@ public class ReportService {
 
             if (jobNames.contains("ADMIN")){
                 List<Object> settingsChangedData = new ArrayList<>();
-                List<SettingsChangeAudit> settingsChangeAudits = settingsChangeAuditService.getSettingsChangeLogsByEmployeeAndPeriod(employee, start, end);
+                List<SettingsChangeAudit> settingsChangeAudits = settingsChangeAuditService.getSettingsChangeAuditsByEmployeeAndPeriod(employee, start, end);
                 for (SettingsChangeAudit settingsChangeAudit : settingsChangeAudits) {
                     Map<String, Object> settingChangeData = new LinkedHashMap<>();
-                    settingChangeData.put("settingsChangeLogId", settingsChangeAudit.getId());
+                    settingChangeData.put("settingsChangeAuditId", settingsChangeAudit.getId());
                     settingChangeData.put("changedAt", settingsChangeAudit.getChangedAt());
                     settingChangeData.put("settingId", settingsChangeAudit.getSettingId());
                     settingChangeData.put("settingsChanged", settingsChangeAudit.getSettingsChanged());
@@ -312,7 +312,7 @@ public class ReportService {
                     settingsChangedData.add(settingChangeData);
                 }
                 if (!settingsChangedData.isEmpty()) {
-                    employeeData.put("settingsChangeLogs", settingsChangeAudits);
+                    employeeData.put("settingsChangeAudits", settingsChangeAudits);
                 }
 
             }

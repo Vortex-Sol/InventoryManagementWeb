@@ -108,12 +108,12 @@ VALUES
     (2, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 3);
 
 INSERT INTO
-    Settings_Change_Log (Setting_ID, Warehouse_ID, Admin_ID, Changed_At, Settings_Changed)
+    Settings_Change_Audit (Setting_ID, Warehouse_ID, Admin_ID, Changed_At, Settings_Changed)
 VALUES
     (1, 1, 1, DEFAULT,'ALL');
 
 INSERT INTO
-    Item_Change_Log (Item_ID, Stocker_ID, Warehouse_ID, Changed_At, Data_Changed)
+    Item_Change_Audit (Item_ID, Stocker_ID, Warehouse_ID, Changed_At, Data_Changed)
 VALUES
     (1, 5, 1, DEFAULT, 'ALL'),
     (4, 5, 1, DEFAULT, 'ALL');
