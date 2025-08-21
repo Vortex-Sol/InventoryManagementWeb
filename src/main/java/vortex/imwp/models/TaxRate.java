@@ -1,6 +1,7 @@
 package vortex.imwp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import vortex.imwp.dtos.SettingsDTO;
 import vortex.imwp.mappers.SettingsDTOMapper;
 
@@ -16,6 +17,7 @@ public class TaxRate {
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(name = "Country", nullable = false)
+    @NotNull(message = "Country is required")
     private Country.Name country;
     @Column(name = "Standard_Rate", nullable = false)
     private Double standardRate;

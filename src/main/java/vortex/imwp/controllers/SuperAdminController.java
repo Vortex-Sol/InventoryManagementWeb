@@ -15,10 +15,9 @@ import vortex.imwp.services.SettingsService;
 import vortex.imwp.services.SuperAdminService;
 import vortex.imwp.services.TaxRateService;
 import vortex.imwp.services.WarehouseService;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 @Controller
 @RequestMapping("/api/super")
 public class SuperAdminController {
@@ -176,4 +175,10 @@ public class SuperAdminController {
             return "super/super-warehouse";
         }
     }
+
+    @ModelAttribute("taxRateForm")
+    public TaxRate taxRateForm() {
+        return new TaxRate();
+    }
+
 }

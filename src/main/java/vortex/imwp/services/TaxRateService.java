@@ -3,7 +3,10 @@ package vortex.imwp.services;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vortex.imwp.models.Country;
+import vortex.imwp.models.Settings;
 import vortex.imwp.models.TaxRate;
+import vortex.imwp.repositories.SettingsChangeAuditRepository;
+import vortex.imwp.repositories.SettingsRepository;
 import vortex.imwp.repositories.TaxRateRepository;
 
 import java.util.List;
@@ -13,11 +16,15 @@ import java.util.Optional;
 public class TaxRateService {
 
     private final TaxRateRepository taxRateRepository;
+    private final SettingsRepository settingsRepository;
+    private final SettingsChangeAuditRepository settingsChangeAuditRepository;
 
-    public TaxRateService(TaxRateRepository taxRateRepository) {
+    public TaxRateService(TaxRateRepository taxRateRepository, SettingsRepository settingsRepository
+    , SettingsChangeAuditRepository settingsChangeAuditRepository) {
         this.taxRateRepository = taxRateRepository;
+        this.settingsRepository = settingsRepository;
+        this.settingsChangeAuditRepository = settingsChangeAuditRepository;
     }
-
 
     public TaxRate getTaxRateByCountry(String country) {
         Country.Name countryName = Country.fromString(country);
@@ -96,9 +103,20 @@ public class TaxRateService {
     }
 
     @Transactional
-    public void deleteByCountry(Country.Name country) {
+    public void hardDeleteTaxRateAndDependents(Country.Name country) {
         TaxRate tr = taxRateRepository.findByCountry(country);
-        if (tr != null) taxRateRepository.delete(tr);
+        if (tr == null) return;
+
+        List<Settings> settings = settingsRepository.findAllByTaxRate_Id(tr.getId());
+
+        if (!settings.isEmpty()) {
+            List<Long> settingIds = settings.stream().map(Settings::getId).toList();
+            settingsChangeAuditRepository.deleteBySettingIds(settingIds);
+            settingsRepository.deleteAll(settings);
+
+        }
+
+        taxRateRepository.delete(tr);
     }
 
     @Transactional
