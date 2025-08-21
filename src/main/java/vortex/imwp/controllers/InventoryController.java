@@ -57,7 +57,7 @@ public class InventoryController {
 		}
 
 		ItemDTO itemDTO = new ItemDTO(name, description, price, barcode, categoryDTO);
-		Item savedItem = itemService.addItem(itemDTO);
+		Item savedItem = itemService.addItem(itemDTO, authentication, quantity);
 
 		Long userWarehouseId = employeeService.getEmployeeByAuthentication(authentication).getWarehouseID();
 		var warehouse = warehouseService.getWarehouseById(userWarehouseId)
@@ -75,8 +75,8 @@ public class InventoryController {
 
 	@PostMapping("/delete")
 	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
-	public String deleteItem(@RequestParam("item_id") Long itemId) {
-		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
+	public String deleteItem(@RequestParam("item_id") Long itemId, Authentication authentication) {
+		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId, authentication));
 		return "redirect:/api/home";
 	}
 
@@ -134,6 +134,7 @@ public class InventoryController {
 							 @RequestParam double price,
 							 @RequestParam Long barcode,
 							 @RequestParam Long categoryId,
+							 Authentication authentication,
 							 RedirectAttributes ra) {
 		Item item = itemService.getItemById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Item not found"));
@@ -145,7 +146,7 @@ public class InventoryController {
 		item.setCategory(categoryService.getCategoryById(categoryId)
 				.orElseThrow(() -> new IllegalArgumentException("Category not found")));
 
-		itemService.updateItem(item);
+		itemService.updateItem(item, authentication);
 		ra.addFlashAttribute("toastSuccess", "Item updated");
 		return "redirect:/api/home";
 	}

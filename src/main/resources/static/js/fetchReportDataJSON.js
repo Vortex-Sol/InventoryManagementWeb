@@ -402,7 +402,7 @@ function attachEmployeesSection() {
         if (!Array.isArray(logs) || !logs.length) return '';
         const rows = logs.map(l => `
           <tr>
-            <td>${l.settingsChangeLogId ?? ''}</td>
+            <td>${l.settingsChangeAuditId ?? ''}</td>
             <td>${fmtDateTime(l.changedAt)}</td>
             <td>${l.settingId ?? ''}</td>
             <td><code class="d-block">${(typeof l.settingsChanged === 'object') ? JSON.stringify(l.settingsChanged) : (l.settingsChanged ?? '')}</code></td>
@@ -446,7 +446,7 @@ function attachEmployeesSection() {
             </details>`;
         }
         const fullName = [emp.Name, emp.Surname].filter(Boolean).join(' ');
-        const settingsHtml = renderSettingsLogs(emp.settingsChangeLogs || []);
+        const settingsHtml = renderSettingsLogs(emp.settingsChangeAudits || []);
 
         return `
           <div class="card">
