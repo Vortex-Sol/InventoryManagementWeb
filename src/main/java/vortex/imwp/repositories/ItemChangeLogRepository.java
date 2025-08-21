@@ -23,7 +23,7 @@ public interface ItemChangeLogRepository extends JpaRepository<ItemChangeLog, Lo
     List<ItemChangeLog> findByStockerId(Long stockerId);
     Page<ItemChangeLog> findByStockerId(Long stockerId, Pageable pageable);
 
-
+    void deleteByItemId(Long itemId);
     Page<ItemChangeLog> findByWarehouseIdOrderByChangedAtDesc(Long warehouseId, Pageable pageable);
 
     Page<ItemChangeLog> findByStockerIdOrderByChangedAtDesc(Long settingId, Pageable pageable);
