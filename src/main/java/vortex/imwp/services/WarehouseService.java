@@ -46,8 +46,8 @@ public class WarehouseService {
 		return warehouses;
 	}
 	@Transactional
-	public Warehouse createWarehouseBasic(String phone, String email, String address, Country.Name country){
-		return new Warehouse(phone, email, address, country);
+	public Warehouse createWarehouseBasic(String phone, String email, String address){
+		return new Warehouse(phone, email, address);
 	}
 
 	public Optional<WarehouseDTO> getWarehouseDTOById(Long id) {

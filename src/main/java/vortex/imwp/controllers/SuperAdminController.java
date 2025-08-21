@@ -79,7 +79,6 @@ public class SuperAdminController {
     @PreAuthorize("hasRole('SUPERADMIN')")
     public String createWarehouse(
             @ModelAttribute("warehouseForm") WarehouseDTO w,
-            @RequestParam("country") Country.Name country,
             @RequestParam("taxRateMode") String taxRateMode,
             @RequestParam(value = "existingTaxRateId", required = false) Long existingTaxRateId,
             @RequestParam(value = "newRateCountry", required = false) Country.Name newRateCountry,
@@ -90,7 +89,7 @@ public class SuperAdminController {
             @RequestParam(value = "newRateOtherRate", required = false) Double newRateOtherRate
     ) {
         Warehouse warehouse = warehouseService.createWarehouseBasic(
-                w.getPhone(), w.getEmail(), w.getAddress(), country
+                w.getPhone(), w.getEmail(), w.getAddress()
         );
 
         TaxRate taxRate;

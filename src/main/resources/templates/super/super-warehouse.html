@@ -93,12 +93,6 @@
                                 <label class="form-label">Address</label>
                                 <input class="form-control" th:field="*{address}" maxlength="250" required>
                             </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Country</label>
-                                <input class="form-control" th:value="${currentCountry}" readonly>
-                                <div class="form-text">Country is fixed after creation.</div>
-                            </div>
                         </div>
 
                         <hr class="my-4">
@@ -183,14 +177,6 @@
                             <div class="col-md-8">
                                 <label class="form-label">Address</label>
                                 <input class="form-control" th:field="*{address}" maxlength="250" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Country</label>
-                                <!-- Country is a request param (not in DTO) -->
-                                <select class="form-select" name="country" required>
-                                    <option value="" disabled selected>Choose...</option>
-                                    <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>
-                                </select>
                             </div>
                         </div>
 
