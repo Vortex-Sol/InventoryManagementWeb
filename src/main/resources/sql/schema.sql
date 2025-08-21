@@ -63,7 +63,8 @@ CREATE TABLE Warehouse (
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Phone VARCHAR(20) NOT NULL,
     Email Varchar(50) NOT NULL,
-    Address VARCHAR(250) NOT NULL
+    Address VARCHAR(250) NOT NULL,
+    Country VARCHAR(250) NOT NULL
 );
 
 CREATE TABLE Category(
@@ -75,11 +76,11 @@ CREATE TABLE Tax_Rate
 (
     ID              BIGINT AUTO_INCREMENT PRIMARY KEY,
     Country         VARCHAR(50) NOT NULL,
-    Standard_Rate DECIMAL(10, 2) NOT NULL,
-    Reduced_Rate DECIMAL(10, 2),
-    Super_Reduced_Rate DECIMAL(10, 2),
-    None_Rate DECIMAL(10, 2),
-    Other_Rate DECIMAL(10, 2)
+    Standard_Rate DECIMAL(10, 3) NOT NULL,
+    Reduced_Rate DECIMAL(10, 3),
+    Super_Reduced_Rate DECIMAL(10, 3),
+    None_Rate DECIMAL(10, 3),
+    Other_Rate DECIMAL(10, 3)
 );
 
 CREATE TABLE Settings(

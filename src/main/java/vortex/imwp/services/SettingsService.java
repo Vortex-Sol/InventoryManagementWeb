@@ -10,8 +10,6 @@ import vortex.imwp.mappers.TaxRateDTOMapper;
 import vortex.imwp.models.*;
 import vortex.imwp.repositories.SettingsChangeAuditRepository;
 import vortex.imwp.repositories.SettingsRepository;
-import vortex.imwp.repositories.TaxRateRepository;
-import vortex.imwp.repositories.WarehouseRepository;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -24,17 +22,11 @@ public class SettingsService {
     private final SettingsRepository settingsRepository;
     private final EmployeeService employeeService;
     private final SettingsChangeAuditRepository settingsChangeAuditRepository;
-    private final WarehouseRepository warehouseRepository;
-    private final TaxRateRepository taxRateRepository;
-    private final WarehouseService warehouseService;
 
-    public SettingsService(SettingsRepository settingsRepository, EmployeeService employeeService, SettingsChangeAuditRepository settingsChangeAuditRepository, WarehouseRepository warehouseRepository, TaxRateRepository taxRateRepository, WarehouseService warehouseService) {
+    public SettingsService(SettingsRepository settingsRepository, EmployeeService employeeService, SettingsChangeAuditRepository settingsChangeAuditRepository) {
         this.settingsRepository = settingsRepository;
         this.employeeService = employeeService;
         this.settingsChangeAuditRepository = settingsChangeAuditRepository;
-        this.warehouseRepository = warehouseRepository;
-        this.taxRateRepository = taxRateRepository;
-        this.warehouseService = warehouseService;
     }
     @Transactional
     public void deleteById(long id) {
@@ -45,14 +37,8 @@ public class SettingsService {
         Optional<Settings> checkSettings = settingsRepository.findById(settingsId);
         return checkSettings.isPresent();
     }
-    public void createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
-        //todo that gets the max id value and ++1
-        warehouse.setId(15L);
-        taxRateRepository.save(taxRate);
-        warehouseRepository.save(warehouse);
-        Settings setting =  new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
-        System.out.println("[TESTING] 3 :" + setting);
-        settingsRepository.save(setting);
+    public Settings createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
+        return new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
     }
     public Optional<Settings> getSettingsById(Long settingsId){
         return settingsRepository.findById(settingsId);

@@ -22,6 +22,10 @@ public class Warehouse {
     @OneToOne(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
     private Settings settings;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Country", nullable = false)
+    private Country.Name country;
+
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WarehouseItem> warehouseItems = new ArrayList<>();
 
@@ -32,11 +36,19 @@ public class Warehouse {
         this.address = address;
     }
 
-    public Warehouse(String phone, String email, String address, Settings settings) {
+    public Warehouse(String phone, String email, String address, Country.Name country) {
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.country = country;
+    }
+
+    public Warehouse(String phone, String email, String address, Settings settings, Country.Name country) {
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.settings = settings;
+        this.country = country;
     }
 
     public Long getId() { return id; }
@@ -44,6 +56,7 @@ public class Warehouse {
     public String getEmail() { return email; }
     public String getAddress() { return address; }
     public Settings getSettings() { return settings; }
+    public Country.Name getCountry() { return country; }
     public List<WarehouseItem> getWarehouseItems() { return warehouseItems; }
 
     public void setId(Long id) { this.id = id; }
@@ -52,9 +65,5 @@ public class Warehouse {
     public void setSettings(Settings settings) { this.settings = settings; }
     public void setWarehouseItems(List<WarehouseItem> warehouseItems) { this.warehouseItems = warehouseItems; }
     public void setAddress(String address) { this.address = address; }
-
-    @Override
-    public String toString() {
-        return "Id: " + id + ", Phone: " + phone + ", Email: " + email + ", Address: " + address;
-    }
+    public void setCountry(Country.Name country) { this.country = country; }
 }
