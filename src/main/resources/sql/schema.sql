@@ -12,7 +12,7 @@ CREATE TABLE Employee (
     Start_Date DATE NOT NULL,
     End_Date DATE,
     Boss_ID BIGINT,
-    Warehouse_ID BIGINT
+    Warehouse_ID BIGINT NOT NULL
 );
 
 CREATE TABLE Job (

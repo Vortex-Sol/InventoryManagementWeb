@@ -98,7 +98,6 @@ public class AdminController {
     public String contact(Model model, Authentication authentication) {
         Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(authentication).getWarehouseID());
         if(warehouse.isPresent()) {
-            System.out.println("[TESTING] Warehouse ID: "  + warehouse.get().getId());
             model.addAttribute("warehouse", WarehouseDTOMapper.map(warehouse.get()));
             return "/admin/edit-contact-information";
         }
@@ -109,7 +108,6 @@ public class AdminController {
     @PostMapping("/contact")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     public String editContact(@ModelAttribute WarehouseDTO dto, Authentication authentication, Model model) {
-        System.out.println("[TESTING PART 2]\n[Warehouse ID] " + dto.getId() + "\n[Warehouse address] " +  dto.getAddress() + "\n[Warehouse email] " + dto.getEmail());
         warehouseService.updateWarehouse(dto.getId(), dto);
         return "redirect:/api/home";
     }
