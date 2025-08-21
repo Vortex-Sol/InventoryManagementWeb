@@ -186,7 +186,6 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Country</label>
-                                <!-- Country is a request param (not in DTO) -->
                                 <select class="form-select" name="country" required>
                                     <option value="" disabled selected>Choose...</option>
                                     <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>

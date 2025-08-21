@@ -105,17 +105,10 @@ public class TaxRateService {
     @Transactional
     public void hardDeleteTaxRateAndDependents(Country.Name country) {
         TaxRate tr = taxRateRepository.findByCountry(country);
-        if (tr == null) return;
-
-        List<Settings> settings = settingsRepository.findAllByTaxRate_Id(tr.getId());
-
-        if (!settings.isEmpty()) {
-            List<Long> settingIds = settings.stream().map(Settings::getId).toList();
-            settingsChangeAuditRepository.deleteBySettingIds(settingIds);
-            settingsRepository.deleteAll(settings);
-
+        if (tr == null) {
+            System.err.println("Tax rate " + country + " not found");
+            return;
         }
-
         taxRateRepository.delete(tr);
     }
 

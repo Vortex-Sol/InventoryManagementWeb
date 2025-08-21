@@ -39,8 +39,7 @@ public class SuperAdminService {
 						tr.getReducedRate(),
 						tr.getSuperReducedRate(),
 						tr.getNoneRate(),
-						tr.getOtherRate(),
-						tr.getSettingsDTOs()
+						tr.getOtherRate()
 				))
 				.collect(Collectors.toList());
 	}
@@ -97,8 +96,6 @@ public class SuperAdminService {
 
 	@Transactional
 	public void deleteWarehouse(Long id) throws DataIntegrityViolationException {
-		 Settings s = settingsRepository.findByWarehouse_Id(id);
-		 if (s != null) settingsRepository.delete(s);
 		 warehouseService.deleteWarehouse(id);
 	}
 

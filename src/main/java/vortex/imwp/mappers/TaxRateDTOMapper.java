@@ -14,8 +14,8 @@ public class TaxRateDTOMapper {
                 taxRate.getReducedRate(),
                 taxRate.getSuperReducedRate(),
                 taxRate.getNoneRate(),
-                taxRate.getOtherRate(),
-                taxRate.getSettingsDTOs()
+                taxRate.getOtherRate()
+
         );
     }
     public static TaxRate map(TaxRateDTO taxRateDTO) {
@@ -26,8 +26,7 @@ public class TaxRateDTOMapper {
                 taxRateDTO.getReducedRate(),
                 taxRateDTO.getSuperReducedRate(),
                 taxRateDTO.getNoneRate(),
-                taxRateDTO.getOtherRate(),
-                taxRateDTO.getSettingsModels()
+                taxRateDTO.getOtherRate()
         );
     }
 }

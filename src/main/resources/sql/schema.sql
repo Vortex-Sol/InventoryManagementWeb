@@ -100,10 +100,8 @@ CREATE TABLE Settings(
     Cash_Count_Start_Time TIME NOT NULL,
     Cash_Count_End_Time TIME NOT NULL,
     Auto_Generate_Inventory_Report_Time TIME NOT NULL,
-    Tax_Rate_id BIGINT NOT NULL,
-    CONSTRAINT fk_settings_tax_rate
-        FOREIGN KEY (Tax_Rate_id)
-            REFERENCES Tax_Rate(ID)
+    Tax_Rate_id BIGINT
+
 );
 
 CREATE TABLE Settings_Change_Audit(
@@ -194,6 +192,7 @@ ALTER TABLE Report ADD FOREIGN KEY (Created_At_Warehouse_ID) REFERENCES Warehous
 ALTER TABLE Receipt ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID);
 ALTER TABLE Receipt ADD FOREIGN KEY (Cancelled_By) REFERENCES Employee(ID);
 ALTER TABLE Settings ADD FOREIGN KEY (Warehouse_id) REFERENCES Warehouse(ID);
+ALTER TABLE Settings ADD FOREIGN KEY (Tax_Rate_id) REFERENCES Tax_Rate(ID)ON DELETE SET NULL;
 ALTER TABLE Settings_Change_Audit ADD FOREIGN KEY (Setting_ID) REFERENCES Settings(ID);
 ALTER TABLE Settings_Change_Audit ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
 ALTER TABLE Settings_Change_Audit ADD FOREIGN KEY (Admin_ID) REFERENCES Employee(ID);

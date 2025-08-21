@@ -48,8 +48,7 @@ public class TaxRateController {
 						tr.getReducedRate(),
 						tr.getSuperReducedRate(),
 						tr.getNoneRate(),
-						tr.getOtherRate(),
-						tr.getSettingsDTOs()
+						tr.getOtherRate()
 				))
 				.collect(Collectors.toList()));
 	}

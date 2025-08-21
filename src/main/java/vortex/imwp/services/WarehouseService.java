@@ -21,11 +21,12 @@ public class WarehouseService {
 	private final ReportRepository reportRepository;
 	private final ItemChangeLogRepository itemChangeLogRepository;
 	private final SettingsChangeAuditRepository settingsChangeAuditRepository;
+	private final EmployeeService employeeService;
 
 	public WarehouseService(WarehouseRepository warehouseRepository, SettingsService settingsService,
 							ItemService itemService, EmployeeRepository employeeRepository,
 							ReportRepository reportRepository, ItemChangeLogRepository itemChangeLogRepository,
-							SettingsChangeAuditRepository settingsChangeAuditRepository) {
+							SettingsChangeAuditRepository settingsChangeAuditRepository, EmployeeService employeeService) {
 		this.warehouseRepository = warehouseRepository;
 		this.settingsService = settingsService;
 		this.itemService = itemService;
@@ -33,6 +34,7 @@ public class WarehouseService {
 		this.reportRepository = reportRepository;
 		this.itemChangeLogRepository = itemChangeLogRepository;
 		this.settingsChangeAuditRepository = settingsChangeAuditRepository;
+		this.employeeService = employeeService;
 	}
 
 	public List<WarehouseDTO> getAllWarehouses() {
@@ -92,15 +94,21 @@ public class WarehouseService {
 		Warehouse warehouse = getWarehouseById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Warehouse " + id + " not found"));
 
-		if (employeeRepository.existsByWarehouseID(id)) {
-			throw new IllegalStateException("Cannot delete warehouse with assigned employees.");
+		if (employeeRepository.existsById(id)) {
+			for (Employee em : employeeService.getAllEmployeesFromWarehouse(id)) {
+				employeeService.deleteEmployee(em.getId());
+			}
 		}
+		System.out.println("3");
+
 		if (reportRepository.existsByCreatedAtWarehouseID(id)) {
-			throw new IllegalStateException("Cannot delete warehouse with reports.");
+			reportRepository.deleteByCreatedAtWarehouseID(id);
 		}
 
 		settingsChangeAuditRepository.deleteByWarehouseId(id);
+		System.out.println("1");
 		itemChangeLogRepository.deleteByWarehouseId(id);
+		System.out.println("2");
 
 		warehouseRepository.delete(warehouse);
 	}

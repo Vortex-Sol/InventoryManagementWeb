@@ -3,6 +3,7 @@ package vortex.imwp.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,10 @@ public class ReportService {
 
     public Report updateReport(Report report) { return reportRepository.save(report); }
 
-    public void deleteReport(Long id) { reportRepository.deleteById(id); }
+    @Transactional
+    public void deleteReportsOfWarehouse(Long idWarehouse) {
+        reportRepository.deleteByCreatedAtWarehouseID(idWarehouse);
+    }
 
     public JSONObject generateTodayGeneralReport() { return new JSONObject(); }
 

@@ -45,7 +45,7 @@ public class Settings {
     private Time autoGenerateInventoryReportTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Tax_Rate_id", nullable = false)
+    @JoinColumn(name = "Tax_Rate_id")
     private TaxRate taxRate;
 
     public Settings() {}
