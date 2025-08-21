@@ -27,4 +27,5 @@ public interface SettingsChangeAuditRepository extends JpaRepository<SettingsCha
 	Page<SettingsChangeAudit> findBySettingIdOrderByChangedAtDesc(Long settingId, Pageable pageable);
 
 
+	void deleteByWarehouseId(Long id);
 }

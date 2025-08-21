@@ -1,11 +1,13 @@
 package vortex.imwp.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.dtos.WarehouseItemDTO;
 import vortex.imwp.mappers.ItemDTOMapper;
 import vortex.imwp.mappers.WarehouseItemDTOMapper;
 import vortex.imwp.models.WarehouseItem;
+import vortex.imwp.models.WarehouseItemID;
 import vortex.imwp.repositories.WarehouseItemRepository;
 
 import java.util.ArrayList;
@@ -39,6 +41,10 @@ public class WarehouseItemService {
             return Optional.empty();
         }
 
+    }
+    @Transactional
+    public void deleteWarehouseItem(WarehouseItemID warehouseItemId) {
+        warehouseItemRepository.deleteById(warehouseItemId);
     }
     public void saveWarehouseItem(WarehouseItem wi) {
         warehouseItemRepository.save(wi);

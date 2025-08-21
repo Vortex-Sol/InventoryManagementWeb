@@ -6,6 +6,6 @@ import vortex.imwp.models.Country;
 import vortex.imwp.models.TaxRate;
 
 @Repository
-public interface TaxRateRepository extends JpaRepository<TaxRate, Integer> {
+public interface TaxRateRepository extends JpaRepository<TaxRate, Long> {
     TaxRate findByCountry(Country.Name country);
 }

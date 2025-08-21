@@ -19,7 +19,7 @@ public class Warehouse {
     @Column(name="Address", nullable = false)
     private String address;
 
-    @OneToOne(mappedBy = "warehouse", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
     private Settings settings;
 
     @Enumerated(EnumType.STRING)

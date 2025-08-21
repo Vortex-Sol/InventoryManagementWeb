@@ -1,8 +1,11 @@
 package vortex.imwp.models;
 
+import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Embeddable
 public class WarehouseItemID implements Serializable {
     private Long warehouseId;
     private Long itemId;

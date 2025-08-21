@@ -15,8 +15,9 @@ public class Settings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "warehouse_id")
+
+    @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "warehouse_id", nullable = false, unique = true)
     private Warehouse warehouse;
 
     @Column(name = "Alert_When_Stock_Is_Low", nullable = false)
@@ -59,6 +60,7 @@ public class Settings {
         this.cashCountEndTime = cashCountEndTime;
         this.autoGenerateInventoryReportTime = autoGenerateInventoryReportTime;
     }
+
 
     public Settings(Warehouse warehouse, Boolean alertWhenStockIsLow, Boolean autoGenerateReport, Time autoGenerateReportTime, Double notifyMinimumCashDiscrepancy, Integer destroyRefundDataAfterNDays, Time cashCountStartTime, Time cashCountEndTime, Time autoGenerateInventoryReportTime, TaxRate taxRate) {
         this.warehouse = warehouse;
