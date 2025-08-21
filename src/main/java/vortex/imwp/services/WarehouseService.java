@@ -87,9 +87,9 @@ public class WarehouseService {
 		}
 	}
 
-    public Long generateId(){
+    /*public Long generateId(){
         warehouseRepository.findWarehouseW
-    }
+    }*/
 
 	@Transactional
 	public void deleteWarehouse(Long id) {

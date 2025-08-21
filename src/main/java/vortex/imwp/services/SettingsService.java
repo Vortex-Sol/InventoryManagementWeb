@@ -43,15 +43,10 @@ public class SettingsService {
         Optional<Settings> checkSettings = settingsRepository.findById(settingsId);
         return checkSettings.isPresent();
     }
-    public Settings createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
+    public void createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
         //todo that gets the max id value and ++1
-        warehouse.setId(15L);
-        taxRateRepository.save(taxRate);
-        warehouseRepository.save(warehouse);
-        Settings setting =  new Settings(warehouse.getId(),false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate.getId());
+        Settings setting =  new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
         System.out.println("[TESTING] 3 :" + setting);
-        settingsRepository.save(setting);
-        return setting;
     }
     public Optional<Settings> getSettingsById(Long settingsId){
         return settingsRepository.findById(settingsId);
