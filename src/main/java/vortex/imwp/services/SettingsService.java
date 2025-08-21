@@ -37,8 +37,8 @@ public class SettingsService {
         Optional<Settings> checkSettings = settingsRepository.findById(settingsId);
         return checkSettings.isPresent();
     }
-    public Settings createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
-        return new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
+    public void createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
+        new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
     }
     public Optional<Settings> getSettingsById(Long settingsId){
         return settingsRepository.findById(settingsId);
