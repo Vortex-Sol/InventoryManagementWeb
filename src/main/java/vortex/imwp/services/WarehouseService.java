@@ -46,8 +46,8 @@ public class WarehouseService {
 		return warehouses;
 	}
 	@Transactional
-	public Warehouse createWarehouseBasic(String phone, String email, String address, Country.Name country){
-		return new Warehouse(phone, email, address, country);
+	public Warehouse createWarehouseBasic(String phone, String email, String address){
+		return new Warehouse(phone, email, address);
 	}
 
 	public Optional<WarehouseDTO> getWarehouseDTOById(Long id) {
@@ -86,6 +86,10 @@ public class WarehouseService {
 			settingsService.updateTaxRate(warehouse.getSettings().getId(), taxRate);
 		}
 	}
+
+    public Long generateId(){
+        warehouseRepository.findWarehouseW
+    }
 
 	@Transactional
 	public void deleteWarehouse(Long id) {

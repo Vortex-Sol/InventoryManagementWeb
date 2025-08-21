@@ -79,7 +79,6 @@ public class SuperAdminController {
     @PreAuthorize("hasRole('SUPERADMIN')")
     public String createWarehouse(
             @ModelAttribute("warehouseForm") WarehouseDTO w,
-            @RequestParam("country") Country.Name country,
             @RequestParam("taxRateMode") String taxRateMode,
             @RequestParam(value = "existingTaxRateId", required = false) Long existingTaxRateId,
             @RequestParam(value = "newRateCountry", required = false) Country.Name newRateCountry,
@@ -90,19 +89,25 @@ public class SuperAdminController {
             @RequestParam(value = "newRateOtherRate", required = false) Double newRateOtherRate
     ) {
         Warehouse warehouse = warehouseService.createWarehouseBasic(
-                w.getPhone(), w.getEmail(), w.getAddress(), country
+                w.getPhone(), w.getEmail(), w.getAddress()
         );
+
+        System.out.println("[TESTING] 1 :" + warehouse);
 
         TaxRate taxRate;
         if ("existing".equalsIgnoreCase(taxRateMode)) {
+            System.out.println("[TESTING] 2 :" + warehouse);
             taxRate = taxRateService.findById(existingTaxRateId).orElse(null);
+            System.out.println("[TESTING] 4 :" + taxRate);
         } else {
             taxRate = taxRateService.createNew(
                     newRateCountry, newRateStandardRate, newRateReducedRate,
                     newRateSuperReducedRate, newRateNoneRate, newRateOtherRate
             );
+            System.out.println("[TESTING] 5 :" + taxRate);
         }
 
+        System.out.println("[TESTING] 3 :" + taxRate);
         settingsService.createDefaultSettingsForWarehouse(warehouse, taxRate);
 
         return "redirect:/api/super/warehouses";

@@ -93,12 +93,6 @@
                                 <label class="form-label">Address</label>
                                 <input class="form-control" th:field="*{address}" maxlength="250" required>
                             </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Country</label>
-                                <input class="form-control" th:value="${currentCountry}" readonly>
-                                <div class="form-text">Country is fixed after creation.</div>
-                            </div>
                         </div>
 
                         <hr class="my-4">
@@ -130,13 +124,6 @@
 
                         <div id="newRateBlockEdit" class="row g-3 d-none border rounded p-3 mt-2">
                             <div class="col-12"><strong>New Tax Rate</strong></div>
-                            <div class="col-md-4">
-                                <label class="form-label">Country</label>
-                                <select class="form-select" name="newRateCountry" id="newRateCountryEdit">
-                                    <option value="" disabled selected>Choose...</option>
-                                    <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>
-                                </select>
-                            </div>
                             <div class="col-md-2">
                                 <label class="form-label">Standard</label>
                                 <input class="form-control" name="newRateStandardRate" type="number" step="0.001" min="0">
@@ -184,14 +171,6 @@
                                 <label class="form-label">Address</label>
                                 <input class="form-control" th:field="*{address}" maxlength="250" required>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Country</label>
-                                <!-- Country is a request param (not in DTO) -->
-                                <select class="form-select" name="country" required>
-                                    <option value="" disabled selected>Choose...</option>
-                                    <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>
-                                </select>
-                            </div>
                         </div>
 
                         <hr class="my-4">
@@ -222,13 +201,6 @@
 
                         <div id="newRateBlockCreate" class="row g-3 d-none border rounded p-3 mt-2">
                             <div class="col-12"><strong>New Tax Rate</strong></div>
-                            <div class="col-md-4">
-                                <label class="form-label">Country</label>
-                                <select class="form-select" name="newRateCountry" id="newRateCountryCreate">
-                                    <option value="" disabled selected>Choose...</option>
-                                    <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>
-                                </select>
-                            </div>
                             <div class="col-md-2">
                                 <label class="form-label">Standard</label>
                                 <input class="form-control" name="newRateStandardRate" type="number" step="0.001" min="0">
