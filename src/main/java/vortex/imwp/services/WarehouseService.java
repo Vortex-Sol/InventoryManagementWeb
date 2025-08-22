@@ -53,7 +53,6 @@ public class WarehouseService {
 		 System.out.println(war +"1");
 		System.out.println(war +"2");
 		 warehouseRepository.save(war);
-		System.out.println(warehouseRepository.findById(5l) +"3");
 		 return war;
 	}
 
