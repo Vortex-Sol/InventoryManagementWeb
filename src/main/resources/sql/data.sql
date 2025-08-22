@@ -52,11 +52,13 @@ VALUES
 INSERT INTO
     Tax_Rate (Country, Standard_Rate, Reduced_Rate, Super_Reduced_Rate, None_Rate, Other_Rate)
 VALUES
-    ('DENMARK', 25, null, null, null,null),
-    ('IRELAND', 23, 13.5, 9, null,4.8),
-    ('POLAND', 23, 8, 5, null,null),
-    ('AUSTRIA', 20, 13, 10, null,null),
-    ('GERMANY', 19, 9, null, null,null);
+    ('NONE', 0, NULL, NULL, NULL, NULL),
+    ('GERMANY', 19, 9, NULL, NULL,NULL),
+    ('DENMARK', 25, NULL, NULL, NULL,NULL),
+    ('IRELAND', 23, 13.5, 9, NULL,4.8),
+    ('POLAND', 23, 8, 5, NULL,NULL),
+    ('AUSTRIA', 20, 13, 10, NULL,NULL);
+
 
 -- Items
 INSERT INTO

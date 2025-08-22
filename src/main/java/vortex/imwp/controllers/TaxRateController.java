@@ -13,6 +13,7 @@ import vortex.imwp.models.Country;
 import vortex.imwp.models.TaxRate;
 import vortex.imwp.services.TaxRateService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -28,12 +29,17 @@ public class TaxRateController {
 	}
 
 	@ModelAttribute("countries")
-	public Country.Name[] countries() {
-		return Country.Name.values();
-	}
+	public Country.Name[] countries() { return taxRateService.filterCountries(); }
 
 	private void populateTaxRates(Model model, String q) {
 		List<TaxRate> all = taxRateService.findAll();
+        for(int i = 0, counter = 0; i < all.size() && counter == 0; ++i){
+            if (all.get(i).getCountry().toString().equalsIgnoreCase("NONE")) {
+                all.remove(i);
+                ++counter;
+            }
+        }
+
 		if (StringUtils.hasText(q)) {
 			final String s = q.toLowerCase(Locale.ROOT);
 			all = all.stream()
@@ -108,14 +114,13 @@ public class TaxRateController {
 
 		taxRateService.saveOrUpdateByCountry(form);
 		ra.addFlashAttribute("success", "Tax rate saved.");
-		return "redirect:/api/super/taxes";
+		return "redirect:/api/taxrates";
 	}
 
 	@PostMapping("/delete")
 	@PreAuthorize("hasRole('SUPERADMIN')")
 	public String delete(@RequestParam("country") String country, RedirectAttributes ra) {
 		Country.Name c = Country.fromString(country);
-        System.out.println("[TESTING] : " + c);
 		if (c == null) {
 			ra.addFlashAttribute("error", "Unknown country: " + country);
 			return "redirect:/api/taxrates";
@@ -126,6 +131,6 @@ public class TaxRateController {
 		} catch (Exception ex) {
 			ra.addFlashAttribute("error", "Delete failed: " + ex.getMessage());
 		}
-		return "redirect:/api/super/taxes";
+		return "redirect:/api/taxrates";
 	}
 }

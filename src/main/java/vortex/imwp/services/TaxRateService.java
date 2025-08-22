@@ -1,5 +1,7 @@
 package vortex.imwp.services;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vortex.imwp.models.Country;
@@ -14,7 +16,9 @@ import java.util.Optional;
 
 @Service
 public class TaxRateService {
-
+    
+    @PersistenceContext
+    private EntityManager entityManager;
     private final TaxRateRepository taxRateRepository;
     private final SettingsRepository settingsRepository;
     private final SettingsChangeAuditRepository settingsChangeAuditRepository;
@@ -104,9 +108,7 @@ public class TaxRateService {
 
     @Transactional
     public void hardDeleteTaxRateAndDependents(Country.Name country) {
-        System.out.println("[TESTING] 2 : " +  country);
         TaxRate tr = taxRateRepository.findByCountry(country);
-        System.out.println("[TESTING] 3 : id" + tr.getId() + " || country : "  + tr.getCountry() + " || std : " + tr.getStandardRate());
         if (tr == null) {
             System.err.println("Tax rate " + country + " not found");
             return;
@@ -128,5 +130,25 @@ public class TaxRateService {
         tr.setNoneRate(none);
         tr.setOtherRate(other);
         return taxRateRepository.save(tr);
+    }
+
+    public Country.Name[] filterCountries(){
+        Country.Name[] countries = Country.Name.values();
+        for(int i = 0, counter = 0; i < countries.length && counter == 0; ++i){
+            if (countries[i].toString().equalsIgnoreCase("NONE")) {
+                countries[i] = null;
+                ++counter;
+            }
+        }
+
+        Country.Name[] filteredCountries = new Country.Name[countries.length - 1];
+        for(int i = 0, k = 0; i < countries.length; ++i){
+            if (countries[i] != null) {
+                filteredCountries[k] = countries[i];
+                ++k;
+            }
+        }
+
+        return filteredCountries;
     }
 }

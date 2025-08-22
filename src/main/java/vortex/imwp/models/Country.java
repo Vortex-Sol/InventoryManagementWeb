@@ -2,6 +2,7 @@ package vortex.imwp.models;
 
 public class Country {
     public enum Name {
+        NONE,
         AUSTRIA,
         BELGIUM,
         BULGARIA,
