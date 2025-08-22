@@ -115,6 +115,7 @@ public class TaxRateController {
 	@PreAuthorize("hasRole('SUPERADMIN')")
 	public String delete(@RequestParam("country") String country, RedirectAttributes ra) {
 		Country.Name c = Country.fromString(country);
+        System.out.println("[TESTING] : " + c);
 		if (c == null) {
 			ra.addFlashAttribute("error", "Unknown country: " + country);
 			return "redirect:/api/taxrates";

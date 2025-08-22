@@ -138,8 +138,8 @@
                                        th:href="@{/api/taxrates/edit(country=${r.country})}">Edit</a>
                                     <form th:action="@{/api/taxrates/delete}" method="post"
                                           onsubmit="return confirm('Delete tax rate for ' + '[[${r.country}]]' + '?');">
-                                        <input type="hidden" name="country" th:value="${r.country}">
                                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                        <input type="hidden" name="country" th:value="${r.country}">
                                         <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
                                     </form>
                                 </div>

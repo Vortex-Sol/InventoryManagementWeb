@@ -3,13 +3,16 @@ package vortex.imwp.controllers;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.extras.springsecurity6.auth.AuthUtils;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.models.Receipt;
 import vortex.imwp.models.Sale;
+import vortex.imwp.models.Warehouse;
 import vortex.imwp.services.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,16 +31,18 @@ public class ReceiptController {
 	private final ItemService itemService;
 	private final WarehouseService warehouseService;
 	private final EmployeeService employeeService;
+    private final TaxRateService taxRateService;
 
-	public ReceiptController(ReceiptService receiptService, SaleService saleService,
-							 ItemService itemService,WarehouseService warehouseService
-							, EmployeeService employeeService) {
+    public ReceiptController(ReceiptService receiptService, SaleService saleService,
+                             ItemService itemService, WarehouseService warehouseService
+							, EmployeeService employeeService, TaxRateService taxRateService) {
 		this.receiptService = receiptService;
 		this.saleService = saleService;
 		this.itemService = itemService;
 		this.warehouseService = warehouseService;
 		this.employeeService = employeeService;
-	}
+        this.taxRateService = taxRateService;
+    }
 	@GetMapping()
 	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String startCheckout(@AuthenticationPrincipal UserDetails userDetails) {
@@ -166,7 +171,9 @@ public class ReceiptController {
 		BigDecimal total = BigDecimal.ZERO;
 
 		sale.getSaleItems().forEach(si -> {
-			BigDecimal price = BigDecimal.valueOf(si.getItem().getPrice());
+
+            Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
+			BigDecimal price = BigDecimal.valueOf(taxRateService.getBrutto(si.getItem(), warehouse.get()));
 			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(si.getQuantity()));
 			itemTotals.put(si.getItem().getId(), itemTotal);
 		});

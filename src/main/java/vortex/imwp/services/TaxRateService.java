@@ -104,7 +104,9 @@ public class TaxRateService {
 
     @Transactional
     public void hardDeleteTaxRateAndDependents(Country.Name country) {
+        System.out.println("[TESTING] 2 : " +  country);
         TaxRate tr = taxRateRepository.findByCountry(country);
+        System.out.println("[TESTING] 3 : id" + tr.getId() + " || country : "  + tr.getCountry() + " || std : " + tr.getStandardRate());
         if (tr == null) {
             System.err.println("Tax rate " + country + " not found");
             return;

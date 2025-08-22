@@ -2,9 +2,9 @@
 INSERT INTO
     Warehouse (ID, Phone, Email, Address)
 VALUES
-    (0, '+48123456789', 'warehouse0@gmail.com', '123 Main St, Berlin'),
-    (1, '+48234567891', 'warehouse1@gmail.com','456 Market Ave, Munich'),
-    (2, '+48345678901', 'warehouse2@gmail.com', '789 Szczesliwicka, Warsaw');
+    (1, '+48123456789', 'warehouse0@gmail.com', '123 Main St, Berlin'),
+    (2, '+48234567891', 'warehouse1@gmail.com','456 Market Ave, Munich'),
+    (3, '+48345678901', 'warehouse2@gmail.com', '789 Szczesliwicka, Warsaw');
 
 -- Jobs
 INSERT INTO
@@ -21,10 +21,10 @@ VALUES
 INSERT INTO
     Employee (Username, Password, Name, Surname, DoB, Email, Phone, Start_Date, End_Date, Boss_ID, Warehouse_ID)
 VALUES
-    ('super', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Clark', 'Kent', '1985-05-02', 'super@gmail.com', '555-0000', '2019-12-30', NULL, NULL, 0),
-    ('admin', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'John', 'Doe', '1990-01-15', 'jdoe@example.com', '555-1111', '2020-01-01', NULL, 1, 1),
-    ('manager', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Clark', 'Kent', '1992-07-10', 'ckent@example.com', '555-4444', '2023-02-01', NULL, 1, 0),
-    ('salesman', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Alice', 'Smith', '1985-06-20', 'asmith@example.com', '555-2222', '2021-05-01', NULL, 3, 2),
+    ('super', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Clark', 'Kent', '1985-05-02', 'super@gmail.com', '555-0000', '2019-12-30', NULL, NULL, 1),
+    ('admin', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'John', 'Doe', '1990-01-15', 'jdoe@example.com', '555-1111', '2020-01-01', NULL, 1, 2),
+    ('manager', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Clark', 'Kent', '1992-07-10', 'ckent@example.com', '555-4444', '2023-02-01', NULL, 1, 1),
+    ('salesman', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Alice', 'Smith', '1985-06-20', 'asmith@example.com', '555-2222', '2021-05-01', NULL, 3, 3),
     ('stocker', '$2a$10$Jj5/CMDhocYIWQX4r.93H.rfCkbsiQ3twLJZFd5osi9RyJe09VH7G', 'Bruce', 'Wayne', '1980-03-30', 'bwayne@example.com', '555-3333', '2019-11-15', NULL, 3, 1);
 
 -- Note: Get the auto-generated employee IDs using SELECTs if needed in Java code.
@@ -71,12 +71,12 @@ VALUES
 INSERT INTO
     Warehouse_Items (Warehouse_ID, Item_ID, Quantity_in_Stock, SKU)
 VALUES
-    (1, 1, 5, '001-001-AF32XA'),
     (2, 1, 5, '001-001-AF32XA'),
-    (0, 1, 5, '001-001-AF32XA'),
-    (1, 2, 20, '001-002-KFAM8M'),
-    (2, 3, 10, '002-002-AAA12G'),
-    (2, 4, 7, '002-001-DD00C4');
+    (3, 1, 5, '001-001-AF32XA'),
+    (1, 1, 5, '001-001-AF32XA'),
+    (2, 2, 20, '001-002-KFAM8M'),
+    (3, 3, 10, '002-002-AAA12G'),
+    (3, 4, 7, '002-001-DD00C4');
 
 -- Sales
 INSERT INTO
@@ -103,9 +103,9 @@ VALUES
 INSERT INTO
     Settings (Warehouse_ID, Alert_When_Stock_Is_Low, Auto_Generate_Report, Auto_Generate_Report_Time, Notify_Minimum_Cash_Discrepancy, Destroy_Refund_Data_After_N_Days, Cash_Count_Start_Time, Cash_Count_End_Time, Auto_Generate_Inventory_Report_Time, Tax_Rate_id)
 VALUES
-    (0, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 1),
-    (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 2),
-    (2, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 3);
+    (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 1),
+    (2, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 2),
+    (3, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 3);
 
 INSERT INTO
     Settings_Change_Audit (Setting_ID, Warehouse_ID, Admin_ID, Changed_At, Settings_Changed)
@@ -127,4 +127,4 @@ VALUES
     (4, 45.000, 'Mobile Payment', 50.000, 5.000, FALSE, NULL, NULL),
     (5, 120.300, 'Card', 120.300, 0.000, TRUE, '2025-08-12 09:15:00', 1);
 
-ALTER TABLE Warehouse ALTER COLUMN ID RESTART WITH 3;
+ALTER TABLE Warehouse ALTER COLUMN ID RESTART WITH 4;
