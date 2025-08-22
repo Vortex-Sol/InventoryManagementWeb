@@ -6,4 +6,7 @@ import vortex.imwp.models.Report;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
+	boolean existsByCreatedAtWarehouseID(Long id);
+	long deleteByCreatedAtWarehouseID(Long warehouseId);
+
 }

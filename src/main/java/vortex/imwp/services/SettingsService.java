@@ -1,11 +1,13 @@
 package vortex.imwp.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import vortex.imwp.dtos.SettingsDTO;
-import vortex.imwp.models.Employee;
-import vortex.imwp.models.Settings;
-import vortex.imwp.models.SettingsChangeAudit;
+import vortex.imwp.dtos.TaxRateDTO;
+import vortex.imwp.mappers.SettingsDTOMapper;
+import vortex.imwp.mappers.TaxRateDTOMapper;
+import vortex.imwp.models.*;
 import vortex.imwp.repositories.SettingsChangeAuditRepository;
 import vortex.imwp.repositories.SettingsRepository;
 
@@ -26,12 +28,20 @@ public class SettingsService {
         this.employeeService = employeeService;
         this.settingsChangeAuditRepository = settingsChangeAuditRepository;
     }
+    @Transactional
+    public void deleteById(long id) {
+        settingsRepository.deleteById(id);
+    }
 
     public boolean checkSettings(Long settingsId) {
         Optional<Settings> checkSettings = settingsRepository.findById(settingsId);
         return checkSettings.isPresent();
     }
-
+    @Transactional
+    public void createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
+        Settings set = new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
+        settingsRepository.save(set);
+    }
     public Optional<Settings> getSettingsById(Long settingsId){
         return settingsRepository.findById(settingsId);
     }
@@ -39,6 +49,20 @@ public class SettingsService {
     public Settings getSettingsByWarehouseId(Long warehouseId){
         return settingsRepository.findByWarehouse_Id(warehouseId);
     }
+    public SettingsDTO getSettingsByWarehouseDTOId(Long warehouseId) {
+        Settings settings = settingsRepository.findByWarehouse_Id(warehouseId);
+        return SettingsDTOMapper.map(settings);
+    }
+    public TaxRateDTO getTaxRateDTOById(Long id) {
+        TaxRate TaxRate  = settingsRepository.findById(id).get().getTaxRate();
+        return TaxRateDTOMapper.map(TaxRate);
+    }
+
+    public void updateTaxRate(Long id, TaxRate taxRate) {
+        settingsRepository.findById(id).get().setTaxRate(taxRate);
+        settingsRepository.save(settingsRepository.findById(id).get());
+    }
+
 
     public void updateSettings(SettingsDTO settingsDto, Authentication authentication) {
 

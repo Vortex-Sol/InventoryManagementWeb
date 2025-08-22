@@ -70,14 +70,14 @@ public class InventoryController {
 			wi.setQuantityInStock(quantity);
 			warehouseItemService.saveWarehouseItem(wi);
 		}
-		return "redirect:/api/home";
+		return "redirect:/api/warehouse";
 	}
 
 	@PostMapping("/delete")
 	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String deleteItem(@RequestParam("item_id") Long itemId) {
 		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
-		return "redirect:/api/home";
+		return "redirect:/api/warehouse";
 	}
 
 	@GetMapping()
@@ -147,7 +147,7 @@ public class InventoryController {
 
 		itemService.updateItem(item);
 		ra.addFlashAttribute("toastSuccess", "Item updated");
-		return "redirect:/api/home";
+		return "redirect:/api/warehouse";
 	}
 
 }

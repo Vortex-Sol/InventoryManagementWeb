@@ -1,13 +1,11 @@
 package vortex.imwp.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import vortex.imwp.dtos.EmployeeDTO;
 import vortex.imwp.dtos.WarehouseDTO;
-import vortex.imwp.mappers.EmployeeDTOMapper;
 import vortex.imwp.mappers.WarehouseDTOMapper;
-import vortex.imwp.models.Employee;
-import vortex.imwp.models.Warehouse;
-import vortex.imwp.repositories.WarehouseRepository;
+import vortex.imwp.models.*;
+import vortex.imwp.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,8 +15,26 @@ import java.util.Optional;
 @Service
 public class WarehouseService {
 	private final WarehouseRepository warehouseRepository;
-	public WarehouseService(WarehouseRepository warehouseRepository) {
+	private final SettingsService settingsService;
+	private final ItemService itemService;
+	private final EmployeeRepository employeeRepository;
+	private final ReportRepository reportRepository;
+	private final ItemChangeLogRepository itemChangeLogRepository;
+	private final SettingsChangeAuditRepository settingsChangeAuditRepository;
+	private final EmployeeService employeeService;
+
+	public WarehouseService(WarehouseRepository warehouseRepository, SettingsService settingsService,
+							ItemService itemService, EmployeeRepository employeeRepository,
+							ReportRepository reportRepository, ItemChangeLogRepository itemChangeLogRepository,
+							SettingsChangeAuditRepository settingsChangeAuditRepository, EmployeeService employeeService) {
 		this.warehouseRepository = warehouseRepository;
+		this.settingsService = settingsService;
+		this.itemService = itemService;
+		this.employeeRepository = employeeRepository;
+		this.reportRepository = reportRepository;
+		this.itemChangeLogRepository = itemChangeLogRepository;
+		this.settingsChangeAuditRepository = settingsChangeAuditRepository;
+		this.employeeService = employeeService;
 	}
 
 	public List<WarehouseDTO> getAllWarehouses() {
@@ -30,6 +46,18 @@ public class WarehouseService {
 			warehouses.add(warehouseDTO);
 		}
 		return warehouses;
+	}
+	@Transactional
+	public Warehouse createWarehouseBasic(String phone, String email, String address){
+		 Warehouse war = new Warehouse(phone, email, address);
+		 System.out.println(war +"1");
+		System.out.println(war +"2");
+		 warehouseRepository.save(war);
+		 return war;
+	}
+
+	public Optional<WarehouseDTO> getWarehouseDTOById(Long id) {
+		return getWarehouseById(id).map(WarehouseDTOMapper::map);
 	}
 
 	public Optional<Warehouse> getWarehouseById(Long id) {
@@ -53,8 +81,39 @@ public class WarehouseService {
                 }
         );
     }
+	@Transactional
+	public void upsertSettingsForWarehouse(Long id, TaxRate taxRate) {
+		Warehouse warehouse = getWarehouseById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Warehouse " + id + " not found"));
 
+		if (warehouse.getSettings() == null) {
+			settingsService.createDefaultSettingsForWarehouse(warehouse, taxRate);
+		} else {
+			settingsService.updateTaxRate(warehouse.getSettings().getId(), taxRate);
+		}
+	}
+
+	@Transactional
 	public void deleteWarehouse(Long id) {
-		warehouseRepository.deleteById(id);
+		Warehouse warehouse = getWarehouseById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Warehouse " + id + " not found"));
+
+		if (employeeRepository.existsById(id)) {
+			for (Employee em : employeeService.getAllEmployeesFromWarehouse(id)) {
+				employeeService.deleteEmployee(em.getId());
+			}
+		}
+		System.out.println("3");
+
+		if (reportRepository.existsByCreatedAtWarehouseID(id)) {
+			reportRepository.deleteByCreatedAtWarehouseID(id);
+		}
+
+		settingsChangeAuditRepository.deleteByWarehouseId(id);
+		System.out.println("1");
+		itemChangeLogRepository.deleteByWarehouseId(id);
+		System.out.println("2");
+
+		warehouseRepository.delete(warehouse);
 	}
 }

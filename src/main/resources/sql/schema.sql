@@ -63,8 +63,7 @@ CREATE TABLE Warehouse (
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Phone VARCHAR(20) NOT NULL,
     Email Varchar(50) NOT NULL,
-    Address VARCHAR(250) NOT NULL,
-    Country VARCHAR(250) NOT NULL
+    Address VARCHAR(250) NOT NULL
 );
 
 CREATE TABLE Category(
@@ -76,19 +75,16 @@ CREATE TABLE Tax_Rate
 (
     ID              BIGINT AUTO_INCREMENT PRIMARY KEY,
     Country         VARCHAR(50) NOT NULL,
-    Standard_Rate DECIMAL(10, 3) NOT NULL,
-    Reduced_Rate DECIMAL(10, 3),
-    Super_Reduced_Rate DECIMAL(10, 3),
-    None_Rate DECIMAL(10, 3),
-    Other_Rate DECIMAL(10, 3)
+    Standard_Rate DECIMAL(10, 2) NOT NULL,
+    Reduced_Rate DECIMAL(10, 2),
+    Super_Reduced_Rate DECIMAL(10, 2),
+    None_Rate DECIMAL(10, 2),
+    Other_Rate DECIMAL(10, 2)
 );
 
 CREATE TABLE Settings(
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Warehouse_id BIGINT NOT NULL,
-    CONSTRAINT fk_settings_warehouse
-        FOREIGN KEY (Warehouse_id)
-            REFERENCES Warehouse(ID),
     Alert_When_Stock_Is_Low BOOLEAN NOT NULL,
     Auto_Generate_Report BOOLEAN NOT NULL,
     Auto_Generate_Report_Time TIME,
@@ -100,13 +96,11 @@ CREATE TABLE Settings(
     Cash_Count_Start_Time TIME NOT NULL,
     Cash_Count_End_Time TIME NOT NULL,
     Auto_Generate_Inventory_Report_Time TIME NOT NULL,
-    Tax_Rate_id BIGINT NOT NULL,
-    CONSTRAINT fk_settings_tax_rate
-        FOREIGN KEY (Tax_Rate_id)
-            REFERENCES Tax_Rate(ID)
+    Tax_Rate_id BIGINT
+
 );
 
-CREATE TABLE Settings_Change_Log(
+CREATE TABLE Settings_Change_Audit(
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Setting_ID BIGINT NOT NULL,
     Warehouse_ID BIGINT NOT NULL,
@@ -194,9 +188,10 @@ ALTER TABLE Report ADD FOREIGN KEY (Created_At_Warehouse_ID) REFERENCES Warehous
 ALTER TABLE Receipt ADD FOREIGN KEY (Sale_ID) REFERENCES Sale(ID);
 ALTER TABLE Receipt ADD FOREIGN KEY (Cancelled_By) REFERENCES Employee(ID);
 ALTER TABLE Settings ADD FOREIGN KEY (Warehouse_id) REFERENCES Warehouse(ID);
-ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Setting_ID) REFERENCES Settings(ID);
-ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
-ALTER TABLE Settings_Change_Log ADD FOREIGN KEY (Admin_ID) REFERENCES Employee(ID);
+ALTER TABLE Settings ADD FOREIGN KEY (Tax_Rate_id) REFERENCES Tax_Rate(ID)ON DELETE SET NULL;
+ALTER TABLE Settings_Change_Audit ADD FOREIGN KEY (Setting_ID) REFERENCES Settings(ID);
+ALTER TABLE Settings_Change_Audit ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
+ALTER TABLE Settings_Change_Audit ADD FOREIGN KEY (Admin_ID) REFERENCES Employee(ID);
 ALTER TABLE Item_Change_Log ADD FOREIGN KEY (Item_ID) REFERENCES Item(ID);
 ALTER TABLE Item_Change_Log ADD FOREIGN KEY (Stocker_ID) REFERENCES Employee(ID);
 ALTER TABLE Item_Change_Log ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);

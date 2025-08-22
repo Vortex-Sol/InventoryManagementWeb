@@ -37,15 +37,5 @@ public class HomeController {
         return "/error";
     }
 
-    @GetMapping("/contact")
-    public String contact(Authentication auth, Model model) {
-        Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(auth).getWarehouseID());
-        if(warehouse.isPresent()) {
-            model.addAttribute("warehouse", WarehouseDTOMapper.map(warehouse.get()));
-        }
-        else{
-            model.addAttribute("error", "Warehouse not found");
-        }
-        return "contact-information";
-    }
+
 }

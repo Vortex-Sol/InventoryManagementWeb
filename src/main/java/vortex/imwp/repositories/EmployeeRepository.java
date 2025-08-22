@@ -16,4 +16,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByUsernameWithJobs(@Param("username") String username);
 
     Employee getByUsername(String username);
+
+    boolean existsByWarehouseID(Long id);
 }

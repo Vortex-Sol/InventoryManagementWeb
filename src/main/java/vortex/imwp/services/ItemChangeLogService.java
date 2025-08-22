@@ -1,5 +1,6 @@
 package vortex.imwp.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class ItemChangeLogService {
         return itemChangeLogRepository.findAllByOrderByChangedAtDesc(PageRequest.of(page, size))
                 .map(ItemChangeLogDTOMapper::map);
     }
+
 
     public List<ItemChangeLog> getItemsChangeLogsByStocker(Employee stocker) {
         return itemChangeLogRepository.findByStockerId(stocker.getId());

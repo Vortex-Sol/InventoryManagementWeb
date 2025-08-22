@@ -19,13 +19,16 @@ public class ItemService {
     private final WarehouseItemRepository warehouseItemRepository;
     private final CategoryRepository categoryRepository;
     private final SaleItemRepository saleItemRepository;
+    private final ItemChangeLogRepository itemChangeLogRepository;
 
     public ItemService(ItemRepository itemRepository, WarehouseItemRepository warehouseItemRepository,
-                       CategoryRepository categoryRepository, SaleItemRepository saleItemRepository) {
+                       CategoryRepository categoryRepository, SaleItemRepository saleItemRepository
+    , ItemChangeLogRepository itemChangeLogRepository) {
         this.itemRepository = itemRepository;
         this.warehouseItemRepository = warehouseItemRepository;
         this.categoryRepository = categoryRepository;
         this.saleItemRepository = saleItemRepository;
+        this.itemChangeLogRepository = itemChangeLogRepository;
     }
     public List<ItemDTO> getAll() {
         Iterable<Item> list = itemRepository.findAll();
@@ -156,6 +159,7 @@ public class ItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Item not found: " + id));
         warehouseItemRepository.deleteByItem(item);
         saleItemRepository.deleteSaleItemByItemId(item.getId());
+        itemChangeLogRepository.deleteByItemId(item.getId());
         itemRepository.delete(item);
     }
 

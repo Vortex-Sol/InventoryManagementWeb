@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout-noSearch :: layout(title=~{::title}, content=~{::section}, navText='Admin Dashboard')}">
+      th:replace="~{fragments/layout-noSearch-contactFooter :: layout(title=~{::title}, content=~{::section},
+       navText='Admin Dashboard', footerEnabled=true)}">
 <head>
   <title>Admin Dashboard</title>
 </head>

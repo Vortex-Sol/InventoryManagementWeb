@@ -2,12 +2,34 @@ package vortex.imwp.models;
 
 public class Country {
     public enum Name {
-        DENMARK,
-        IRELAND,
-        POLAND,
+        NONE,
         AUSTRIA,
+        BELGIUM,
+        BULGARIA,
+        CROATIA,
+        CYPRUS,
+        CZECHIA,
+        DENMARK,
+        ESTONIA,
+        FINLAND,
+        FRANCE,
         GERMANY,
-        GREECE
+        GREECE,
+        HUNGARY,
+        IRELAND,
+        ITALY,
+        LATVIA,
+        LITHUANIA,
+        LUXEMBOURG,
+        MALTA,
+        NETHERLANDS,
+        POLAND,
+        PORTUGAL,
+        ROMANIA,
+        SLOVAKIA,
+        SLOVENIA,
+        SPAIN,
+        SWEDEN
     }
 
     public static Name fromString(String name) {

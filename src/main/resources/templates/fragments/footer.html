@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="footer(warehouse)">
+<footer th:if="${warehouse != null}" class="mt-5">
+  <div class="container">
+    <div class="card shadow-sm">
+      <div class="card-header text-white" style="background-color: #e94e77">
+        <h6 class="mb-0">Contact Information</h6>
+      </div>
+      <div class="card-body">
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <small class="text-muted d-block">Email</small>
+            <span th:text="${warehouse.email}">contact@warehouse.com</span>
+          </div>
+          <div class="col-md-6">
+            <small class="text-muted d-block">Phone</small>
+            <span th:text="${warehouse.phone}">+1 (555) 123-4567</span>
+          </div>
+        </div>
+        <div>
+          <small class="text-muted d-block">Address</small>
+          <span th:text="${warehouse.address}">123 Supply Chain Street, Logistics City</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</html>
