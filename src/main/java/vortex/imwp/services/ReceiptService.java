@@ -26,11 +26,13 @@ public class ReceiptService {
 	private final ReceiptRepository receiptRepository;
 	private final SaleRepository saleRepository;
 	private final EmployeeRepository employeeRepository;
+	private final TaxRateService taxRateService;
 
-	public ReceiptService(ReceiptRepository receiptRepository, SaleRepository saleRepository, EmployeeRepository employeeRepository) {
+	public ReceiptService(ReceiptRepository receiptRepository, SaleRepository saleRepository, EmployeeRepository employeeRepository, TaxRateService taxRateService) {
 		this.receiptRepository = receiptRepository;
 		this.saleRepository = saleRepository;
 		this.employeeRepository = employeeRepository;
+		this.taxRateService = taxRateService;
 	}
 
 	@Transactional
@@ -73,7 +75,7 @@ public class ReceiptService {
 			itemJson.put("quantity", item.getQuantity());
 			itemJson.put("unit", "szt");
 			itemJson.put("price", item.getItem().getPrice());
-			itemJson.put("vatRate", "A"); //  hardcoded for 23% tax
+			itemJson.put("vatRate", item.getItem().getCategory().getName());
 			items.put(itemJson);
 		}
 		receiptData.put("items", items);

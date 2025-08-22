@@ -77,7 +77,6 @@ public class ReceiptController {
 	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String checkoutForm(@PathVariable Long saleId, Model model) {
 		Sale sale = saleService.getSaleById(saleId);
-		System.out.println("[TESTING 2] ");
 		populateCheckoutModel(sale, model);
 		return "inventory/receipt/checkout";
 	}
@@ -176,13 +175,9 @@ public class ReceiptController {
 		BigDecimal total = BigDecimal.ZERO;
 
 		sale.getSaleItems().forEach(si -> {
-			System.out.println("[TESTING 3]");
             Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
-			System.out.println("[TESTING 4]");
 			BigDecimal price = BigDecimal.valueOf(taxRateService.getBrutto(si.getItem(), warehouse.get()));
-			System.out.println("[TESTING 5]");
 			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(si.getQuantity()));
-			System.out.println("[TESTING 6]");
 			itemTotals.put(si.getItem().getId(), itemTotal);
 		});
 
