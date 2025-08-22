@@ -6,14 +6,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import vortex.imwp.dtos.TaxRateDTO;
 import vortex.imwp.dtos.WarehouseDTO;
+import vortex.imwp.mappers.TaxRateDTOMapper;
 import vortex.imwp.mappers.WarehouseDTOMapper;
+import vortex.imwp.models.Employee;
 import vortex.imwp.models.Warehouse;
 import vortex.imwp.services.EmployeeService;
 import vortex.imwp.services.PasswordValidatorService;
 import vortex.imwp.dtos.EmployeeDTO;
 import vortex.imwp.services.WarehouseService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +36,16 @@ public class AdminController {
 
     @GetMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
-    public String admin() {
+    public String admin(Model model, Authentication authentication) {
+
+        Employee employee = employeeService.getEmployeeByAuthentication(authentication);
+        Optional<Warehouse> warehouseCheck = warehouseService.getWarehouseById(employee.getWarehouseID());
+        if (warehouseCheck.isPresent()) {
+            Warehouse warehouse = warehouseCheck.get();
+            List<TaxRateDTO> dtos = new ArrayList<>();
+            dtos.add(TaxRateDTOMapper.map(warehouse.getSettings().getTaxRate()));
+            model.addAttribute("taxRates", dtos);
+        }
         return "/admin/admin-dashboard";
     }
 

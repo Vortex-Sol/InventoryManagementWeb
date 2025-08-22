@@ -217,7 +217,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Standard</label>
-                                <input class="form-control" name="newRateStandardRate" type="number" step="0.001" min="0">
+                                <input class="form-control" name="newRateStandardRate" type="number" step="0.001" min="0" id="standard-rate" required>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Reduced</label>
@@ -251,5 +251,6 @@
         </div>
     </div>
     <script th:src="@{/js/newTaxRate.js}"></script>
+    <script th:src="@{/js/check-Standard-Rate.js}"></script>
 </section>
 </html>
