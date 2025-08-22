@@ -250,62 +250,6 @@
             </div>
         </div>
     </div>
-
+    <script th:src="@{/js/newTaxRate.js}"></script>
 </section>
-
-<script>
-    (function() {
-        const modeExistingEdit = document.getElementById('modeExistingEdit');
-        const modeNewEdit = document.getElementById('modeNewEdit');
-        const existingBlockEdit = document.getElementById('existingRateBlockEdit');
-        const newBlockEdit = document.getElementById('newRateBlockEdit');
-        const existingSelectEdit = document.getElementById('existingTaxRateIdEdit');
-        const newRateCountryEdit = document.getElementById('newRateCountryEdit');
-
-        function toggleBlocksEdit() {
-            const useNew = modeNewEdit && modeNewEdit.checked;
-            if (!existingBlockEdit || !newBlockEdit) return;
-            if (useNew) {
-                existingBlockEdit.classList.add('d-none');
-                newBlockEdit.classList.remove('d-none');
-                if (existingSelectEdit) existingSelectEdit.removeAttribute('required');
-                if (newRateCountryEdit) newRateCountryEdit.setAttribute('required', 'required');
-            } else {
-                existingBlockEdit.classList.remove('d-none');
-                newBlockEdit.classList.add('d-none');
-                if (existingSelectEdit) existingSelectEdit.setAttribute('required', 'required');
-                if (newRateCountryEdit) newRateCountryEdit.removeAttribute('required');
-            }
-        }
-        if (modeExistingEdit) modeExistingEdit.addEventListener('change', toggleBlocksEdit);
-        if (modeNewEdit) modeNewEdit.addEventListener('change', toggleBlocksEdit);
-        toggleBlocksEdit();
-
-        const modeExistingCreate = document.getElementById('modeExistingCreate');
-        const modeNewCreate = document.getElementById('modeNewCreate');
-        const existingBlockCreate = document.getElementById('existingRateBlockCreate');
-        const newBlockCreate = document.getElementById('newRateBlockCreate');
-        const existingSelectCreate = document.getElementById('existingTaxRateIdCreate');
-        const newRateCountryCreate = document.getElementById('newRateCountryCreate');
-
-        function toggleBlocksCreate() {
-            const useNew = modeNewCreate && modeNewCreate.checked;
-            if (!existingBlockCreate || !newBlockCreate) return;
-            if (useNew) {
-                existingBlockCreate.classList.add('d-none');
-                newBlockCreate.classList.remove('d-none');
-                if (existingSelectCreate) existingSelectCreate.removeAttribute('required');
-                if (newRateCountryCreate) newRateCountryCreate.setAttribute('required', 'required');
-            } else {
-                existingBlockCreate.classList.remove('d-none');
-                newBlockCreate.classList.add('d-none');
-                if (existingSelectCreate) existingSelectCreate.setAttribute('required', 'required');
-                if (newRateCountryCreate) newRateCountryCreate.removeAttribute('required');
-            }
-        }
-        if (modeExistingCreate) modeExistingCreate.addEventListener('change', toggleBlocksCreate);
-        if (modeNewCreate) modeNewCreate.addEventListener('change', toggleBlocksCreate);
-        toggleBlocksCreate();
-    })();
-</script>
 </html>

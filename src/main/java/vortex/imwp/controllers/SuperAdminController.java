@@ -101,7 +101,6 @@ public class SuperAdminController {
                     newRateCountry, newRateStandardRate, newRateReducedRate,
                     newRateSuperReducedRate, newRateNoneRate, newRateOtherRate
             );
-
         }
 
         settingsService.createDefaultSettingsForWarehouse(warehouse, taxRate);
@@ -152,7 +151,6 @@ public class SuperAdminController {
                     newRateSuperReducedRate, newRateNoneRate, newRateOtherRate
             );
         }
-
         warehouseService.upsertSettingsForWarehouse(id, taxRate);
 
         return "redirect:/api/super/warehouses";
