@@ -63,8 +63,7 @@ CREATE TABLE Warehouse (
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Phone VARCHAR(20) NOT NULL,
     Email Varchar(50) NOT NULL,
-    Address VARCHAR(250) NOT NULL,
-    Country VARCHAR(250) NOT NULL
+    Address VARCHAR(250) NOT NULL
 );
 
 CREATE TABLE Category(
@@ -86,9 +85,6 @@ CREATE TABLE Tax_Rate
 CREATE TABLE Settings(
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     Warehouse_id BIGINT NOT NULL,
-    CONSTRAINT fk_settings_warehouse
-        FOREIGN KEY (Warehouse_id)
-            REFERENCES Warehouse(ID),
     Alert_When_Stock_Is_Low BOOLEAN NOT NULL,
     Auto_Generate_Report BOOLEAN NOT NULL,
     Auto_Generate_Report_Time TIME,

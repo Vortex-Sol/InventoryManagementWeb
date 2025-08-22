@@ -1,10 +1,10 @@
 -- Warehouses
 INSERT INTO
-    Warehouse (ID, Phone, Email, Address, Country)
+    Warehouse (ID, Phone, Email, Address)
 VALUES
-    (0, '+48123456789', 'warehouse0@gmail.com', '123 Main St, Berlin', 'GERMANY'),
-    (1, '+48234567891', 'warehouse1@gmail.com','456 Market Ave, Munich', 'GERMANY'),
-    (2, '+48345678901', 'warehouse2@gmail.com', '789 Szczesliwicka, Warsaw', 'POLAND');
+    (0, '+48123456789', 'warehouse0@gmail.com', '123 Main St, Berlin'),
+    (1, '+48234567891', 'warehouse1@gmail.com','456 Market Ave, Munich'),
+    (2, '+48345678901', 'warehouse2@gmail.com', '789 Szczesliwicka, Warsaw');
 
 -- Jobs
 INSERT INTO

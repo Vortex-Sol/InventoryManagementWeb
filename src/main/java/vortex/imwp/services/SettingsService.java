@@ -37,8 +37,10 @@ public class SettingsService {
         Optional<Settings> checkSettings = settingsRepository.findById(settingsId);
         return checkSettings.isPresent();
     }
-    public Settings createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
-        return new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
+    @Transactional
+    public void createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
+        Settings set = new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
+        settingsRepository.save(set);
     }
     public Optional<Settings> getSettingsById(Long settingsId){
         return settingsRepository.findById(settingsId);
@@ -58,6 +60,7 @@ public class SettingsService {
 
     public void updateTaxRate(Long id, TaxRate taxRate) {
         settingsRepository.findById(id).get().setTaxRate(taxRate);
+        settingsRepository.save(settingsRepository.findById(id).get());
     }
 
 

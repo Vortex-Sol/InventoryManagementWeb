@@ -93,12 +93,6 @@
                                 <label class="form-label">Address</label>
                                 <input class="form-control" th:field="*{address}" maxlength="250" required>
                             </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Country</label>
-                                <input class="form-control" th:value="${currentCountry}" readonly>
-                                <div class="form-text">Country is fixed after creation.</div>
-                            </div>
                         </div>
 
                         <hr class="my-4">
@@ -184,13 +178,6 @@
                                 <label class="form-label">Address</label>
                                 <input class="form-control" th:field="*{address}" maxlength="250" required>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Country</label>
-                                <select class="form-select" name="country" required>
-                                    <option value="" disabled selected>Choose...</option>
-                                    <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>
-                                </select>
-                            </div>
                         </div>
 
                         <hr class="my-4">
@@ -268,7 +255,6 @@
 
 <script>
     (function() {
-        // Toggle for EDIT form
         const modeExistingEdit = document.getElementById('modeExistingEdit');
         const modeNewEdit = document.getElementById('modeNewEdit');
         const existingBlockEdit = document.getElementById('existingRateBlockEdit');
@@ -295,7 +281,6 @@
         if (modeNewEdit) modeNewEdit.addEventListener('change', toggleBlocksEdit);
         toggleBlocksEdit();
 
-        // Toggle for CREATE form
         const modeExistingCreate = document.getElementById('modeExistingCreate');
         const modeNewCreate = document.getElementById('modeNewCreate');
         const existingBlockCreate = document.getElementById('existingRateBlockCreate');

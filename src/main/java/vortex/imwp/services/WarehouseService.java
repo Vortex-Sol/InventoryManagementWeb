@@ -48,8 +48,13 @@ public class WarehouseService {
 		return warehouses;
 	}
 	@Transactional
-	public Warehouse createWarehouseBasic(String phone, String email, String address, Country.Name country){
-		return new Warehouse(phone, email, address, country);
+	public Warehouse createWarehouseBasic(String phone, String email, String address){
+		 Warehouse war = new Warehouse(phone, email, address);
+		 System.out.println(war +"1");
+		System.out.println(war +"2");
+		 warehouseRepository.save(war);
+		System.out.println(warehouseRepository.findById(5l) +"3");
+		 return war;
 	}
 
 	public Optional<WarehouseDTO> getWarehouseDTOById(Long id) {
