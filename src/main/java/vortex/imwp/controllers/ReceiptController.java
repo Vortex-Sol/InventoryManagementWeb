@@ -12,6 +12,7 @@ import org.thymeleaf.extras.springsecurity6.auth.AuthUtils;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.models.Receipt;
 import vortex.imwp.models.Sale;
+import vortex.imwp.models.SaleItem;
 import vortex.imwp.models.Warehouse;
 import vortex.imwp.services.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -76,6 +77,7 @@ public class ReceiptController {
 	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String checkoutForm(@PathVariable Long saleId, Model model) {
 		Sale sale = saleService.getSaleById(saleId);
+		System.out.println("[TESTING 2] ");
 		populateCheckoutModel(sale, model);
 		return "inventory/receipt/checkout";
 	}
@@ -142,6 +144,7 @@ public class ReceiptController {
 		}
 
 		try {
+			System.out.println("[TESTING] 1");
 			saleService.addItemToSale(saleId, warehouseId, resolvedItemId, quantity);
 		} catch (IllegalArgumentException e) {
 			redirectAttributes.addAttribute("error", e.getMessage());
@@ -155,7 +158,9 @@ public class ReceiptController {
 	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String cancelReceipt(@PathVariable Long receiptId,
 								@AuthenticationPrincipal UserDetails userDetails,
+								@ModelAttribute(name = "sale") Sale sale,
 								RedirectAttributes redirectAttributes) {
+		for (SaleItem item : sale.getSaleItems()) System.out.println(item);
 		try {
 			receiptService.cancelReceipt(receiptId, userDetails.getUsername());
 			redirectAttributes.addFlashAttribute("success", "Receipt cancelled successfully.");
@@ -171,10 +176,13 @@ public class ReceiptController {
 		BigDecimal total = BigDecimal.ZERO;
 
 		sale.getSaleItems().forEach(si -> {
-
+			System.out.println("[TESTING 3]");
             Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
+			System.out.println("[TESTING 4]");
 			BigDecimal price = BigDecimal.valueOf(taxRateService.getBrutto(si.getItem(), warehouse.get()));
+			System.out.println("[TESTING 5]");
 			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(si.getQuantity()));
+			System.out.println("[TESTING 6]");
 			itemTotals.put(si.getItem().getId(), itemTotal);
 		});
 

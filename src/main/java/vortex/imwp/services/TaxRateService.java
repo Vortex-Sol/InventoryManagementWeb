@@ -55,7 +55,9 @@ public class TaxRateService {
     public Double getBrutto(vortex.imwp.models.Item item, vortex.imwp.models.Warehouse warehouse) {
         vortex.imwp.models.Category category = item.getCategory();
         Double netto = item.getPrice();
-        return netto * (1 + (warehouse.getSettings().getTaxRate().getRateByCategory(category))/100);
+        Double rate = warehouse.getSettings().getTaxRate().getRateByCategory(category);
+        if (rate == null) throw new IllegalStateException("Tax rate not found");
+        else return netto * (1 + rate/100);
     }
 
     public void editVATRate(vortex.imwp.models.Category category, String countryName, Double newVATRate) {
