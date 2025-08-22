@@ -26,13 +26,15 @@ public class SettingsService {
     private final SettingsChangeAuditRepository settingsChangeAuditRepository;
     private final WarehouseRepository warehouseRepository;
     private final TaxRateRepository taxRateRepository;
+    private final WarehouseService warehouseService;
 
-    public SettingsService(SettingsRepository settingsRepository, EmployeeService employeeService, SettingsChangeAuditRepository settingsChangeAuditRepository, WarehouseRepository warehouseRepository, TaxRateRepository taxRateRepository) {
+    public SettingsService(SettingsRepository settingsRepository, EmployeeService employeeService, SettingsChangeAuditRepository settingsChangeAuditRepository, WarehouseRepository warehouseRepository, TaxRateRepository taxRateRepository, WarehouseService warehouseService) {
         this.settingsRepository = settingsRepository;
         this.employeeService = employeeService;
         this.settingsChangeAuditRepository = settingsChangeAuditRepository;
         this.warehouseRepository = warehouseRepository;
         this.taxRateRepository = taxRateRepository;
+        this.warehouseService = warehouseService;
     }
     @Transactional
     public void deleteById(long id) {
@@ -43,10 +45,17 @@ public class SettingsService {
         Optional<Settings> checkSettings = settingsRepository.findById(settingsId);
         return checkSettings.isPresent();
     }
+
+    @Transactional
     public void createDefaultSettingsForWarehouse(Warehouse warehouse, TaxRate taxRate) {
         //todo that gets the max id value and ++1
+        warehouse.setId(warehouseService.generateId());
+        warehouseRepository.save(warehouse);
+        taxRateRepository.save(taxRate);
         Settings setting =  new Settings(warehouse,false, true, new Time(00,00,00), 500.00, 14, new Time(06,00,00), new Time(23,00,00), new Time(23,00,00), taxRate);
         System.out.println("[TESTING] 3 :" + setting);
+        settingsRepository.save(setting);
+
     }
     public Optional<Settings> getSettingsById(Long settingsId){
         return settingsRepository.findById(settingsId);

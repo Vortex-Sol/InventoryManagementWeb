@@ -87,9 +87,10 @@ public class WarehouseService {
 		}
 	}
 
-    /*public Long generateId(){
-        warehouseRepository.findWarehouseW
-    }*/
+    public Long generateId(){
+        Warehouse warehouse = warehouseRepository.findTopByOrderByIdDesc();
+        return warehouse.getId() + 1;
+    }
 
 	@Transactional
 	public void deleteWarehouse(Long id) {

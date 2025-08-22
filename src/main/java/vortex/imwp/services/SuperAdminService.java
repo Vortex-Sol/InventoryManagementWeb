@@ -47,7 +47,7 @@ public class SuperAdminService {
 
 	@Transactional
 	public Warehouse createWarehouseWithTaxRate(
-			String phone, String email, String address, Country.Name country,
+			String phone, String email, String address,
 			String taxRateMode,
 			Long existingTaxRateId,
 			Country.Name newRateCountry,
@@ -55,7 +55,7 @@ public class SuperAdminService {
 	) {
 		TaxRate taxRate = resolveTaxRate(taxRateMode, existingTaxRateId, newRateCountry, std, red, superRed, none, other);
 
-		Warehouse w = new Warehouse(phone, email, address, country);
+		Warehouse w = new Warehouse(phone, email, address);
 		w = warehouseService.addWarehouse(w);
 
 		Settings s = buildDefaultSettings(w, taxRate);
