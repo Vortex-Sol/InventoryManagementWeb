@@ -13,7 +13,7 @@ public class JsonSender {
         // Hardcoded JSON as a map
         Map<String, Object> json = Map.of(
                 "lines", List.of(
-                        Map.of("na", "Towar 1", "il", 1.0, "vt", 0, "pr", 12356),
+                        Map.of("na", "Towar 1", "il", 1.0, "vt", 1, "pr", 12356),
                         Map.of("na", "Towar 2", "il", 1.0, "vt", 0, "pr", 34567)
                 ),
                 "summary", Map.of(
