@@ -159,7 +159,10 @@ public class ReceiptController {
 								@AuthenticationPrincipal UserDetails userDetails,
 								@ModelAttribute(name = "sale") Sale sale,
 								RedirectAttributes redirectAttributes) {
+		System.out.println("TESTING");
 		for (SaleItem item : sale.getSaleItems()) System.out.println(item);
+		System.out.println("TESTING2");
+		System.out.println(sale);
 		try {
 			receiptService.cancelReceipt(receiptId, userDetails.getUsername());
 			redirectAttributes.addFlashAttribute("success", "Receipt cancelled successfully.");

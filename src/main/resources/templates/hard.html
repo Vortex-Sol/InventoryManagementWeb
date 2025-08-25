@@ -1,0 +1,32 @@
+<body>
+<script>
+  var http = new XMLHttpRequest();
+  var url = 'http://127.0.0.1:3050/paragon';
+  var params = {
+    lines : [
+      { na: "Towar 1", il: 1.0, vt: 0,pr: 12356},
+      { na: "Towar 2", il: 1.0, vt: 0,pr: 34567}
+    ],
+    summary : {
+      to: 46923,
+      fp: 46923
+    },
+    payments : [
+      { ty: 0, wa: 40000, na: "Got�wka", re: false },
+      { ty: 2, wa: 6923, na: "Visa ... ... 0456", re: false }
+    ]
+  };
+  http.open('POST', url, true);
+
+  //Send the proper header information along with the request
+  http.setRequestHeader('Content-type', 'application/json');
+
+  http.onreadystatechange = function() {//Call a function when the state changes.
+    //alert(http.responseText);
+    if(http.readyState == 4 && http.status == 200) {
+      alert(http.responseText);
+    }
+  }
+  http.send(JSON.stringify(params));
+</script>
+</body>

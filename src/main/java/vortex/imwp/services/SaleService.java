@@ -131,6 +131,23 @@ public class SaleService {
         return saleRepository.save(sale);
     }
 
+    /*public Sale removeItemToSale(Long saleId, Long warehouseId, Long itemId, int quantity) {
+        Sale sale = saleRepository.findById(saleId)
+                .orElseThrow(() -> new RuntimeException("Sale not found"));
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+
+        WarehouseItem warehouseItem = warehouseItemRepository.findByWarehouseIdAndItemId(warehouseId, itemId)
+                .orElseThrow(() -> new RuntimeException("Item not available in selected warehouse"));
+
+        warehouseItem.setQuantityInStock(warehouseItem.getQuantityInStock() + quantity);
+        warehouseItemRepository.save(warehouseItem);
+
+        Optional<SaleItem> existing = sale.getSaleItems().stream()
+                .filter(si -> si.getItem().getId().equals(itemId))
+                .findFirst();
+    }*/
 
     public Sale getSaleById(Long saleId) {
         return saleRepository.findById(saleId)
