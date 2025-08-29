@@ -15,9 +15,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -58,54 +56,50 @@ public class ReceiptService {
 	}
 
 	public String generateReceiptJson(Receipt receipt) {
-		JSONObject json = new JSONObject();
-		json.put("type", "printReceipt");
+        Map<String, Integer> vatCat = new HashMap<>();
+        vatCat.put("A", 0);
+        vatCat.put("B", 1);
+        vatCat.put("C", 2);
+        vatCat.put("D", 3);
 
-		JSONObject receiptData = new JSONObject();
-		JSONObject header = new JSONObject();
-		header.put("operator", "01");
-		header.put("cashier", receipt.getSale().getSalesman().getName());
-		header.put("invoice", false);
-		receiptData.put("header", header);
+        Map<String, Integer> paymentCat = new HashMap<>();
+        paymentCat.put("card", 0);
+        paymentCat.put("cash", 2);
 
-		JSONArray items = new JSONArray();
-		for (SaleItem item : receipt.getSale().getSaleItems()) {
-			JSONObject itemJson = new JSONObject();
-			itemJson.put("name", item.getItem().getName());
-			itemJson.put("quantity", item.getQuantity());
-			itemJson.put("unit", "szt");
-			itemJson.put("price", item.getItem().getPrice());
-			itemJson.put("vatRate", item.getItem().getCategory().getName());
-			items.put(itemJson);
-		}
-		receiptData.put("items", items);
+        int sum = 0;
 
-		JSONArray payments = new JSONArray();
-		JSONObject payment = new JSONObject();
-		payment.put("type", receipt.getPaymentMethod().toLowerCase());
-		payment.put("amount", receipt.getTotalAmount());
+        JSONObject json = new JSONObject();
+        JSONArray lines = new JSONArray();
 
-		if (receipt.getAmountReceived() != null) {
-			payment.put("amountReceived", receipt.getAmountReceived());
-		}
-		if (receipt.getChangeGiven() != null) {
-			payment.put("changeGiven", receipt.getChangeGiven());
-		}
+        for (SaleItem item : receipt.getSale().getSaleItems()){
+            lines.put(new JSONObject()
+                    .put("na", item.getItem().getName())
+                    .put("il", item.getQuantity())
+                    .put("vt", vatCat.get(item.getItem().getCategory().getName()))
+                    .put("pr", item.getItem().getPrice() * 100) //todo get brutto
+            );
 
-		payments.put(payment);
-		receiptData.put("payments", payments);
-		if (receipt.isCancelled()) {
-			JSONObject cancellation = new JSONObject();
-			cancellation.put("cancelledAt", receipt.getCancelledAt().toString());
-			cancellation.put("cancelledBy", receipt.getCancelledBy().getName());
-			receiptData.put("cancellation", cancellation);
-		}
-		JSONObject footer = new JSONObject();
-		footer.put("message", "Thank you for shopping!");
-		receiptData.put("footer", footer);
-		json.put("receipt", receiptData);
+            sum += (int) (item.getItem().getPrice() * 100);
+        }
 
-		return json.toString(2);
+        JSONObject summary = new JSONObject();
+        summary.put("to", sum);
+        summary.put("fp", sum);
+
+        JSONArray payments = new JSONArray(
+                new JSONObject()
+                        .put("ty", paymentCat.get(receipt.getPaymentMethod().toLowerCase()))
+                        .put("wa", sum)
+                        .put("na", receipt.getPaymentMethod())
+                        .put("re", false)
+        );
+
+        JSONObject params = new JSONObject()
+                .put("lines", lines)
+                .put("summary", summary)
+                .put("payments", payments);
+
+        return params.toString(2);
 	}
 
 	@Transactional
