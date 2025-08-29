@@ -2,6 +2,7 @@ package vortex.imwp.services;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vortex.imwp.dtos.SaleDTO;
@@ -25,18 +26,25 @@ public class ReceiptService {
 	private final SaleRepository saleRepository;
 	private final EmployeeRepository employeeRepository;
 	private final TaxRateService taxRateService;
+    private final WarehouseService warehouseService;
+    private final EmployeeService employeeService;
 
-	public ReceiptService(ReceiptRepository receiptRepository, SaleRepository saleRepository, EmployeeRepository employeeRepository, TaxRateService taxRateService) {
+	public ReceiptService(ReceiptRepository receiptRepository, SaleRepository saleRepository, EmployeeRepository employeeRepository, TaxRateService taxRateService,  WarehouseService warehouseService, EmployeeService employeeService) {
 		this.receiptRepository = receiptRepository;
 		this.saleRepository = saleRepository;
 		this.employeeRepository = employeeRepository;
 		this.taxRateService = taxRateService;
+        this.warehouseService = warehouseService;
+        this.employeeService = employeeService;
 	}
 
 	@Transactional
 	public Receipt createReceipt(Sale sale, String paymentMethod, BigDecimal amountReceived) {
+        Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
+        if (warehouse.isEmpty()) throw new IllegalArgumentException("Warehouse does not exist");
+
 		double totalDouble = sale.getSaleItems().stream()
-				.mapToDouble(saleItem -> saleItem.getItem().getPrice().doubleValue() * saleItem.getQuantity())
+				.mapToDouble(saleItem -> taxRateService.getBrutto(saleItem.getItem(), warehouse.get()) * saleItem.getQuantity())
 				.sum();
 
 		BigDecimal total = BigDecimal.valueOf(totalDouble);
@@ -66,15 +74,16 @@ public class ReceiptService {
         paymentCat.put("card", 0);
         paymentCat.put("cash", 2);
 
-        JSONObject json = new JSONObject();
-        JSONArray lines = new JSONArray();
+        Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
+        if (warehouse.isEmpty()) throw new IllegalArgumentException("Warehouse does not exist");
 
+        JSONArray lines = new JSONArray();
         for (SaleItem item : receipt.getSale().getSaleItems()){
             lines.put(new JSONObject()
                     .put("na", item.getItem().getName())
                     .put("il", item.getQuantity())
                     .put("vt", vatCat.get(item.getItem().getCategory().getName()))
-                    .put("pr", item.getItem().getPrice() * 100) //todo get brutto
+                    .put("pr", (int) (taxRateService.getBrutto(item.getItem(), warehouse.get()) * 100))
             );
         }
 
