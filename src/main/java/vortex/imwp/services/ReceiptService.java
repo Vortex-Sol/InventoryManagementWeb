@@ -2,8 +2,13 @@ package vortex.imwp.services;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import vortex.imwp.dtos.SaleDTO;
 import vortex.imwp.mappers.SaleDTOMapper;
 import vortex.imwp.models.*;
@@ -15,9 +20,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -26,20 +29,32 @@ public class ReceiptService {
 	private final ReceiptRepository receiptRepository;
 	private final SaleRepository saleRepository;
 	private final EmployeeRepository employeeRepository;
+	private final TaxRateService taxRateService;
+    private final WarehouseService warehouseService;
+    private final EmployeeService employeeService;
 
-	public ReceiptService(ReceiptRepository receiptRepository, SaleRepository saleRepository, EmployeeRepository employeeRepository) {
+	public ReceiptService(ReceiptRepository receiptRepository, SaleRepository saleRepository, EmployeeRepository employeeRepository, TaxRateService taxRateService,  WarehouseService warehouseService, EmployeeService employeeService) {
 		this.receiptRepository = receiptRepository;
 		this.saleRepository = saleRepository;
 		this.employeeRepository = employeeRepository;
+		this.taxRateService = taxRateService;
+        this.warehouseService = warehouseService;
+        this.employeeService = employeeService;
 	}
 
 	@Transactional
 	public Receipt createReceipt(Sale sale, String paymentMethod, BigDecimal amountReceived) {
-		double totalDouble = sale.getSaleItems().stream()
-				.mapToDouble(saleItem -> saleItem.getItem().getPrice().doubleValue() * saleItem.getQuantity())
-				.sum();
+        Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
+        if (warehouse.isEmpty()) throw new IllegalArgumentException("Warehouse does not exist");
 
-		BigDecimal total = BigDecimal.valueOf(totalDouble);
+
+        BigDecimal total = new BigDecimal(0);
+        for (SaleItem item : sale.getSaleItems()){
+            BigDecimal itemCost = taxRateService.getBrutto(item.getItem(), warehouse.get());
+            BigDecimal totalItemCost = itemCost.multiply(BigDecimal.valueOf(item.getQuantity()));
+            total = total.add(totalItemCost);
+        }
+        System.out.println("[RECEIPT SERVICE] " + total.doubleValue());
 
 		Receipt receipt = new Receipt(sale, total, paymentMethod);
 		receipt.setCreatedAt(LocalDateTime.now());
@@ -56,54 +71,57 @@ public class ReceiptService {
 	}
 
 	public String generateReceiptJson(Receipt receipt) {
-		JSONObject json = new JSONObject();
-		json.put("type", "printReceipt");
+        RestTemplate restTemplate = new RestTemplate();
 
-		JSONObject receiptData = new JSONObject();
-		JSONObject header = new JSONObject();
-		header.put("operator", "01");
-		header.put("cashier", receipt.getSale().getSalesman().getName());
-		header.put("invoice", false);
-		receiptData.put("header", header);
+        Map<String, Integer> vatCat = new HashMap<>();
+        vatCat.put("A", 0);
+        vatCat.put("B", 1);
+        vatCat.put("C", 2);
+        vatCat.put("D", 3);
 
-		JSONArray items = new JSONArray();
-		for (SaleItem item : receipt.getSale().getSaleItems()) {
-			JSONObject itemJson = new JSONObject();
-			itemJson.put("name", item.getItem().getName());
-			itemJson.put("quantity", item.getQuantity());
-			itemJson.put("unit", "szt");
-			itemJson.put("price", item.getItem().getPrice());
-			itemJson.put("vatRate", "A"); //  hardcoded for 23% tax
-			items.put(itemJson);
-		}
-		receiptData.put("items", items);
+        Map<String, Integer> paymentCat = new HashMap<>();
+		paymentCat.put("cash", 0);
+		paymentCat.put("card", 2);
 
-		JSONArray payments = new JSONArray();
-		JSONObject payment = new JSONObject();
-		payment.put("type", receipt.getPaymentMethod().toLowerCase());
-		payment.put("amount", receipt.getTotalAmount());
+        Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
+        if (warehouse.isEmpty()) throw new IllegalArgumentException("Warehouse does not exist");
 
-		if (receipt.getAmountReceived() != null) {
-			payment.put("amountReceived", receipt.getAmountReceived());
-		}
-		if (receipt.getChangeGiven() != null) {
-			payment.put("changeGiven", receipt.getChangeGiven());
-		}
+        JSONArray lines = new JSONArray();
+        for (SaleItem item : receipt.getSale().getSaleItems()){
+            BigDecimal price = taxRateService.getBrutto(item.getItem(), warehouse.get()).multiply(BigDecimal.valueOf(100));
+            lines.put(new JSONObject()
+                    .put("na", item.getItem().getName())
+                    .put("il", item.getQuantity())
+                    .put("vt", vatCat.get(item.getItem().getCategory().getName()))
+                    .put("pr", price.intValue())
+            );
+        }
 
-		payments.put(payment);
-		receiptData.put("payments", payments);
-		if (receipt.isCancelled()) {
-			JSONObject cancellation = new JSONObject();
-			cancellation.put("cancelledAt", receipt.getCancelledAt().toString());
-			cancellation.put("cancelledBy", receipt.getCancelledBy().getName());
-			receiptData.put("cancellation", cancellation);
-		}
-		JSONObject footer = new JSONObject();
-		footer.put("message", "Thank you for shopping!");
-		receiptData.put("footer", footer);
-		json.put("receipt", receiptData);
+        int total = receipt.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue();
+        JSONObject summary = new JSONObject();
+        summary.put("to", total);
+		summary.put("fp", total);
 
-		return json.toString(2);
+        JSONArray payments = new JSONArray();
+        payments.put(new JSONObject()
+                .put("ty", paymentCat.get(receipt.getPaymentMethod().toLowerCase()))
+                .put("wa", total)
+                .put("na", receipt.getPaymentMethod())
+                .put("re", false));
+
+        JSONObject params = new JSONObject()
+                .put("lines", lines)
+                .put("summary", summary)
+                .put("payments", payments);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(params.toString(), headers);
+
+        String url = "http://127.0.0.1:3050/paragon";
+        //restTemplate.postForEntity(url, requestEntity, String.class);
+
+        return params.toString(2);
 	}
 
 	@Transactional

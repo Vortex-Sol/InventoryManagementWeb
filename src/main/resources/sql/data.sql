@@ -105,9 +105,9 @@ VALUES
 INSERT INTO
     Settings (Warehouse_ID, Alert_When_Stock_Is_Low, Auto_Generate_Report, Auto_Generate_Report_Time, Notify_Minimum_Cash_Discrepancy, Destroy_Refund_Data_After_N_Days, Cash_Count_Start_Time, Cash_Count_End_Time, Auto_Generate_Inventory_Report_Time, Tax_Rate_id)
 VALUES
-    (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 1),
-    (2, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 2),
-    (3, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 3);
+    (1, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 5),
+    (2, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 5),
+    (3, FALSE, TRUE, '00:00:00', 500, 14, '06:00:00', '23:00:00', '23:00:00', 5);
 
 INSERT INTO
     Settings_Change_Audit (Setting_ID, Warehouse_ID, Admin_ID, Changed_At, Settings_Changed)

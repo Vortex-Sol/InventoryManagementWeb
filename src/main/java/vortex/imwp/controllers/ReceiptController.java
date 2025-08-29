@@ -12,6 +12,7 @@ import org.thymeleaf.extras.springsecurity6.auth.AuthUtils;
 import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.models.Receipt;
 import vortex.imwp.models.Sale;
+import vortex.imwp.models.SaleItem;
 import vortex.imwp.models.Warehouse;
 import vortex.imwp.services.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -155,6 +156,7 @@ public class ReceiptController {
 	@PreAuthorize("hasAnyRole('SALESMAN','MANAGER','ADMIN', 'SUPERADMIN')")
 	public String cancelReceipt(@PathVariable Long receiptId,
 								@AuthenticationPrincipal UserDetails userDetails,
+								@ModelAttribute(name = "sale") Sale sale,
 								RedirectAttributes redirectAttributes) {
 		try {
 			receiptService.cancelReceipt(receiptId, userDetails.getUsername());
@@ -171,9 +173,8 @@ public class ReceiptController {
 		BigDecimal total = BigDecimal.ZERO;
 
 		sale.getSaleItems().forEach(si -> {
-
             Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
-			BigDecimal price = BigDecimal.valueOf(taxRateService.getBrutto(si.getItem(), warehouse.get()));
+			BigDecimal price = taxRateService.getBrutto(si.getItem(), warehouse.get());
 			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(si.getQuantity()));
 			itemTotals.put(si.getItem().getId(), itemTotal);
 		});
@@ -181,6 +182,8 @@ public class ReceiptController {
 		for (BigDecimal it : itemTotals.values()) {
 			total = total.add(it);
 		}
+
+        System.out.println("[RECEIPT CONTROLLER] " +  total.doubleValue());
 
 		model.addAttribute("sale", sale);
 		model.addAttribute("itemTotals", itemTotals);
