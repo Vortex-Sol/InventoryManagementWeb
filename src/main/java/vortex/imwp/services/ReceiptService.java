@@ -2,9 +2,13 @@ package vortex.imwp.services;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import vortex.imwp.dtos.SaleDTO;
 import vortex.imwp.mappers.SaleDTOMapper;
 import vortex.imwp.models.*;
@@ -64,6 +68,8 @@ public class ReceiptService {
 	}
 
 	public String generateReceiptJson(Receipt receipt) {
+        RestTemplate restTemplate = new RestTemplate();
+
         Map<String, Integer> vatCat = new HashMap<>();
         vatCat.put("A", 0);
         vatCat.put("B", 1);
@@ -102,6 +108,13 @@ public class ReceiptService {
                 .put("lines", lines)
                 .put("summary", summary)
                 .put("payments", payments);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(params.toString(), headers);
+
+        String url = "http://127.0.0.1:3050/paragon";
+        restTemplate.postForEntity(url, requestEntity, String.class);
 
         return params.toString(2);
 	}
