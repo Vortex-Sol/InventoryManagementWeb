@@ -11,6 +11,8 @@ import vortex.imwp.repositories.SettingsChangeAuditRepository;
 import vortex.imwp.repositories.SettingsRepository;
 import vortex.imwp.repositories.TaxRateRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +59,18 @@ public class TaxRateService {
         Double netto = item.getPrice();
         Double rate = warehouse.getSettings().getTaxRate().getRateByCategory(category);
         if (rate == null) throw new IllegalStateException("Tax rate not found");
-        else return netto * (1 + rate/100);
+        else {
+            double value = netto * (1 + rate/100);
+            BigDecimal bd = new BigDecimal(value);
+
+            BigDecimal result = bd.setScale(3, RoundingMode.DOWN);
+            BigDecimal thirdDigit = result.subtract(result.setScale(2, RoundingMode.DOWN));
+
+            if (thirdDigit.compareTo(BigDecimal.valueOf(0.005)) >= 0) result = result.setScale(2, RoundingMode.UP);
+            else result = result.setScale(2, RoundingMode.DOWN);
+
+            return result.doubleValue();
+        }
     }
 
     public void editVATRate(vortex.imwp.models.Category category, String countryName, Double newVATRate) {
