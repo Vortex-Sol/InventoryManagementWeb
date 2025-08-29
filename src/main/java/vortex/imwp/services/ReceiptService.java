@@ -80,8 +80,8 @@ public class ReceiptService {
         vatCat.put("D", 3);
 
         Map<String, Integer> paymentCat = new HashMap<>();
-        paymentCat.put("card", 0);
-        paymentCat.put("cash", 2);
+		paymentCat.put("cash", 0);
+		paymentCat.put("card", 2);
 
         Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
         if (warehouse.isEmpty()) throw new IllegalArgumentException("Warehouse does not exist");
@@ -100,6 +100,7 @@ public class ReceiptService {
         int total = receipt.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue();
         JSONObject summary = new JSONObject();
         summary.put("to", total);
+		summary.put("fp", total);
 
         JSONArray payments = new JSONArray();
         payments.put(new JSONObject()
