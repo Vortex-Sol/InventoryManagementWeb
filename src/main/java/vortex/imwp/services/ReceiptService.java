@@ -66,8 +66,6 @@ public class ReceiptService {
         paymentCat.put("card", 0);
         paymentCat.put("cash", 2);
 
-        int sum = 0;
-
         JSONObject json = new JSONObject();
         JSONArray lines = new JSONArray();
 
@@ -78,21 +76,18 @@ public class ReceiptService {
                     .put("vt", vatCat.get(item.getItem().getCategory().getName()))
                     .put("pr", item.getItem().getPrice() * 100) //todo get brutto
             );
-
-            sum += (int) (item.getItem().getPrice() * 100);
         }
 
         JSONObject summary = new JSONObject();
-        summary.put("to", sum);
-        summary.put("fp", sum);
+        summary.put("to", (int) (receipt.getTotalAmount().doubleValue() * 100));
+        summary.put("fp", (int) (receipt.getTotalAmount().doubleValue() * 100));
 
-        JSONArray payments = new JSONArray(
-                new JSONObject()
-                        .put("ty", paymentCat.get(receipt.getPaymentMethod().toLowerCase()))
-                        .put("wa", sum)
-                        .put("na", receipt.getPaymentMethod())
-                        .put("re", false)
-        );
+        JSONArray payments = new JSONArray();
+        payments.put(new JSONObject()
+                .put("ty", paymentCat.get(receipt.getPaymentMethod().toLowerCase()))
+                .put("wa", (int) (receipt.getTotalAmount().doubleValue() * 100))
+                .put("na", receipt.getPaymentMethod())
+                .put("re", false));
 
         JSONObject params = new JSONObject()
                 .put("lines", lines)
