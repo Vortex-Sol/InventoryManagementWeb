@@ -174,7 +174,7 @@ public class ReceiptController {
 
 		sale.getSaleItems().forEach(si -> {
             Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
-			BigDecimal price = BigDecimal.valueOf(taxRateService.getBrutto(si.getItem(), warehouse.get()));
+			BigDecimal price = taxRateService.getBrutto(si.getItem(), warehouse.get());
 			BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(si.getQuantity()));
 			itemTotals.put(si.getItem().getId(), itemTotal);
 		});
@@ -182,6 +182,8 @@ public class ReceiptController {
 		for (BigDecimal it : itemTotals.values()) {
 			total = total.add(it);
 		}
+
+        System.out.println("[RECEIPT CONTROLLER] " +  total.doubleValue());
 
 		model.addAttribute("sale", sale);
 		model.addAttribute("itemTotals", itemTotals);

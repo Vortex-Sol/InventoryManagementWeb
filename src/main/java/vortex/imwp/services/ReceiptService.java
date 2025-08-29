@@ -47,11 +47,14 @@ public class ReceiptService {
         Optional<Warehouse> warehouse = warehouseService.getWarehouseById(employeeService.getEmployeeByAuthentication(SecurityContextHolder.getContext().getAuthentication()).getWarehouseID());
         if (warehouse.isEmpty()) throw new IllegalArgumentException("Warehouse does not exist");
 
-		double totalDouble = sale.getSaleItems().stream()
-				.mapToDouble(saleItem -> taxRateService.getBrutto(saleItem.getItem(), warehouse.get()) * saleItem.getQuantity())
-				.sum();
 
-		BigDecimal total = BigDecimal.valueOf(totalDouble);
+        BigDecimal total = new BigDecimal(0);
+        for (SaleItem item : sale.getSaleItems()){
+            BigDecimal itemCost = taxRateService.getBrutto(item.getItem(), warehouse.get());
+            BigDecimal totalItemCost = itemCost.multiply(BigDecimal.valueOf(item.getQuantity()));
+            total = total.add(totalItemCost);
+        }
+        System.out.println("[RECEIPT SERVICE] " + total.doubleValue());
 
 		Receipt receipt = new Receipt(sale, total, paymentMethod);
 		receipt.setCreatedAt(LocalDateTime.now());
@@ -85,22 +88,23 @@ public class ReceiptService {
 
         JSONArray lines = new JSONArray();
         for (SaleItem item : receipt.getSale().getSaleItems()){
+            BigDecimal price = taxRateService.getBrutto(item.getItem(), warehouse.get()).multiply(BigDecimal.valueOf(100));
             lines.put(new JSONObject()
                     .put("na", item.getItem().getName())
                     .put("il", item.getQuantity())
                     .put("vt", vatCat.get(item.getItem().getCategory().getName()))
-                    .put("pr", (int) (taxRateService.getBrutto(item.getItem(), warehouse.get()) * 100))
+                    .put("pr", price.intValue())
             );
         }
 
+        int total = receipt.getTotalAmount().multiply(BigDecimal.valueOf(100)).intValue();
         JSONObject summary = new JSONObject();
-        summary.put("to", (int) (receipt.getTotalAmount().doubleValue() * 100));
-        summary.put("fp", (int) (receipt.getTotalAmount().doubleValue() * 100));
+        summary.put("to", total);
 
         JSONArray payments = new JSONArray();
         payments.put(new JSONObject()
                 .put("ty", paymentCat.get(receipt.getPaymentMethod().toLowerCase()))
-                .put("wa", (int) (receipt.getTotalAmount().doubleValue() * 100))
+                .put("wa", total)
                 .put("na", receipt.getPaymentMethod())
                 .put("re", false));
 
@@ -114,7 +118,7 @@ public class ReceiptService {
         HttpEntity<String> requestEntity = new HttpEntity<String>(params.toString(), headers);
 
         String url = "http://127.0.0.1:3050/paragon";
-        restTemplate.postForEntity(url, requestEntity, String.class);
+        //restTemplate.postForEntity(url, requestEntity, String.class);
 
         return params.toString(2);
 	}

@@ -54,7 +54,7 @@ public class TaxRateService {
         }
     }
 
-    public Double getBrutto(vortex.imwp.models.Item item, vortex.imwp.models.Warehouse warehouse) {
+    public BigDecimal getBrutto(vortex.imwp.models.Item item, vortex.imwp.models.Warehouse warehouse) {
         vortex.imwp.models.Category category = item.getCategory();
         Double netto = item.getPrice();
         Double rate = warehouse.getSettings().getTaxRate().getRateByCategory(category);
@@ -69,7 +69,7 @@ public class TaxRateService {
             if (thirdDigit.compareTo(BigDecimal.valueOf(0.005)) >= 0) result = result.setScale(2, RoundingMode.UP);
             else result = result.setScale(2, RoundingMode.DOWN);
 
-            return result.doubleValue();
+            return result;
         }
     }
 
