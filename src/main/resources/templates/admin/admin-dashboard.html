@@ -21,5 +21,39 @@
       </div>
     </div>
   </div>
+
+  <div class="card shadow-sm" th:if="${not #lists.isEmpty(taxRates)}">
+    <div class="card-header text-white" style="background-color: #e94e77">
+      <h6 class="mb-0">Tax Rates Information</h6>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered mb-0">
+        <thead class="table-secondary">
+        <tr>
+          <th>Id</th>
+          <th>Country</th>
+          <th>Standard Rate</th>
+          <th>Reduced Rate</th>
+          <th>Super Reduced Rate</th>
+          <th>None Rate</th>
+          <th>Other Rate</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="taxRate : ${taxRates}">
+          <td th:text="${taxRate.id}"></td>
+          <td th:text="${taxRate.country}"></td>
+          <td th:text="${taxRate.standardRate}"></td>
+          <td th:text="${taxRate.reducedRate != null ? taxRate.reducedRate : 'N/A'}"></td>
+          <td th:text="${taxRate.superReducedRate != null ? taxRate.superReducedRate : 'N/A'}"></td>
+          <td th:text="${taxRate.noneRate != null ? taxRate.noneRate : 'N/A'}"></td>
+          <td th:text="${taxRate.otherRate != null ? taxRate.otherRate : 'N/A'}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
 </section>
 </html>
