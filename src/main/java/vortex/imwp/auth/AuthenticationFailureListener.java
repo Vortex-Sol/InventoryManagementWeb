@@ -29,6 +29,6 @@ public class AuthenticationFailureListener
 
         System.out.println("[" + timestamp + "] Failure login: username: " + username + " ip: " + ip);
 
-        auditSvc.recordLogin(username, ip, timestamp, true);
+        auditSvc.recordLogin(username, ip, timestamp, false);
     }
 }
