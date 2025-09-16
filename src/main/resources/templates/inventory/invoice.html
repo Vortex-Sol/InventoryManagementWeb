@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout ::
+        layout(title=~{::title}, content=~{::section}, navText='Invoice Upload')}">
+
+<head>
+  <title>Upload Invoice</title>
+  <style>
+    .upload-card {
+      max-width: 600px;
+      margin: auto;
+    }
+    .file-drop-area {
+      position: relative;
+      border: 2px dashed #dee2e6;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      transition: border-color .3s ease, background .3s ease;
+    }
+    .file-drop-area.dragover {
+      border-color: #e94e77;
+      background: rgba(233, 78, 119, 0.05);
+    }
+    .file-drop-area input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .invoice-list {
+      margin-top: 1.5rem;
+    }
+    .invoice-list .card {
+      border: 1px solid #f1f3f5;
+    }
+  </style>
+</head>
+
+<section th:fragment="section">
+  <div class="container">
+    <h2 class="mb-4">Upload Invoice</h2>
+
+    <div th:if="${errorMessage != null and !#strings.isEmpty(errorMessage)}"
+         class="alert alert-danger" role="alert">
+      <span th:text="${errorMessage}"></span>
+    </div>
+
+    <div class="card upload-card mb-4">
+      <div class="card-body">
+        <form th:action="@{/api/invoice/upload}" method="post" enctype="multipart/form-data">
+          <div class="file-drop-area mb-3" id="dropArea">
+            <p class="mb-1">Drag & drop your invoice file here</p>
+            <small class="text-muted">Supported formats: PDF, JPG, PNG</small>
+            <input type="file" name="file" accept="application/pdf,image/*" required>
+          </div>
+          <button class="btn btn-primary w-100" type="submit">Upload</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card mb-3 p-3">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Search by file name</label>
+          <input type="text" id="filterName" class="form-control" placeholder="Enter file name">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Filter by date</label>
+          <input type="date" id="filterDate" class="form-control">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Sort by date</label>
+          <select id="sortOrder" class="form-select">
+            <option value="">-- None --</option>
+            <option value="asc">Oldest first</option>
+            <option value="desc">Newest first</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button type="button" id="resetFilters" class="btn btn-outline-secondary w-100">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="invoice-list">
+      <h5 class="mb-3">My Uploaded Invoices</h5>
+      <div id="noInvoices" class="empty-state" th:if="${invoices == null or invoices.isEmpty()}">
+        No invoices uploaded yet.
+      </div>
+      <div class="table-responsive" th:if="${invoices != null and !invoices.isEmpty()}">
+        <table id="invoiceTable" class="table table-bordered table-hover">
+          <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Uploaded At</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="inv : ${invoices}" data-date="${#dates.format(inv.uploadedAt,'yyyy-MM-dd')}">
+            <td class="file-name" th:text="${inv.fileName}"></td>
+            <td class="upload-date" th:text="${#dates.format(inv.uploadedAt, 'dd MMM yyyy HH:mm')}"></td>
+            <td>
+              <a th:href="@{/api/invoice/download/{id}(id=${inv.id})}"
+                 class="btn btn-outline-primary btn-sm">Download</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <script th:src="@{/js/filter-invoices.js}"></script>
+</section>
+</html>

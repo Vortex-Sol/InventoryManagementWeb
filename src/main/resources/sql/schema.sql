@@ -169,12 +169,26 @@ CREATE TABLE Receipt (
      Cancelled_By BIGINT
 );
 
+CREATE TABLE Invoice (
+                         ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         File_Name VARCHAR(255) NOT NULL,
+                         Stored_Path VARCHAR(500) NOT NULL,
+                         Uploaded_At TIMESTAMP NOT NULL,
+                         Warehouse_ID BIGINT NOT NULL,
+                         Uploaded_By BIGINT NOT NULL
+
+);
+
+
 
 
 -- === FOREIGN KEYS ===
 
 ALTER TABLE Employee ADD FOREIGN KEY (Boss_ID) REFERENCES Employee(ID);
 ALTER TABLE Employee ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
+-- added ( im not sure if we are going to implement it
+ALTER TABLE Invoice ADD FOREIGN KEY (Warehouse_ID) REFERENCES Warehouse(ID);
+ALTER TABLE Invoice ADD FOREIGN KEY (Uploaded_By) REFERENCES Employee(ID);
 ALTER TABLE Employee_Job ADD FOREIGN KEY (Employee_ID) REFERENCES Employee(ID);
 ALTER TABLE Employee_Job ADD FOREIGN KEY (Job_ID) REFERENCES Job(ID);
 ALTER TABLE Sale ADD FOREIGN KEY (Salesman_ID) REFERENCES Employee(ID);
