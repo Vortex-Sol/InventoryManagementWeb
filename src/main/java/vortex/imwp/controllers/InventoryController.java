@@ -46,9 +46,11 @@ public class InventoryController {
 						  @RequestParam(required = false) Long categoryId,
 						  @RequestParam(required = false) String newCategoryName,
 						  @RequestParam int quantity,
+						  @RequestParam(required = false) Long warehouseId,
 						  Authentication auth) {
 
 		var employee = employeeService.getEmployeeByAuthentication(auth);
+
 		CategoryDTO categoryDTO = (newCategoryName != null && !newCategoryName.isBlank())
 				? categoryService.createCategoryIfNotExists(new CategoryDTO(null, newCategoryName.trim()))
 				: categoryService.getCategoryDTOById(categoryId)
@@ -58,19 +60,24 @@ public class InventoryController {
 		Item savedItem = itemService.addItem(dto);
 
 		if (quantity > 0) {
-			Long warehouseId = employee.getJobs().stream().anyMatch(j -> j.getName().equals("SUPERADMIN"))
-					? null
-					: employee.getWarehouseID();
+			Long effectiveWarehouseId;
 
-			if (warehouseId != null) {
-				var warehouse = warehouseService.getWarehouseById(warehouseId)
-						.orElseThrow(() -> new IllegalStateException("User's warehouse not found"));
+			if (employee.getJobs().stream().anyMatch(j -> j.getName().equals("SUPERADMIN"))) {
+				effectiveWarehouseId = warehouseId;
+			} else {
+				effectiveWarehouseId = employee.getWarehouseID();
+			}
+
+			if (effectiveWarehouseId != null) {
+				var warehouse = warehouseService.getWarehouseById(effectiveWarehouseId)
+						.orElseThrow(() -> new IllegalStateException("Warehouse not found"));
 				warehouseItemService.saveWarehouseItem(new WarehouseItem(warehouse, savedItem, quantity));
 			}
 		}
 
 		return "redirect:/api/warehouse";
 	}
+
 
 	@PostMapping("/delete")
 	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')")
