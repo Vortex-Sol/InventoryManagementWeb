@@ -94,6 +94,8 @@
           <tr>
             <th>File Name</th>
             <th>Uploaded At</th>
+            <th>Uploaded by</th>
+            <th>Path</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -101,6 +103,8 @@
           <tr th:each="inv : ${invoices}" data-date="${#dates.format(inv.uploadedAt,'yyyy-MM-dd')}">
             <td class="file-name" th:text="${inv.fileName}"></td>
             <td class="upload-date" th:text="${#dates.format(inv.uploadedAt, 'dd MMM yyyy HH:mm')}"></td>
+            <td class="uploaded-by" th:text="${inv.getUploadedBy().getName()}"></td>
+            <td class="path" th:text="${inv.getStoredPath()}"></td>
             <td>
               <a th:href="@{/api/invoice/download/{id}(id=${inv.id})}"
                  class="btn btn-outline-primary btn-sm">Download</a>
