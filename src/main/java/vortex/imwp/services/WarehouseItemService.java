@@ -10,9 +10,7 @@ import vortex.imwp.models.WarehouseItem;
 import vortex.imwp.models.WarehouseItemID;
 import vortex.imwp.repositories.WarehouseItemRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class WarehouseItemService {
@@ -52,5 +50,19 @@ public class WarehouseItemService {
 
     public List<WarehouseItem> getWarehouseItems(Long warehouseID) {
         return warehouseItemRepository.findAllByWarehouseId(warehouseID);
+    }
+
+    public Map<Long, List<Long>> getItemWarehouseIdsMap() {
+        List<WarehouseItem> warehouseItems = warehouseItemRepository.findAll();
+        Map<Long, List<Long>> result = new HashMap<>();
+
+        for (WarehouseItem wi : warehouseItems) {
+            Long itemId = wi.getItem().getId();
+            Long warehouseId = wi.getWarehouse().getId();
+
+            result.computeIfAbsent(itemId, k -> new ArrayList<>()).add(warehouseId);
+        }
+
+        return result;
     }
 }
