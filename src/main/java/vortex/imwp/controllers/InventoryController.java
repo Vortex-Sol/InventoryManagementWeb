@@ -9,6 +9,7 @@ import vortex.imwp.dtos.ItemDTO;
 import vortex.imwp.dtos.CategoryDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import vortex.imwp.models.Employee;
 import vortex.imwp.models.Item;
 import vortex.imwp.models.Response;
 import vortex.imwp.models.WarehouseItem;
@@ -37,7 +38,7 @@ public class InventoryController {
 
 
 	@PostMapping("/add")
-	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')")
 	public String addItem(@RequestParam String name,
 						  @RequestParam String description,
 						  @RequestParam double price,
@@ -45,40 +46,58 @@ public class InventoryController {
 						  @RequestParam(required = false) Long categoryId,
 						  @RequestParam(required = false) String newCategoryName,
 						  @RequestParam int quantity,
-						  Authentication authentication) {
-		CategoryDTO categoryDTO;
-		if (newCategoryName != null && !newCategoryName.trim().isEmpty()) {
-			categoryDTO = categoryService.createCategoryIfNotExists(new CategoryDTO(null, newCategoryName.trim()));
-		} else if (categoryId != null) {
-			categoryDTO = categoryService.getCategoryDTOById(categoryId)
-					.orElseThrow(() -> new IllegalArgumentException("Invalid category selected."));
-		} else {
-			throw new IllegalArgumentException("A category must be selected or created.");
-		}
+						  @RequestParam(required = false) Long warehouseId,
+						  Authentication auth) {
 
-		ItemDTO itemDTO = new ItemDTO(name, description, price, barcode, categoryDTO);
-		Item savedItem = itemService.addItem(itemDTO);
+		var employee = employeeService.getEmployeeByAuthentication(auth);
 
-		Long userWarehouseId = employeeService.getEmployeeByAuthentication(authentication).getWarehouseID();
-		var warehouse = warehouseService.getWarehouseById(userWarehouseId)
-				.orElseThrow(() -> new IllegalStateException("User's warehouse not found: " + userWarehouseId));
+		CategoryDTO categoryDTO = (newCategoryName != null && !newCategoryName.isBlank())
+				? categoryService.createCategoryIfNotExists(new CategoryDTO(null, newCategoryName.trim()))
+				: categoryService.getCategoryDTOById(categoryId)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid category selected."));
+
+		ItemDTO dto = new ItemDTO(name, description, price, barcode, categoryDTO);
+		Item savedItem = itemService.addItem(dto);
 
 		if (quantity > 0) {
-			WarehouseItem wi = new WarehouseItem();
-			wi.setItem(savedItem);
-			wi.setWarehouse(warehouse);
-			wi.setQuantityInStock(quantity);
-			warehouseItemService.saveWarehouseItem(wi);
+			Long effectiveWarehouseId;
+
+			if (employee.getJobs().stream().anyMatch(j -> j.getName().equals("SUPERADMIN"))) {
+				effectiveWarehouseId = warehouseId;
+			} else {
+				effectiveWarehouseId = employee.getWarehouseID();
+			}
+
+			if (effectiveWarehouseId != null) {
+				var warehouse = warehouseService.getWarehouseById(effectiveWarehouseId)
+						.orElseThrow(() -> new IllegalStateException("Warehouse not found"));
+				warehouseItemService.saveWarehouseItem(new WarehouseItem(warehouse, savedItem, quantity));
+			}
 		}
+
 		return "redirect:/api/warehouse";
 	}
 
+
 	@PostMapping("/delete")
-	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
-	public String deleteItem(@RequestParam("item_id") Long itemId) {
-		itemService.getItemById(itemId).ifPresent(item -> itemService.deleteItem(itemId));
+	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN','SUPERADMIN')")
+	public String deleteItem(@RequestParam("item_id") Long itemId, Authentication auth) {
+		var employee = employeeService.getEmployeeByAuthentication(auth);
+
+		itemService.getItemById(itemId).ifPresent(item -> {
+			if (!employee.getJobs().stream().anyMatch(j -> j.getName().equals("SUPERADMIN"))) {
+				var warehouseItems = warehouseItemService.getWarehouseItems(employee.getWarehouseID());
+				boolean belongsToWarehouse = warehouseItems.stream()
+						.anyMatch(wi -> wi.getItem().getId().equals(itemId));
+				if (!belongsToWarehouse) throw new IllegalStateException("Not allowed to delete this item");
+			}
+			itemService.deleteItem(itemId);
+		});
+
 		return "redirect:/api/warehouse";
 	}
+
+
 
 	@GetMapping()
 	@PreAuthorize("hasAnyRole('STOCKER','MANAGER','ADMIN', 'SUPERADMIN')")
